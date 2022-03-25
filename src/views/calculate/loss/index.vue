@@ -223,14 +223,14 @@ export default {
         result += parseFloat(item.textileLossResult)
       })
       // 算门幅
-      if (parseFloat(this.doorWidth) < 150) {
-        result += 3
-      }
+      // if (parseFloat(this.doorWidth) < 150) {
+      //   result += 3
+      // }
       // 算特殊工艺
-      this.craftListCheck.forEach((index) => {
-        const item = this.craftList[index]
-        result += parseFloat(item.value)
-      })
+      // this.craftListCheck.forEach((index) => {
+      //   const item = this.craftList[index]
+      //   result += parseFloat(item.value)
+      // })
       result = result.toFixed(2)
       return result
     },
