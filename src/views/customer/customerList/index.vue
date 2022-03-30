@@ -69,7 +69,6 @@
       ref="customerList"
       @selection-change="handleSelectionChange"
       style="width: 100%"
-      default-expand-all
     >
       <!-- <el-table-column type="selection" width="55"> </el-table-column> -->
       <!-- <el-table-column label="序号" type="index" align="center">
@@ -84,6 +83,7 @@
             v-for="(item, index) in props.row.brandList"
             :key="index"
             :column="4"
+            inline
           >
             <el-descriptions-item label="品牌名">
               <el-tag size="small">{{ item.brandName }}</el-tag>
