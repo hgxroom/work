@@ -2,7 +2,7 @@
   <div class="app-container">
     <!-- 搜索框 -->
     <el-row>
-     <el-col :span="20">
+     <el-col :span="21">
         <el-form :model="queryParams" ref="queryForm" label-width="90px" :inline="true" size="mini">
           <el-form-item label="客户名称">
             <el-input v-model="queryParams.applyNo"></el-input>
@@ -33,7 +33,7 @@
           </el-form-item>
         </el-form>
         </el-col>
-      <el-col :span="4">
+      <el-col :span="3">
         <el-button type="primary" @click="handleQuery">查询</el-button>
         <el-button type="" @click="resetQuery">重置</el-button>
       </el-col>
@@ -227,7 +227,7 @@ import { getFinance, financeExport } from '@/api/report/receivables'
 export default {
   data() {
     return {
-      tableHeight: window.innerHeight - 210,
+      tableHeight: window.innerHeight - 255,
       // queryParams: {
       //   company: '',
       //   salesman: '',
@@ -280,7 +280,7 @@ export default {
           this.loading = false
         })
         .then((res) => {
-          this.listData = res.data
+          // this.listData = res.data
         })
     },
     tableSummaries(param) {

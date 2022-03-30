@@ -158,6 +158,7 @@ export default {
         })
     },
     tableSummaries(param) {
+      console.log(param,"param=========")
       const { columns, data } = param
       const sums = []
       columns.forEach((column, index) => {
@@ -171,9 +172,11 @@ export default {
           orignal !== null && orignal !== '' ? (Num = Number(item[column.property])) : (Num = NaN)
           return Num
         })
+         console.log(values,"values=========")
         const valuesIsNum = values.every((value) => {
           return isNaN(value)
         })
+         console.log(valuesIsNum,"valuesIsNum=========")
         if (!valuesIsNum) {
           sums[index] = values.reduce((prev, curr) => {
             const value = Number(curr)

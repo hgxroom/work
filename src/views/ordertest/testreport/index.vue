@@ -17,6 +17,7 @@
               range-separator="-"
               start-placeholder="开始日期"
               end-placeholder="结束日期"
+              :picker-options="pickerOptions"
             ></el-date-picker>
           </el-form-item>
           <el-form-item label="流转卡号">
@@ -55,6 +56,7 @@
         label="流转卡号"
         align="center"
         prop="lzkh"
+        width="80"
         :show-overflow-tooltip="true"
       />
       <el-table-column
@@ -73,6 +75,7 @@
         label="款号"
         align="center"
         prop="kh2"
+        width="80"
         :show-overflow-tooltip="true"
       />
       <el-table-column
@@ -92,12 +95,14 @@
           label="封度"
           align="center"
           prop="fd"
+          width="60"
           :show-overflow-tooltip="true"
         />
         <el-table-column
           label="克重"
           align="center"
           prop="kz"
+          width="60"
           :show-overflow-tooltip="true"
         />
       </el-table-column>
@@ -106,18 +111,21 @@
           label="湿擦"
           align="center"
           prop="sc"
+          width="60"
           :show-overflow-tooltip="true"
         />
         <el-table-column
           label="干擦"
           align="center"
           prop="gc"
+          width="60"
           :show-overflow-tooltip="true"
         />
         <el-table-column
           label="日光牢度"
           align="center"
           prop="rgld"
+          width="60"
           :show-overflow-tooltip="true"
         />
       </el-table-column>
@@ -126,6 +134,7 @@
           label="PH值"
           align="center"
           prop="phz"
+          width="60"
           :show-overflow-tooltip="true"
         />
       </el-table-column>
@@ -134,12 +143,14 @@
           label="封度"
           align="center"
           prop="fd2"
+          width="60"
           :show-overflow-tooltip="true"
         />
         <el-table-column
           label="克重"
           align="center"
           prop="kz2"
+          width="60"
           :show-overflow-tooltip="true"
         />
       </el-table-column>
@@ -148,18 +159,21 @@
           label="横缩"
           align="center"
           prop="hs"
+          width="60"
           :show-overflow-tooltip="true"
         />
         <el-table-column
           label="直缩"
           align="center"
           prop="zs"
+          width="60"
           :show-overflow-tooltip="true"
         />
         <el-table-column
           label="扭度"
           align="center"
           prop="nj"
+          width="60"
           :show-overflow-tooltip="true"
         />
       </el-table-column>
@@ -167,6 +181,7 @@
         label="备注"
         align="center"
         prop="bz"
+        width="80"
         :show-overflow-tooltip="true"
       />
       <el-table-column
@@ -196,6 +211,46 @@ export default {
       loading: false,
       listData: [],
       downloadLoading: false,
+      pickerOptions: {
+          shortcuts: [
+            {
+                text: '过去一天',
+                onClick(picker) {
+                const end = new Date();
+                const start = new Date();
+                start.setTime(start.getTime() - 3600 * 1000 * 24 * 1);
+                picker.$emit('pick', [start, end]);
+                }
+            },
+            {
+                text: '过去三天',
+                onClick(picker) {
+                const end = new Date();
+                const start = new Date();
+                start.setTime(start.getTime() - 3600 * 1000 * 24 * 3);
+                picker.$emit('pick', [start, end]);
+                }
+            },
+            {
+                text: '最近一周',
+                onClick(picker) {
+                const end = new Date();
+                const start = new Date();
+                start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
+                picker.$emit('pick', [start, end]);
+                }
+            },
+        //    {
+        //         text: '最近一个月',
+        //         onClick(picker) {
+        //         const end = new Date();
+        //         const start = new Date();
+        //         start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
+        //         picker.$emit('pick', [start, end]);
+        //         }
+        //     }, 
+          ]
+        },
     }
   },
   methods: {
