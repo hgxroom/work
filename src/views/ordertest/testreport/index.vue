@@ -74,7 +74,7 @@
       <el-table-column
         label="款号"
         align="center"
-        prop="kh2"
+        prop="kh"
         width="80"
         :show-overflow-tooltip="true"
       />
