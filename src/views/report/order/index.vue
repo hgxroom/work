@@ -13,7 +13,7 @@
           <el-form-item label="业务员">
             <el-input v-model="queryParams.salesman"></el-input>
           </el-form-item>
-           <el-form-item label="业务部">
+           <el-form-item label="所属办事处">
             <el-input v-model="queryParams.department"></el-input>
           </el-form-item>
           <el-form-item label="客服经理">
@@ -85,7 +85,7 @@
         :show-overflow-tooltip="true"
       />
       <el-table-column
-        label="业务部"
+        label="所属办事处"
         align="center"
         prop="ywb"
         :show-overflow-tooltip="true"
@@ -245,7 +245,7 @@ export default {
       dateRange: [],
       queryParams:{
         company: "",//客户名称
-        department: "",//业务部
+        department: "",//所属办事处
         developNum: "",//开发单号
         gangNum: "",//缸号
         manager: "",//客服经理
