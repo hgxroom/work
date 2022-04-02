@@ -64,13 +64,14 @@
         label="客户名称"
         align="center"
         prop="khmch"
+        min-width="150px"
         :show-overflow-tooltip="true"
       />
       <el-table-column
         label="订单号"
         align="center"
         prop="ddh"
-        :show-overflow-tooltip="true"
+        min-width="120px"
       />
       <el-table-column
         label="订单重量（KG）"
@@ -82,7 +83,7 @@
         label="订单金额（元）"
         align="center"
         prop="ddjeTotal"
-        :show-overflow-tooltip="true"
+        min-width="100px"
       />
       <el-table-column
         label="所属办事处"
@@ -106,30 +107,34 @@
         label="付款方式"
         align="center"
         prop="fktj"
+        min-width="100px"
         :show-overflow-tooltip="true"
       />
        <el-table-column
         label="发货单号"
         align="center"
         prop="fhdh"
-        :show-overflow-tooltip="true"
+        min-width="150px"
       />
        <el-table-column
         label="发货日期"
         align="center"
         prop="kdrq"
+        min-width="110px"
         :show-overflow-tooltip="true"
       />
        <el-table-column
         label="开发单号"
         align="center"
         prop="bh"
+         min-width="100px"
         :show-overflow-tooltip="true"
       />
        <el-table-column
         label="缸号"
         align="center"
         prop="lzkh"
+        min-width="130px"
         :show-overflow-tooltip="true"
       />
        <el-table-column
@@ -154,24 +159,28 @@
         label="收款到期日"
         align="center"
         prop="skdqr"
+        min-width="100px"
         :show-overflow-tooltip="true"
       />
        <el-table-column
         label="收款日期"
         align="center"
         prop="hrrq"
+        min-width="110px"
         :show-overflow-tooltip="true"
       />
        <el-table-column
         label="开票日期"
         align="center"
         prop="fprq"
+         min-width="110px"
         :show-overflow-tooltip="true"
       />
        <el-table-column
         label="发票号码"
         align="center"
         prop="fph"
+        min-width="130px"
         :show-overflow-tooltip="true"
       />
       <el-table-column label="累计欠款金额" align="center">
@@ -179,18 +188,21 @@
           label="已开票金额（元）"
           align="center"
           prop="ykpje"
+          min-width="100px"
           :show-overflow-tooltip="true"
         />
         <el-table-column
           label="未开票金额（元）"
           align="center"
           prop="wkpje"
+          min-width="100px"
           :show-overflow-tooltip="true"
         />
         <el-table-column
           label="总计金额（元）"
           align="center"
           prop="zjje"
+          min-width="100px"
           :show-overflow-tooltip="true"
         />
       </el-table-column>
@@ -198,18 +210,21 @@
           label="超期天数"
           align="center"
           prop="cqts"
+          min-width="60px"
           :show-overflow-tooltip="true"
         />
            <el-table-column
           label="超期日利率"
           align="center"
           prop="cqrll"
+          min-width="100px"
           :show-overflow-tooltip="true"
         />
            <el-table-column
           label="超期利息（元）"
           align="center"
           prop="cqlx"
+          min-width="100px"
           :show-overflow-tooltip="true"
         />
            <el-table-column
@@ -252,7 +267,7 @@ export default {
         orderNum: "",//订单号
         payWay: "",//付款方式
         salesman: "",//业务员
-        sendOutNum: "",//发货单号
+        sendOutNum: "A20210323016",//发货单号
       },
       loading: false,
       listData: [],
@@ -283,7 +298,7 @@ export default {
                     this.pos_fhdh = 0
                 } else {
                     //不是第一项时，就根据标识去存储
-                    console.log(data[index].lzkh,"data[index].lzkh")
+                    
                     if (data[index].ddh === data[index - 1].ddh) {
                         // 查找到符合条件的数据时每次要把之前存储的数据+1
                         this.spanArr[this.pos] += 1
@@ -304,8 +319,6 @@ export default {
                     }
                 }
             })
-            console.log(this.spanArr, this.pos,"11111")
-            console.log(this.spanArr_fhdh, this.pos_fhdh,"22222")
         },
         // 列表方法
         arraySpanMethod({ rowIndex, columnIndex }) {
@@ -377,7 +390,6 @@ export default {
           this.loading = false
         })
         .then((res) => {
-          console.log(res,"res=====")
           this.listData = res.data.resultList
           this.getSpanArr(this.listData)
           this.cqlxTotal= res.data.cqlxTotal
@@ -417,7 +429,6 @@ export default {
           sums[index] = this.zjjeTotal +" 元"
           break;
           case "cqlx":
-            console.log(this.cqlxTotal,"this.cqlxTotal=====")
           sums[index] = this.cqlxTotal +" 元"
           break;
           default:
