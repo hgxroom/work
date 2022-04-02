@@ -267,7 +267,7 @@ export default {
         orderNum: "",//订单号
         payWay: "",//付款方式
         salesman: "",//业务员
-        sendOutNum: "A20210323016",//发货单号
+        sendOutNum: "",//发货单号
       },
       loading: false,
       listData: [],

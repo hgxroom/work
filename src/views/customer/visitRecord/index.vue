@@ -142,7 +142,12 @@ export default {
               break;
             case 1:
               for(let i in val){
-                 list.push(val[i])
+                  if(i == 7){
+
+                  }else{
+                     list.push(val[i])
+                  }
+                
               }
               this.charList.push(list)
               break;
