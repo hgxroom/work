@@ -5,13 +5,13 @@
     <el-row :gutter="10" class="mb8" type="flex" justify="space-between">
       <el-col :span="20">
         <el-col :span="1.5">
-          <el-button type="primary" plain @click="searchAll('0')">全部</el-button>
+          <el-button type="primary" plain @click="searchAll('0')" :class="queryParams.type == '0' ?'btn_pitch':''">全部</el-button>
         </el-col>
         <el-col :span="1.5">
-          <el-button type="primary" plain @click="searchAll('1')">本周</el-button>
+          <el-button type="primary" plain @click="searchAll('1')" :class="queryParams.type == '1' ?'btn_pitch':''">本周</el-button>
         </el-col>
         <el-col :span="1.5">
-          <el-button type="primary" plain  @click="searchAll('2')"
+          <el-button type="primary" plain  @click="searchAll('2')" :class="queryParams.type == '2' ?'btn_pitch':''"
             >本月</el-button
           >
         </el-col>
@@ -36,10 +36,10 @@
       </el-col>
       <el-col :span="4">
         <el-col :span="2.5">
-          <el-button type="primary" @click="changeBtn = true" plain>柱形图</el-button>
+          <el-button type="primary" @click="changeBtn = true" plain :class="changeBtn ?'btn_pitch':''">柱形图</el-button>
         </el-col>
         <el-col :span="2.5">
-          <el-button type="primary" @click="changeBtn = false" plain>表格</el-button>
+          <el-button type="primary" @click="changeBtn = false" plain :class="!changeBtn ?'btn_pitch':''">表格</el-button>
         </el-col>
       </el-col>
     </el-row>
@@ -175,4 +175,10 @@ export default {
 }
 </script>
 
-<style></style>
+<style lang="scss" scoped>
+.el-button--primary.is-plain.btn_pitch {
+    background: #1890ff;
+    border-color: #1890ff;
+    color: #FFFFFF;
+}
+</style>
