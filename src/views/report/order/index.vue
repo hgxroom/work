@@ -257,8 +257,12 @@ export default {
       loading: false,
       listData: [],
       downloadLoading: false,
+      //订单号合并标记数组
       spanArr:[],
-      pos:0
+      pos:0,
+      //发货单号合并标记数组
+      spanArr_fhdh:[],
+      pos_fhdh:0
     }
   },
   methods: {
@@ -275,43 +279,91 @@ export default {
                 if (index === 0) {
                     this.spanArr.push(1)
                     this.pos = 0
+                    this.spanArr_fhdh.push(1)
+                    this.pos_fhdh = 0
                 } else {
                     //不是第一项时，就根据标识去存储
-                    if (data[index].qiyemingcheng === data[index - 1].qiyemingcheng) {
+                    console.log(data[index].lzkh,"data[index].lzkh")
+                    if (data[index].ddh === data[index - 1].ddh) {
                         // 查找到符合条件的数据时每次要把之前存储的数据+1
                         this.spanArr[this.pos] += 1
                         this.spanArr.push(0)
-                    } else {
+                    }else {
                         // 没有符合的数据时，要记住当前的index
                         this.spanArr.push(1)
                         this.pos = index
                     }
+                    if (data[index].fhdh === data[index - 1].fhdh) {
+                        // 查找到符合条件的数据时每次要把之前存储的数据+1
+                        this.spanArr_fhdh[this.pos_fhdh] += 1
+                        this.spanArr_fhdh.push(0)
+                    } else {
+                        // 没有符合的数据时，要记住当前的index
+                        this.spanArr_fhdh.push(1)
+                        this.pos_fhdh = index
+                    }
                 }
             })
-            console.log(this.spanArr, this.pos)
+            console.log(this.spanArr, this.pos,"11111")
+            console.log(this.spanArr_fhdh, this.pos_fhdh,"22222")
         },
         // 列表方法
         arraySpanMethod({ rowIndex, columnIndex }) {
             // 页面列表上 表格合并行 -> 第几列(从0开始)
             // 需要合并多个单元格时 依次增加判断条件即可
-            if (columnIndex === 1) {
-                // 数组存储的数据 取出
+            let data_ddh = [0,1,2,3,4,5,6,7] //订单号规则合并列字段
+            for (let index = 0; index < data_ddh.length; index++) {
+              const element = data_ddh[index];
+              if(columnIndex === element){
                 const _row = this.spanArr[rowIndex]
                 const _col = _row > 0 ? 1 : 0
                 return {
                     rowspan: _row,
                     colspan: _col
                 }
-                //不可以return {rowspan：0， colspan: 0} 会造成数据不渲染， 也可以不写else，eslint过不了的话就返回false
-            } else {
-                return false
+              }
+              
             }
+            let data_fhdh = [ 8, 9,  15, 16, 19,20, 21, 22, 23, 24, 25, 26 ]//发货单号规则合并列字段
+            for (let index = 0; index < data_fhdh.length; index++) {
+              const element = data_fhdh[index];
+              if(columnIndex === element){
+                const _row = this.spanArr_fhdh[rowIndex]
+                const _col = _row > 0 ? 1 : 0
+                return {
+                    rowspan: _row,
+                    colspan: _col
+                }
+              }
+              
+            }
+            // if (columnIndex === 0 ||columnIndex === 1 || columnIndex === 2|| columnIndex === 3|| columnIndex === 4|| columnIndex === 5|| columnIndex === 6|| columnIndex === 7) {
+            //     // 数组存储的数据 取出
+            //     const _row = this.spanArr[rowIndex]
+            //     const _col = _row > 0 ? 1 : 0
+            //     return {
+            //         rowspan: _row,
+            //         colspan: _col
+            //     }
+            //     //不可以return {rowspan：0， colspan: 0} 会造成数据不渲染， 也可以不写else，eslint过不了的话就返回false
+            //     // 8 9  16 17 20 21 22 23 24 25 26 
+            // }else if( columnIndex === 8 || columnIndex === 9 || columnIndex === 16 || columnIndex === 17|| columnIndex === 20|| columnIndex === 21|| columnIndex === 22|| columnIndex === 23|| columnIndex === 24|| columnIndex === 25|| columnIndex === 26) {
+            //     // 数组存储的数据 取出
+            //     const _row = this.spanArr_fhdh[rowIndex]
+            //     const _col = _row > 0 ? 1 : 0
+            //     return {
+            //         rowspan: _row,
+            //         colspan: _col
+            //     }
+            //     //不可以return {rowspan：0， colspan: 0} 会造成数据不渲染， 也可以不写else，eslint过不了的话就返回false
+            // }else {
+            //     return false
+            // }
             
         },
 
     
     getList() {
-
       this.loading = true
       // const { company, department, payWdevelopNumay ,gangNum,manager,orderNum,payWay,salesman,sendOutNum} = this.queryParams
       
@@ -404,11 +456,18 @@ export default {
     /** 重置按钮操作 */
     resetQuery() {
       this.queryParams.company = '';
-      this.queryParams.salesman = '';
+      this.queryParams.department = '';
+      this.queryParams.developNum = '';
+      this.queryParams.gangNum = '';
+      this.queryParams.manager = '';
+      this.queryParams.orderNum = '';
       this.queryParams.payWay = '';
-      this.getList();
+      this.queryParams.salesman = '';
+      this.queryParams.sendOutNum = '';
+      // this.getList();
     },
     exportReport() {
+      
       this.downloadLoading = true
       exportOrderDetail(this.queryParams).finally(() => {
         this.downloadLoading = false
