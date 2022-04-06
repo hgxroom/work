@@ -59,18 +59,8 @@
         width="80"
         :show-overflow-tooltip="true"
       />
-      <el-table-column
-        label="缸号"
-        align="center"
-        prop="gh"
-        :show-overflow-tooltip="true"
-      />
-      <el-table-column
-        label="客户"
-        align="center"
-        prop="khmc"
-        :show-overflow-tooltip="true"
-      />
+      <el-table-column label="缸号" align="center" prop="gh" :show-overflow-tooltip="true" />
+      <el-table-column label="客户" align="center" prop="khmc" :show-overflow-tooltip="true" />
       <el-table-column
         label="款号"
         align="center"
@@ -78,18 +68,8 @@
         width="80"
         :show-overflow-tooltip="true"
       />
-      <el-table-column
-        label="颜色"
-        align="center"
-        prop="ys"
-        :show-overflow-tooltip="true"
-      />
-      <el-table-column
-        label="布类"
-        align="center"
-        prop="bl"
-        :show-overflow-tooltip="true"
-      />
+      <el-table-column label="颜色" align="center" prop="ys" :show-overflow-tooltip="true" />
+      <el-table-column label="布类" align="center" prop="bl" :show-overflow-tooltip="true" />
       <el-table-column label="客户要求" align="center">
         <el-table-column
           label="封度"
@@ -184,12 +164,7 @@
         width="80"
         :show-overflow-tooltip="true"
       />
-      <el-table-column
-        label="缩水日期"
-        align="center"
-        prop="ssrq"
-        :show-overflow-tooltip="true"
-      />
+      <el-table-column label="缩水日期" align="center" prop="ssrq" :show-overflow-tooltip="true" />
     </el-table>
   </div>
 </template>
@@ -201,67 +176,69 @@ export default {
       tableHeight: window.innerHeight - 210,
       // 日期范围
       dateRange: [],
-      queryParams:{
-        gh: "",//缸号
-        jsrq: "",//结束日期
-        khmc: "",//客户名称
-        ksrq: "",//开始日期
-        lzkh: ""//流转卡号
+      queryParams: {
+        gh: '', //缸号
+        jsrq: '', //结束日期
+        khmc: '', //客户名称
+        ksrq: '', //开始日期
+        lzkh: '', //流转卡号
       },
       loading: false,
       listData: [],
       downloadLoading: false,
       pickerOptions: {
-          shortcuts: [
-            {
-                text: '过去一天',
-                onClick(picker) {
-                const end = new Date();
-                const start = new Date();
-                start.setTime(start.getTime() - 3600 * 1000 * 24 * 1);
-                picker.$emit('pick', [start, end]);
-                }
+        shortcuts: [
+          {
+            text: '过去一天',
+            onClick(picker) {
+              const end = new Date()
+              const start = new Date()
+              end.setTime(start.getTime() - 3600 * 1000 * 24 * 1) //不算今天时间
+              start.setTime(start.getTime() - 3600 * 1000 * 24 * 1)
+              picker.$emit('pick', [start, end])
             },
-            {
-                text: '过去三天',
-                onClick(picker) {
-                const end = new Date();
-                const start = new Date();
-                start.setTime(start.getTime() - 3600 * 1000 * 24 * 3);
-                picker.$emit('pick', [start, end]);
-                }
+          },
+          {
+            text: '过去三天',
+            onClick(picker) {
+              const end = new Date()
+              const start = new Date()
+              end.setTime(start.getTime() - 3600 * 1000 * 24 * 1) //不算今天时间
+              start.setTime(start.getTime() - 3600 * 1000 * 24 * 3)
+              picker.$emit('pick', [start, end])
             },
-            {
-                text: '最近一周',
-                onClick(picker) {
-                const end = new Date();
-                const start = new Date();
-                start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
-                picker.$emit('pick', [start, end]);
-                }
+          },
+          {
+            text: '最近一周',
+            onClick(picker) {
+              const end = new Date()
+              const start = new Date()
+              end.setTime(start.getTime() - 3600 * 1000 * 24 * 1) //不算今天时间
+              start.setTime(start.getTime() - 3600 * 1000 * 24 * 7)
+              picker.$emit('pick', [start, end])
             },
-        //    {
-        //         text: '最近一个月',
-        //         onClick(picker) {
-        //         const end = new Date();
-        //         const start = new Date();
-        //         start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
-        //         picker.$emit('pick', [start, end]);
-        //         }
-        //     }, 
-          ]
-        },
+          },
+          //    {
+          //         text: '最近一个月',
+          //         onClick(picker) {
+          //         const end = new Date();
+          //         const start = new Date();
+          //         start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
+          //         picker.$emit('pick', [start, end]);
+          //         }
+          //     },
+        ],
+      },
     }
   },
   methods: {
-    getList(){
-
-      if(this.dateRange){
-          this.queryParams.ksrq = this.dateRange[0]
-          this.queryParams.jsrq = this.dateRange[1]
-      }else{
-          this.queryParams.ksrq = ""
-          this.queryParams.jsrq = ""
+    getList() {
+      if (this.dateRange) {
+        this.queryParams.ksrq = this.dateRange[0]
+        this.queryParams.jsrq = this.dateRange[1]
+      } else {
+        this.queryParams.ksrq = ''
+        this.queryParams.jsrq = ''
       }
       this.loading = true
       const { gh, jsrq, khmc, ksrq, lzkh } = this.queryParams
@@ -270,9 +247,9 @@ export default {
         jsrq,
         khmc,
         ksrq,
-        lzkh
+        lzkh,
       }
-      
+
       getExternalOrderList(data)
         .finally(() => {
           this.loading = false
@@ -283,13 +260,13 @@ export default {
     },
     /** 重置按钮操作 */
     resetQuery() {
-      this.queryParams.gh = '';
-      this.queryParams.jsrq = '';
-      this.queryParams.khmc = '';
-      this.queryParams.ksrq = '';
-      this.queryParams.lzkh = '';
+      this.queryParams.gh = ''
+      this.queryParams.jsrq = ''
+      this.queryParams.khmc = ''
+      this.queryParams.ksrq = ''
+      this.queryParams.lzkh = ''
       this.dateRange = []
-      this.getList();
+      this.getList()
     },
     exportReport() {
       this.downloadLoading = true
