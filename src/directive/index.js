@@ -4,8 +4,10 @@ import dialogDrag from './dialog/drag'
 import dialogDragWidth from './dialog/dragWidth'
 import dialogDragHeight from './dialog/dragHeight'
 import clipboard from './module/clipboard'
+import loadmore from './loadmoreltable/loadmore'
 
-const install = function(Vue) {
+const install = function (Vue) {
+  Vue.directive('loadmore', loadmore)
   Vue.directive('hasRole', hasRole)
   Vue.directive('hasPermi', hasPermi)
   Vue.directive('clipboard', clipboard)
@@ -17,7 +19,7 @@ const install = function(Vue) {
 if (window.Vue) {
   window['hasRole'] = hasRole
   window['hasPermi'] = hasPermi
-  Vue.use(install); // eslint-disable-line
+  Vue.use(install) // eslint-disable-line
 }
 
 export default install
