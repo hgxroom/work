@@ -4,7 +4,7 @@
     <el-row>
       <el-col :span="21">
         <el-form :model="queryParams" ref="queryForm" label-width="90px" :inline="true" size="mini">
-          <el-form-item label="收获日期">
+          <el-form-item label="发货日期">
             <el-date-picker
               v-model="dateRange"
               size="small"
@@ -427,11 +427,12 @@ export default {
           this.loading = false
         })
         .then((res) => {
-          this.packetData(res.data.resultList) //初始化分组数据
-          this.listData = this.dataList[this.dataIndex]
-          if (this.listData.length > 0) {
+          if (res.data.resultList.length > 0) {
+            this.packetData(res.data.resultList) //初始化分组数据
+            this.listData = this.dataList[this.dataIndex]
             this.getSpanArr(this.listData)
           }
+
           this.cqlxTotal = res.data.cqlxTotal
           this.fhjeTotal = res.data.fhjeTotal
           this.fhzlTotal = res.data.fhzlTotal
@@ -530,6 +531,7 @@ export default {
       this.queryParams.sendOutNum = ''
       this.queryParams.startDate = ''
       this.queryParams.endDate = ''
+      this.dateRange = []
       // this.getList();
     },
     exportReport() {
