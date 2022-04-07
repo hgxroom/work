@@ -4,28 +4,36 @@
     <el-row>
       <el-col>
         <el-form :model="queryParams" ref="queryForm" :inline="true">
-          <el-form-item label="客户名称">
-            <el-input v-model="queryParams.khmc" size="mini" clearble></el-input>
-          </el-form-item>
-          <el-form-item label="缩水日期">
-            <el-date-picker
-              v-model="dateRange"
-              size="small"
-              style="width: 240px"
-              value-format="yyyy-MM-dd"
-              type="daterange"
-              range-separator="-"
-              start-placeholder="开始日期"
-              end-placeholder="结束日期"
-              :picker-options="pickerOptions"
-            ></el-date-picker>
-          </el-form-item>
-          <el-form-item label="流转卡号">
-            <el-input v-model="queryParams.lzkh" size="mini" clearble></el-input>
-          </el-form-item>
-          <el-form-item label="缸号">
-            <el-input v-model="queryParams.gh" size="mini" clearble></el-input>
-          </el-form-item>
+          <el-col :span="15">
+            <el-form-item label="客户名称">
+              <el-input v-model="queryParams.khmc" size="mini" clearble></el-input>
+            </el-form-item>
+            <el-form-item label="订单号">
+              <el-input v-model="queryParams.ddh" size="mini" clearble></el-input>
+            </el-form-item>
+            <el-form-item label="颜色">
+              <el-input v-model="queryParams.ys" size="mini" clearble></el-input>
+            </el-form-item>
+            <el-form-item label="缩水日期">
+              <el-date-picker
+                v-model="dateRange"
+                size="small"
+                style="width: 240px"
+                value-format="yyyy-MM-dd"
+                type="daterange"
+                range-separator="-"
+                start-placeholder="开始日期"
+                end-placeholder="结束日期"
+                :picker-options="pickerOptions"
+              ></el-date-picker>
+            </el-form-item>
+            <el-form-item label="流转卡号">
+              <el-input v-model="queryParams.lzkh" size="mini" clearble></el-input>
+            </el-form-item>
+            <el-form-item label="缸号">
+              <el-input v-model="queryParams.gh" size="mini" clearble></el-input>
+            </el-form-item>
+          </el-col>
           <el-form-item>
             <el-button type="primary" @click="getList">查询</el-button>
           </el-form-item>
@@ -52,6 +60,13 @@
       :height="tableHeight"
       style="width: 100%"
     >
+      <el-table-column
+        label="订单号"
+        align="center"
+        prop="ddh"
+        width="100"
+        :show-overflow-tooltip="true"
+      />
       <el-table-column
         label="流转卡号"
         align="center"
@@ -182,6 +197,8 @@ export default {
         khmc: '', //客户名称
         ksrq: '', //开始日期
         lzkh: '', //流转卡号
+        ddh: '', //订单号
+        ys: '', //颜色
       },
       loading: false,
       listData: [],
@@ -241,13 +258,15 @@ export default {
         this.queryParams.jsrq = ''
       }
       this.loading = true
-      const { gh, jsrq, khmc, ksrq, lzkh } = this.queryParams
+      const { gh, jsrq, khmc, ksrq, lzkh, ddh, ys } = this.queryParams
       const data = {
         gh,
         jsrq,
         khmc,
         ksrq,
         lzkh,
+        ddh,
+        ys,
       }
 
       getExternalOrderList(data)
@@ -265,6 +284,8 @@ export default {
       this.queryParams.khmc = ''
       this.queryParams.ksrq = ''
       this.queryParams.lzkh = ''
+      this.queryParams.ddh = ''
+      this.queryParams.ys = ''
       this.dateRange = []
       this.getList()
     },
