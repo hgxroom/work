@@ -4,6 +4,19 @@
     <el-row>
       <el-col :span="21">
         <el-form :model="queryParams" ref="queryForm" label-width="90px" :inline="true" size="mini">
+          <el-form-item label="收货日期">
+            <el-date-picker
+              v-model="dateRange"
+              size="small"
+              style="width: 240px"
+              value-format="yyyy-MM-dd"
+              type="daterange"
+              range-separator="-"
+              start-placeholder="开始日期"
+              end-placeholder="结束日期"
+              :picker-options="pickerOptions"
+            ></el-date-picker>
+          </el-form-item>
           <el-form-item label="客户名称">
             <el-input v-model="queryParams.company"></el-input>
           </el-form-item>
@@ -224,6 +237,8 @@ export default {
       zjjeTotal: '', //总计金额合计
       dateRange: [],
       queryParams: {
+        startDate: '', //开始时间
+        endDate: '', //结束时间
         company: '', //客户名称
         department: '', //所属办事处
         developNum: '', //开发单号
@@ -245,6 +260,49 @@ export default {
       pos_fhdh: 0,
       dataList: [], //传输数据数组
       dataIndex: 0, //合并数据index
+      pickerOptions: {
+        shortcuts: [
+          {
+            text: '过去一天',
+            onClick(picker) {
+              const end = new Date()
+              const start = new Date()
+              end.setTime(start.getTime() - 3600 * 1000 * 24 * 1) //不算今天时间
+              start.setTime(start.getTime() - 3600 * 1000 * 24 * 1)
+              picker.$emit('pick', [start, end])
+            },
+          },
+          {
+            text: '过去三天',
+            onClick(picker) {
+              const end = new Date()
+              const start = new Date()
+              end.setTime(start.getTime() - 3600 * 1000 * 24 * 1) //不算今天时间
+              start.setTime(start.getTime() - 3600 * 1000 * 24 * 3)
+              picker.$emit('pick', [start, end])
+            },
+          },
+          {
+            text: '最近一周',
+            onClick(picker) {
+              const end = new Date()
+              const start = new Date()
+              end.setTime(start.getTime() - 3600 * 1000 * 24 * 1) //不算今天时间
+              start.setTime(start.getTime() - 3600 * 1000 * 24 * 7)
+              picker.$emit('pick', [start, end])
+            },
+          },
+          //    {
+          //         text: '最近一个月',
+          //         onClick(picker) {
+          //         const end = new Date();
+          //         const start = new Date();
+          //         start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
+          //         picker.$emit('pick', [start, end]);
+          //         }
+          //     },
+        ],
+      },
     }
   },
   methods: {
@@ -348,7 +406,6 @@ export default {
       //     return false
       // }
     },
-
     getList() {
       this.loading = true
       // const { company, department, payWdevelopNumay ,gangNum,manager,orderNum,payWay,salesman,sendOutNum} = this.queryParams
@@ -358,6 +415,13 @@ export default {
       //   salesman,
       //   payWay,
       // }
+      if (this.dateRange) {
+        this.queryParams.startDate = this.dateRange[0]
+        this.queryParams.endDate = this.dateRange[1]
+      } else {
+        this.queryParams.startDate = ''
+        this.queryParams.endDate = ''
+      }
       getOrderlist(this.queryParams)
         .finally(() => {
           this.loading = false
@@ -365,7 +429,9 @@ export default {
         .then((res) => {
           this.packetData(res.data.resultList) //初始化分组数据
           this.listData = this.dataList[this.dataIndex]
-          this.getSpanArr(this.listData)
+          if (this.listData.length > 0) {
+            this.getSpanArr(this.listData)
+          }
           this.cqlxTotal = res.data.cqlxTotal
           this.fhjeTotal = res.data.fhjeTotal
           this.fhzlTotal = res.data.fhzlTotal
@@ -472,7 +538,15 @@ export default {
     },
   },
   mounted() {
-    // this.getList()
+    let now = new Date() // 当前日期
+    let nowMonth = now.getMonth() // 当前月
+    let nowYear = now.getYear()
+    nowYear += nowYear < 2000 ? 1900 : 0 // 当前年
+    let monthStartDate = new Date(nowYear, nowMonth, 1)
+    this.dateRange[0] = this.parseTime(monthStartDate, '{y}-{m}-{d}')
+    this.dateRange[1] = this.parseTime(now, '{y}-{m}-{d}')
+    this.$set(this.dateRange)
+    this.getList()
     // this.gettest()
   },
   updated() {
