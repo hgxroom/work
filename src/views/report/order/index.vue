@@ -4,7 +4,7 @@
     <el-row>
       <el-col :span="21">
         <el-form :model="queryParams" ref="queryForm" label-width="90px" :inline="true" size="mini">
-          <el-form-item label="收货日期">
+          <el-form-item label="收获日期">
             <el-date-picker
               v-model="dateRange"
               size="small"
@@ -528,6 +528,8 @@ export default {
       this.queryParams.payWay = ''
       this.queryParams.salesman = ''
       this.queryParams.sendOutNum = ''
+      this.queryParams.startDate = ''
+      this.queryParams.endDate = ''
       // this.getList();
     },
     exportReport() {
