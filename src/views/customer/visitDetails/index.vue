@@ -1,6 +1,12 @@
 <template>
   <div class="app-container">
-    <el-form class="visitForm" :model="formInline" :inline="true" :rules="rules">
+    <el-form
+      class="visitForm"
+      :model="formInline"
+      :inline="true"
+      :rules="rules"
+      :label-position="'top'"
+    >
       <el-form-item label="客户名称" prop="customerName">
         <!-- 搜索框 -->
         <el-autocomplete

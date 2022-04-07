@@ -1,7 +1,14 @@
 <template>
   <div class="app-container">
     <!-- 客户基础信息 -->
-    <el-form class="base-form" :model="baseInfo" :rules="rules" ref="baseInfoForm" :inline="true">
+    <el-form
+      class="base-form"
+      :model="baseInfo"
+      :rules="rules"
+      ref="baseInfoForm"
+      :inline="true"
+      :label-position="'top'"
+    >
       <el-form-item label="客户编号">
         <el-input
           v-model="baseInfo.customerNo"
@@ -121,6 +128,7 @@
       :rules="rules"
       ref="brandInfoForm"
       :inline="true"
+      :label-position="'top'"
     >
       <el-form-item label="品牌名称" prop="brandName">
         <el-input
