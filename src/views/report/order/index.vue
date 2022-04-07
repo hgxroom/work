@@ -431,6 +431,9 @@ export default {
             this.packetData(res.data.resultList) //初始化分组数据
             this.listData = this.dataList[this.dataIndex]
             this.getSpanArr(this.listData)
+          } else {
+            this.listData = []
+            this.dataList = []
           }
 
           this.cqlxTotal = res.data.cqlxTotal
