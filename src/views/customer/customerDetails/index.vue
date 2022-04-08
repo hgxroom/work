@@ -337,6 +337,14 @@
           ></el-option>
         </el-select>
       </el-form-item>
+      <el-form-item label="备注" prop="brandRemark">
+        <el-input
+          v-model="brandInfo.brandRemark"
+          rows="2"
+          type="textarea"
+          placeholder="请输入备注"
+        />
+      </el-form-item>
     </el-form>
     <!-- 两表格 -->
     <el-row :gutter="20" type="flex" v-if="!noBrand">
@@ -486,7 +494,7 @@ export default {
       //当前编辑品牌
       brandInfo: {
         // id: "", //主键id
-
+        brandRemark: '', //备注
         brandName: '', //品牌名称
         revenueScale: '', //营收规模，单位：万元
         brandGrade: '', //品牌分层
@@ -593,6 +601,7 @@ export default {
           createTime,
         }
         this.brandList = brandList
+        console.log('brandList', this.brandList)
         if (brandList.length > 0) {
           this.tabActiveName = brandList[0].id
         }
@@ -855,6 +864,7 @@ export default {
       //初始化的tabs 属性会比全量少
       if (Object.keys(findItem).length < Object.keys(this.brandInfo).length) return
       Object.assign(this.brandInfo, findItem)
+      console.log('this.brandInfo', this.brandInfo)
     },
     /**
      * 清空覆盖品类模态框填选内容

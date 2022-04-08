@@ -12,7 +12,7 @@
         <el-input v-model="baseInfo.customerNo" placeholder="无需填写" readonly></el-input>
       </el-form-item>
       <el-form-item label="业务员" prop="salesman">
-        <el-input v-model="name" placeholder="请输入业务员" readonly></el-input>
+        <el-input v-model="baseInfo.salesman" placeholder="请输入业务员" readonly></el-input>
       </el-form-item>
       <el-form-item label="客户名称" prop="customerName">
         <el-input v-model="baseInfo.customerName" placeholder="请输入客户名称" readonly></el-input>
@@ -131,6 +131,15 @@
                     >{{ dict.label }}</el-checkbox
                   >
                 </el-checkbox-group> -->
+              </el-form-item>
+              <el-form-item label="备注" prop="brandRemark">
+                <el-input
+                  v-model="item.brandRemark"
+                  type="textarea"
+                  placeholder="请输入备注"
+                  readonly
+                >
+                </el-input>
               </el-form-item>
             </el-form>
             <!-- 两表格 -->
