@@ -290,10 +290,10 @@ export default {
     },
     /** 重置按钮操作 */
     resetQuery() {
-      this.queryParams.company = ''
-      this.queryParams.salesman = ''
-      this.queryParams.payWay = ''
-      this.getList()
+      this.queryParams.ywgdy = ''
+      this.queryParams.ywb = ''
+      this.queryParams.scYear = ''
+      // this.getList()
     },
     exportReport() {
       this.downloadLoading = true
