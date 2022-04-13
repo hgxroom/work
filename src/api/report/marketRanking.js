@@ -18,6 +18,6 @@ export function exportexportMoneyBacklist(params) {
   return download_JSON(
     `/hterp/saleBackMoney/export`,
     JSON.stringify(params),
-    '销售及汇款排名表.xls',
+    '销售及回款排名表.xls',
   )
 }
