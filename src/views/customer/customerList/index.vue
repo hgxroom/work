@@ -217,11 +217,7 @@ export default {
       let url = '/customer/customerDetails'
       if (scope) {
         let id = scope.row.id
-        if (type == 'detail') {
-          url = `/customer/customerDetailsRead/${id}`
-        } else {
-          url = `/customer/customerDetails/${id}`
-        }
+        url = `/customer/customerDetails/${id}`
       }
       this.$router.push({ path: url, query: { type } })
     },

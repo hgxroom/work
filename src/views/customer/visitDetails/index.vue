@@ -5,7 +5,8 @@
       :model="formInline"
       :inline="true"
       :rules="rules"
-      :label-position="'top'"
+      label-width="90px"
+      :label-position="labelPosition"
     >
       <el-form-item label="客户名称" prop="customerName">
         <!-- 搜索框 -->
@@ -106,6 +107,14 @@
         >
         </el-date-picker>
       </el-form-item>
+    </el-form>
+    <el-form
+      class="visitForm"
+      :model="formInline"
+      :inline="true"
+      :rules="rules"
+      :label-position="'top'"
+    >
       <el-form-item class="fullWidth" label="拓客策略">
         <el-input
           type="textarea"
@@ -167,6 +176,8 @@ export default {
   dicts: ['customer_visit_purpose'],
   data() {
     return {
+      labelPosition: 'right',
+      type: '', // 表单类型
       rules: Object.freeze(formRules),
       brandList: [],
       queryTimeout: null,
@@ -210,8 +221,11 @@ export default {
     }
 
     const obj = Object.assign({}, this.$route, {
-      title: `拜访详情(${this.editState})`,
+      title: `拜访(${this.editState})`,
     })
+    if (this.type == 'detail') {
+      obj.title = '拜访(详情)'
+    }
     this.$tab.updatePage(obj)
   },
   methods: {
@@ -258,6 +272,23 @@ export default {
           advancePlan,
           needSupport: resourceSupport,
           visitContent,
+        }
+        if (this.type == 'detail') {
+          for (let item in this.formInline) {
+            let type = typeof this.formInline[item]
+            if (type == 'string' && this.formInline[item] == '') {
+              this.formInline[item] = '-'
+            } else if (type == 'object' && this.formInline[item] == null) {
+              this.formInline[item] = '无'
+            } else if (
+              type == 'object' &&
+              Array.isArray(this.formInline[item]) &&
+              this.formInline[item].length == 0
+            ) {
+              this.formInline[item] = ['-']
+            }
+          }
+          console.log('this.formInline', this.formInline)
         }
       })
     },
@@ -399,6 +430,7 @@ export default {
     border: 1px solid transparent;
     background: transparent;
     cursor: auto;
+    color: #666;
   }
   ::v-deep .el-input-group__append {
     margin: 0;
@@ -411,6 +443,7 @@ export default {
   ::v-deep .el-input__inner {
     border: 1px solid transparent;
     background: transparent;
+    color: #666;
   }
   ::v-deep .el-input.is-disabled .el-input__inner {
     cursor: auto;
@@ -423,12 +456,12 @@ export default {
   }
 }
 .unit-detail {
-  color: #c0c4cc;
+  color: #666;
   padding-left: 15px;
 }
 .multiple-detail {
   ::v-deep .el-form-item__content {
-    width: calc(100% - 100px);
+    width: calc(100% - 90px);
   }
 }
 .input-textarea-detail {
