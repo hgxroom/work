@@ -7,7 +7,8 @@
       :rules="rules"
       ref="baseInfoForm"
       :inline="true"
-      :label-position="'top'"
+      label-width="90px"
+      :label-position="labelPosition"
     >
       <el-form-item label="客户编号">
         <el-input
@@ -128,7 +129,8 @@
       :rules="rules"
       ref="brandInfoForm"
       :inline="true"
-      :label-position="'top'"
+      label-width="90px"
+      :label-position="labelPosition"
     >
       <el-form-item label="品牌名称" prop="brandName">
         <el-input
@@ -210,7 +212,7 @@
           ></el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="运营模式和能力" prop="operationModeAbility">
+      <el-form-item label="运营模式" prop="operationModeAbility">
         <el-select
           v-model="brandInfo.operationModeAbility"
           placeholder="请选择"
@@ -337,11 +339,16 @@
           ></el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="备注" prop="brandRemark">
+      <el-form-item
+        label="备注"
+        prop="brandRemark"
+        :class="['mark-textarea', type == 'detail' ? 'textarea-detail' : '']"
+      >
         <el-input
           v-model="brandInfo.brandRemark"
           rows="2"
           type="textarea"
+          :disabled="type == 'detail' ? true : false"
           placeholder="请输入备注"
         />
       </el-form-item>
@@ -474,6 +481,7 @@ export default {
   dicts: dictMap,
   data() {
     return {
+      labelPosition: 'right',
       type: '', // 表单类型
       // 表单验证规则
       rules: Object.freeze(formRules),
@@ -864,7 +872,23 @@ export default {
       //初始化的tabs 属性会比全量少
       if (Object.keys(findItem).length < Object.keys(this.brandInfo).length) return
       Object.assign(this.brandInfo, findItem)
-      console.log('this.brandInfo', this.brandInfo)
+      if (this.type == 'detail') {
+        for (let item in this.brandInfo) {
+          let type = typeof this.brandInfo[item]
+          if (type == 'string' && this.brandInfo[item] == '') {
+            this.brandInfo[item] = '-'
+          } else if (type == 'object' && this.brandInfo[item] == null) {
+            this.brandInfo[item] = '无'
+          } else if (
+            type == 'object' &&
+            Array.isArray(this.brandInfo[item]) &&
+            this.brandInfo[item].length == 0
+          ) {
+            this.brandInfo[item] = ['-']
+          }
+        }
+        console.log('this.brandInfo', this.brandInfo)
+      }
     },
     /**
      * 清空覆盖品类模态框填选内容
@@ -914,6 +938,7 @@ export default {
     border: 1px solid transparent;
     background: transparent;
     cursor: auto;
+    color: #666;
   }
   ::v-deep .el-input-group__append {
     margin: 0;
@@ -926,6 +951,7 @@ export default {
   ::v-deep .el-input__inner {
     border: 1px solid transparent;
     background: transparent;
+    color: #666;
   }
   ::v-deep .el-input.is-disabled .el-input__inner {
     cursor: auto;
@@ -938,12 +964,36 @@ export default {
   }
 }
 .unit-detail {
-  color: #c0c4cc;
+  color: #666;
   padding-left: 15px;
 }
 .multiple-detail {
   ::v-deep .el-form-item__content {
-    width: calc(100% - 100px);
+    width: calc(100% - 90px);
+  }
+}
+.mark-textarea {
+  width: 100% !important;
+  margin-right: 0 !important;
+  ::v-deep .el-form-item__content {
+    width: calc(100% - 320px);
+  }
+}
+.textarea-detail {
+  width: 100% !important;
+  margin-right: 0 !important;
+  ::v-deep .el-form-item__content {
+    width: calc(100% - 90px);
+  }
+  ::v-deep .el-textarea__inner {
+    border: 1px solid transparent;
+    background: transparent;
+    color: #666;
+    background: transparent;
+    cursor: auto;
+  }
+  ::v-deep .el-textarea__inner {
+    border-color: transparent;
   }
 }
 </style>
