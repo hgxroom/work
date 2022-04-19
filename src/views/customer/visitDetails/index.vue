@@ -221,8 +221,11 @@ export default {
     }
 
     const obj = Object.assign({}, this.$route, {
-      title: `拜访详情(${this.editState})`,
+      title: `拜访(${this.editState})`,
     })
+    if (this.type == 'detail') {
+      obj.title = '拜访(详情)'
+    }
     this.$tab.updatePage(obj)
   },
   methods: {

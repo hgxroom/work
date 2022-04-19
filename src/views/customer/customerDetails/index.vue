@@ -34,7 +34,7 @@
           placeholder="请输入客户名称"
           :clearable="type == 'detail' ? false : true"
           :disabled="type == 'detail' ? true : false"
-          :class="[type == 'detail' ? 'input-detail' : '']"
+          :class="[type == 'detail' ? 'input-detail input-customer-name' : '']"
           maxlength="20"
           show-word-limit
         ></el-input>
@@ -561,8 +561,11 @@ export default {
     // console.log(this.editState);
     // console.log(this.dict);
     const obj = Object.assign({}, this.$route, {
-      title: `客户详情(${this.editState})`,
+      title: `客户(${this.editState})`,
     })
+    if (this.type == 'detail') {
+      obj.title = '客户(详情)'
+    }
     this.$tab.updatePage(obj)
     this.getData(this.customerId)
   },
@@ -945,6 +948,12 @@ export default {
     padding: 0;
     border-color: transparent;
     background: transparent;
+  }
+}
+.input-customer-name {
+  ::v-deep .el-input__inner {
+    width: 300px;
+    padding-right: 0;
   }
 }
 .select-detail {
