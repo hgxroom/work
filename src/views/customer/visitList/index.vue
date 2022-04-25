@@ -40,7 +40,7 @@
           plain
           icon="el-icon-plus"
           size="mini"
-          @click="handleCreateCustomerBtn"
+          @click="handleFromCustomer('add')"
           v-hasPermi="['customer:visit:add']"
           >新增拜访</el-button
         >
@@ -93,8 +93,17 @@
         label="拜访内容"
         align="center"
         prop="visitContent"
-        :show-overflow-tooltip="true"
-      />
+        :show-overflow-tooltip="false"
+      >
+        <template slot-scope="scope">
+          <el-popover trigger="hover" placement="top">
+            <p style="max-width: 600px">{{ scope.row.visitContent }}</p>
+            <div slot="reference" class="content-colum">
+              {{ scope.row.visitContent }}
+            </div>
+          </el-popover>
+        </template>
+      </el-table-column>
       <el-table-column
         label="拜访时间"
         align="center"
@@ -107,14 +116,14 @@
             size="mini"
             type="text"
             icon="el-icon-monitor"
-            @click.native.prevent="handleReadCustomer(scope)"
+            @click.native.prevent="handleFromCustomer('detail', scope)"
             >查看</el-button
           >
           <el-button
             size="mini"
             type="text"
             icon="el-icon-edit"
-            @click.native.prevent="handleEditCustomer(scope)"
+            @click.native.prevent="handleFromCustomer('edit', scope)"
             v-hasPermi="['customer:visit:edit']"
             >编辑</el-button
           >
@@ -180,19 +189,26 @@ export default {
       this.pageNum = 1
       this.getList()
     },
-
-    handleCreateCustomerBtn() {
-      this.$router.push({ path: '/customer/visitDetails' })
+    handleFromCustomer(type, scope) {
+      let url = '/customer/visitDetails'
+      if (scope) {
+        let id = scope.row.id
+        url = `/customer/visitDetails/${id}`
+      }
+      this.$router.push({ path: url, query: { type } })
     },
-    handleReadCustomer(scope) {
-      console.log(scope)
-      const id = scope.row.id
-      this.$router.push({ path: `/customer/visitDetailsRead/${id}` })
-    },
-    handleEditCustomer(scope) {
-      const id = scope.row.id
-      this.$router.push({ path: `/customer/visitDetails/${id}` })
-    },
+    // handleCreateCustomerBtn() {
+    //   this.$router.push({ path: '/customer/visitDetails' })
+    // },
+    // handleReadCustomer(scope) {
+    //   console.log(scope)
+    //   const id = scope.row.id
+    //   this.$router.push({ path: `/customer/visitDetailsRead/${id}` })
+    // },
+    // handleEditCustomer(scope) {
+    //   const id = scope.row.id
+    //   this.$router.push({ path: `/customer/visitDetails/${id}` })
+    // },
     handleExportBtn() {
       console.log('点击导出')
       visitExport()
@@ -207,4 +223,11 @@ export default {
   },
 }
 </script>
-<style></style>
+<style>
+.content-colum {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  -o-text-overflow: ellipsis; /* for Opera */
+}
+</style>

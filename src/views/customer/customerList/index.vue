@@ -49,7 +49,7 @@
           plain
           icon="el-icon-plus"
           size="mini"
-          @click="handleCreateCustomerBtn"
+          @click="handleFromCustomer('add')"
           v-hasPermi="['customer:customer:add']"
           >新增客户</el-button
         >
@@ -142,14 +142,14 @@
             size="mini"
             type="text"
             icon="el-icon-monitor"
-            @click.native.prevent="handleReadCustomer(scope)"
+            @click.native.prevent="handleFromCustomer('detail', scope)"
             >查看</el-button
           >
           <el-button
             size="mini"
             type="text"
             icon="el-icon-edit"
-            @click.native.prevent="handleEditCustomer(scope)"
+            @click.native.prevent="handleFromCustomer('edit', scope)"
             v-hasPermi="['customer:customer:edit']"
             >编辑</el-button
           >
@@ -213,18 +213,25 @@ export default {
       this.pageNum = 1
       this.getList()
     },
-
-    handleCreateCustomerBtn() {
-      this.$router.push({ path: '/customer/customerDetails' })
+    handleFromCustomer(type, scope) {
+      let url = '/customer/customerDetails'
+      if (scope) {
+        let id = scope.row.id
+        url = `/customer/customerDetails/${id}`
+      }
+      this.$router.push({ path: url, query: { type } })
     },
-    handleReadCustomer(scope) {
-      const id = scope.row.id
-      this.$router.push({ path: `/customer/customerDetailsRead/${id}` })
-    },
-    handleEditCustomer(scope) {
-      const id = scope.row.id
-      this.$router.push({ path: `/customer/customerDetails/${id}` })
-    },
+    // handleCreateCustomerBtn() {
+    //   this.$router.push({ path: '/customer/customerDetails' })
+    // },
+    // handleReadCustomer(scope) {
+    //   const id = scope.row.id
+    //   this.$router.push({ path: `/customer/customerDetailsRead/${id}` })
+    // },
+    // handleEditCustomer(scope) {
+    //   const id = scope.row.id
+    //   this.$router.push({ path: `/customer/customerDetails/${id}` })
+    // },
 
     handleExportBtn() {
       console.log('点击导出')

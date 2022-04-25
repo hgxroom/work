@@ -15,5 +15,5 @@ export function getOrderlist(params) {
  * 下载报表
  */
 export function exportOrderDetail(params) {
-  return download(`/hterp/orderDetail/exportOrderDetail`, params, '营收账款.xls')
+  return download(`/hterp/orderDetail/exportOrderDetail`, params, '订单发货收款明细表.xls')
 }
