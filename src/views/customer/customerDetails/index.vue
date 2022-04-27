@@ -599,6 +599,7 @@ export default {
           customerArea,
           createTime,
           brandList,
+          customerState,
         } = res.data
 
         // 如果id请求为不存在的客户
@@ -627,6 +628,7 @@ export default {
           revenueScale,
           customerArea,
           createTime,
+          customerState,
         }
         this.brandList = brandList
         console.log('brandList', this.brandList)

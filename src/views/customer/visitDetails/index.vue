@@ -71,15 +71,6 @@
           :class="[type == 'detail' ? 'input-detail' : '']"
         ></el-input>
       </el-form-item>
-      <el-form-item label="联系方式" prop="contactInfo">
-        <el-input
-          v-model="formInline.contactInfo"
-          maxlength="11"
-          :clearable="type == 'detail' ? false : true"
-          :disabled="type == 'detail' ? true : false"
-          :class="[type == 'detail' ? 'input-detail' : '']"
-        ></el-input>
-      </el-form-item>
       <el-form-item label="拜访目的">
         <el-select
           v-model="formInline.visitPurpose"
@@ -115,6 +106,15 @@
           :class="[type == 'detail' ? 'input-detail' : '']"
         >
         </el-date-picker>
+      </el-form-item>
+      <el-form-item label="联系方式" prop="contactInfo">
+        <el-input
+          v-model="formInline.contactInfo"
+          maxlength="11"
+          :clearable="type == 'detail' ? false : true"
+          :disabled="type == 'detail' ? true : false"
+          :class="[type == 'detail' ? 'input-detail' : '']"
+        ></el-input>
       </el-form-item>
     </el-form>
     <el-form
