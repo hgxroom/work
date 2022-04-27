@@ -81,6 +81,21 @@
           </template>
         </el-form-item>
       </template>
+      <el-form-item label="状态" prop="customerState">
+        <el-select
+          v-model="baseInfo.customerState"
+          placeholder="请选择"
+          :disabled="type == 'detail' ? true : false"
+          :class="[type == 'detail' ? 'select-detail' : '']"
+        >
+          <el-option
+            v-for="(dict, index) in dict.type.customer_state"
+            :key="index"
+            :label="dict.label"
+            :value="dict.label"
+          ></el-option>
+        </el-select>
+      </el-form-item>
     </el-form>
     <!-- 标签 -->
     <el-row>
@@ -345,6 +360,7 @@
         :class="['mark-textarea', type == 'detail' ? 'textarea-detail' : '']"
       >
         <el-input
+          maxlength="200"
           v-model="brandInfo.brandRemark"
           rows="2"
           type="textarea"
@@ -494,6 +510,7 @@ export default {
         revenueScale: '', //收入规模
         customerArea: '', //客户区域
         createTime: '', //创建时间
+        customerState: '', // 状态
       },
       //品牌列表
       brandList: [],

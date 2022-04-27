@@ -20,11 +20,13 @@
       </el-form-item>
       <el-form-item label="搜索区间">
         <el-date-picker
-          v-model="queryParams.setDate"
-          type="daterange"
-          range-separator="至"
+          v-model="queryParams.dateTimePicker"
+          type="datetimerange"
+          value-format="yyyy-MM-dd HH:mm:ss"
+          range-separator="-"
           start-placeholder="开始日期"
           end-placeholder="结束日期"
+          :default-time="['00:00:00', '23:59:59']"
         >
         </el-date-picker>
       </el-form-item>
@@ -178,7 +180,7 @@ export default {
         pageNum,
         pageSize,
       }
-
+      console.log(data)
       getVisitList(data).then((res) => {
         this.total = res.total
         this.listData = res.rows
