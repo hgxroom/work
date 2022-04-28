@@ -179,8 +179,8 @@ export default {
           salesman,
           startTime: '',
           endTime: '',
-          pageNum,
-          pageSize,
+          pageNum: this.pageNum,
+          pageSize: this.pageSize,
         }
       } else {
         data = {
@@ -188,8 +188,8 @@ export default {
           salesman,
           startTime: dateTimePicker[0],
           endTime: dateTimePicker[1],
-          pageNum,
-          pageSize,
+          pageNum: this.pageNum,
+          pageSize: this.pageSize,
         }
       }
       console.log(data)
