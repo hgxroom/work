@@ -71,15 +71,7 @@
           :class="[type == 'detail' ? 'input-detail' : '']"
         ></el-input>
       </el-form-item>
-      <el-form-item label="联系方式" prop="contactInfo">
-        <el-input
-          v-model="formInline.contactInfo"
-          :clearable="type == 'detail' ? false : true"
-          :disabled="type == 'detail' ? true : false"
-          :class="[type == 'detail' ? 'input-detail' : '']"
-        ></el-input>
-      </el-form-item>
-      <el-form-item label="拜访目的">
+      <el-form-item label="拜访目的" prop="visitPurpose">
         <el-select
           v-model="formInline.visitPurpose"
           placeholder="请选择"
@@ -95,17 +87,34 @@
         </el-select>
       </el-form-item>
       <el-form-item label="拜访时间" prop="visitTime">
+        <span v-if="type == 'detail'" style="color: #666; padding-left: 15px">
+          {{ formInline.visitTime }} - {{ formInline.visitEndTime }}
+        </span>
         <el-date-picker
-          v-model="formInline.visitTime"
+          v-if="type !== 'detail'"
+          v-model="datePickerTime"
           value-format="yyyy-MM-dd HH:mm:ss"
-          type="datetime"
-          placeholder="选择日期时间"
+          type="datetimerange"
+          range-separator="-"
+          start-placeholder="开始日期"
+          end-placeholder="结束日期"
+          :default-time="['00:00:00', '23:59:59']"
+          :picker-options="pickerOptions"
           @change="pickTime"
           :clearable="type == 'detail' ? false : true"
           :disabled="type == 'detail' ? true : false"
           :class="[type == 'detail' ? 'input-detail' : '']"
         >
         </el-date-picker>
+      </el-form-item>
+      <el-form-item label="联系方式" prop="contactInfo">
+        <el-input
+          v-model="formInline.contactInfo"
+          maxlength="11"
+          :clearable="type == 'detail' ? false : true"
+          :disabled="type == 'detail' ? true : false"
+          :class="[type == 'detail' ? 'input-detail' : '']"
+        ></el-input>
       </el-form-item>
     </el-form>
     <el-form
@@ -116,7 +125,9 @@
       :label-position="'top'"
     >
       <el-form-item class="fullWidth" label="拓客策略">
+        <p v-if="type == 'detail'" class="unit-detail">{{ formInline.expansionStrategy }}</p>
         <el-input
+          v-if="type !== 'detail'"
           type="textarea"
           autosize
           v-model="formInline.expansionStrategy"
@@ -126,7 +137,9 @@
         ></el-input>
       </el-form-item>
       <el-form-item class="fullWidth" label="推进计划">
+        <p v-if="type == 'detail'" class="unit-detail">{{ formInline.advancePlan }}</p>
         <el-input
+          v-if="type !== 'detail'"
           type="textarea"
           autosize
           v-model="formInline.advancePlan"
@@ -136,7 +149,9 @@
         ></el-input>
       </el-form-item>
       <el-form-item class="fullWidth" label="需求资源和支持">
+        <p v-if="type == 'detail'" class="unit-detail">{{ formInline.needSupport }}</p>
         <el-input
+          v-if="type !== 'detail'"
           type="textarea"
           autosize
           v-model="formInline.needSupport"
@@ -146,7 +161,9 @@
         ></el-input>
       </el-form-item>
       <el-form-item class="fullWidth" label="拜访内容" prop="visitContent">
+        <p v-if="type == 'detail'" class="unit-detail">{{ formInline.visitContent }}</p>
         <el-input
+          v-if="type !== 'detail'"
           type="textarea"
           v-model="formInline.visitContent"
           :clearable="type == 'detail' ? false : true"
@@ -181,6 +198,7 @@ export default {
       rules: Object.freeze(formRules),
       brandList: [],
       queryTimeout: null,
+      datePickerTime: [],
       //表单信息
       formInline: {
         customerId: '',
@@ -193,10 +211,16 @@ export default {
         contactInfo: '',
         visitPurpose: '',
         visitTime: '',
+        visitEndTime: '',
         expansionStrategy: '',
         advancePlan: '',
         needSupport: '',
         visitContent: '',
+      },
+      pickerOptions: {
+        disabledDate(time) {
+          return time.getTime() - 8.64e7 > Date.now()
+        },
       },
     }
   },
@@ -251,6 +275,7 @@ export default {
           contactInformation,
           visitTarget,
           visitTime,
+          visitEndTime,
           strategy,
           advancePlan,
           resourceSupport,
@@ -268,11 +293,15 @@ export default {
           contactInfo: contactInformation,
           visitPurpose: visitTarget,
           visitTime,
+          visitEndTime,
           expansionStrategy: strategy,
           advancePlan,
           needSupport: resourceSupport,
           visitContent,
         }
+        this.datePickerTime[0] = this.formInline.visitTime
+        this.datePickerTime[1] = this.formInline.visitEndTime
+        this.$set(this.datePickerTime)
         if (this.type == 'detail') {
           for (let item in this.formInline) {
             let type = typeof this.formInline[item]
@@ -324,12 +353,18 @@ export default {
     },
 
     pickTime(picker) {
-      const nowTime = new Date().getTime()
-      const pickTime = new Date(picker).getTime()
-      if (nowTime < pickTime) {
-        this.formInline.visitTime = ''
+      console.log(picker)
+      if (picker) {
+        let startDay = picker[0].slice(0, 10)
+        let endDay = picker[1].slice(0, 10)
+        if (startDay !== endDay) {
+          this.$message.error('拜访时间必须是同一天哦')
+          this.datePickerTime = ''
+        } else {
+          this.formInline.visitTime = picker[0]
+          this.formInline.visitEndTime = picker[1]
+        }
       }
-      console.log('选择时间大于当前时间')
     },
     submit() {
       const {
@@ -343,6 +378,7 @@ export default {
         contactInfo: contactInformation,
         visitPurpose: visitTarget,
         visitTime,
+        visitEndTime,
         expansionStrategy: strategy,
         advancePlan,
         needSupport: resourceSupport,
@@ -359,6 +395,7 @@ export default {
         contactInformation,
         visitTarget,
         visitTime,
+        visitEndTime,
         strategy,
         advancePlan,
         resourceSupport,
