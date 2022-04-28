@@ -5,7 +5,7 @@ import request, { download } from '@/utils/request'
  */
 export function getFinance(params) {
   return request({
-    url: `hterp/finance/list`,
+    url: `hterp/finance/kj/list`,
     method: 'get',
     params: params,
   })
@@ -15,5 +15,5 @@ export function getFinance(params) {
  * 下载报表
  */
 export function financeExport() {
-  return download(`hterp/finance/exportAccount`, {}, '应收账款账龄分析表.xls')
+  return download(`hterp/finance/kj/exportAccount`, {}, '应收账款账龄分析表.xls')
 }
