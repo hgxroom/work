@@ -187,6 +187,7 @@
       <el-form-item label="联系人" prop="contacts">
         <el-input
           v-model="brandInfo.contacts"
+          maxlength="11"
           placeholder="请输入联系人"
           :clearable="type == 'detail' ? false : true"
           :disabled="type == 'detail' ? true : false"

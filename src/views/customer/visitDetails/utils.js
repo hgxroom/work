@@ -60,8 +60,8 @@ export const formRules = {
       trigger: 'blur',
     },
     {
-      min: 50,
-      message: '最少50字',
+      min: 30,
+      message: '最少30字',
       trigger: 'change',
     },
   ],
