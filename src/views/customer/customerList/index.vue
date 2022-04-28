@@ -221,8 +221,8 @@ export default {
           customerState,
           startTime: '',
           endTime: ' ',
-          pageNum,
-          pageSize,
+          pageNum: this.pageNum,
+          pageSize: this.pageSize,
         }
       } else {
         data = {
@@ -231,8 +231,8 @@ export default {
           customerState,
           startTime: dateTimePicker[0],
           endTime: dateTimePicker[1],
-          pageNum,
-          pageSize,
+          pageNum: this.pageNum,
+          pageSize: this.pageSize,
         }
       }
       const { pageNum, pageSize } = this
