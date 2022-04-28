@@ -44,6 +44,9 @@
           <el-form-item label="开发单号">
             <el-input v-model="queryParams.developNum"></el-input>
           </el-form-item>
+          <el-form-item label="发票号码">
+            <el-input v-model="queryParams.invoiceNum"></el-input>
+          </el-form-item>
         </el-form>
       </el-col>
       <el-col :span="3">
@@ -248,6 +251,7 @@ export default {
         payWay: '', //付款方式
         salesman: '', //业务员
         sendOutNum: '', //发货单号
+        invoiceNum: '', // 发票号码
       },
       loading: false,
       listData: [],
@@ -534,6 +538,7 @@ export default {
       this.queryParams.sendOutNum = ''
       this.queryParams.startDate = ''
       this.queryParams.endDate = ''
+      this.queryParams.invoiceNum = ''
       this.dateRange = []
       // this.getList();
     },
