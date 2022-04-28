@@ -71,7 +71,7 @@
           :class="[type == 'detail' ? 'input-detail' : '']"
         ></el-input>
       </el-form-item>
-      <el-form-item label="拜访目的">
+      <el-form-item label="拜访目的" prop="visitPurpose">
         <el-select
           v-model="formInline.visitPurpose"
           placeholder="请选择"
@@ -88,7 +88,7 @@
       </el-form-item>
       <el-form-item label="拜访时间" prop="visitTime">
         <span v-if="type == 'detail'" style="color: #666; padding-left: 15px">
-          {{ formInline.visitEndTime }} - {{ formInline.visitTime }}
+          {{ formInline.visitTime }} - {{ formInline.visitEndTime }}
         </span>
         <el-date-picker
           v-if="type !== 'detail'"
@@ -198,7 +198,7 @@ export default {
       rules: Object.freeze(formRules),
       brandList: [],
       queryTimeout: null,
-      datePickerTime: '',
+      datePickerTime: [],
       //表单信息
       formInline: {
         customerId: '',
@@ -299,6 +299,9 @@ export default {
           needSupport: resourceSupport,
           visitContent,
         }
+        this.datePickerTime[0] = this.formInline.visitTime
+        this.datePickerTime[1] = this.formInline.visitEndTime
+        this.$set(this.datePickerTime)
         if (this.type == 'detail') {
           for (let item in this.formInline) {
             let type = typeof this.formInline[item]
@@ -350,6 +353,7 @@ export default {
     },
 
     pickTime(picker) {
+      console.log(picker)
       if (picker) {
         let startDay = picker[0].slice(0, 10)
         let endDay = picker[1].slice(0, 10)

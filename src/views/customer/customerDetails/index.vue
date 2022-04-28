@@ -486,7 +486,7 @@
               <span class="unit-detail" style="padding-left: 0">{{ item.visitEndTime }}</span>
             </el-form-item>
             <el-form-item label="拜访对象">
-              <span class="unit-detail">{{ item.visitTarget }}</span>
+              <span class="unit-detail">{{ item.visitObject }}</span>
             </el-form-item>
             <el-form-item label="职位">
               <span class="unit-detail">{{ item.position }}</span>

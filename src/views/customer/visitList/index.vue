@@ -106,12 +106,12 @@
           </el-popover>
         </template>
       </el-table-column>
-      <el-table-column
-        label="拜访时间"
-        align="center"
-        prop="visitTime"
-        :show-overflow-tooltip="true"
-      />
+      <el-table-column label="拜访时间" align="center" :show-overflow-tooltip="true">
+        <template slot-scope="scope">
+          <span>{{ scope.row.visitTime }}</span> -
+          <span>{{ scope.row.visitEndTime.slice(10, 19) }}</span>
+        </template>
+      </el-table-column>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
@@ -172,13 +172,25 @@ export default {
     getList() {
       const { customerName, salesman, dateTimePicker } = this.queryParams
       const { pageNum, pageSize } = this
-      const data = {
-        customerName,
-        salesman,
-        startTime: dateTimePicker[0],
-        endTime: dateTimePicker[1],
-        pageNum,
-        pageSize,
+      let data = {}
+      if (this.queryParams.dateTimePicker == null) {
+        data = {
+          customerName,
+          salesman,
+          startTime: '',
+          endTime: '',
+          pageNum,
+          pageSize,
+        }
+      } else {
+        data = {
+          customerName,
+          salesman,
+          startTime: dateTimePicker[0],
+          endTime: dateTimePicker[1],
+          pageNum,
+          pageSize,
+        }
       }
       console.log(data)
       getVisitList(data).then((res) => {

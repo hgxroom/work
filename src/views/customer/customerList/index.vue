@@ -21,7 +21,7 @@
             ></el-input>
           </el-form-item>
           <el-form-item label="状态">
-            <el-select v-model="queryParams.customerState" placeholder="请选择">
+            <el-select v-model="queryParams.customerState" clearable placeholder="请选择">
               <el-option
                 v-for="(dict, index) in dict.type.customer_state"
                 :key="index"
@@ -213,17 +213,29 @@ export default {
      */
     getList() {
       const { customerName, salesman, customerState, dateTimePicker } = this.queryParams
-      const { pageNum, pageSize } = this
-      const data = {
-        customerName,
-        salesman,
-        customerState,
-        startTime: dateTimePicker[0],
-        endTime: dateTimePicker[1],
-        pageNum,
-        pageSize,
+      let data = {}
+      if (this.queryParams.dateTimePicker == null) {
+        data = {
+          customerName,
+          salesman,
+          customerState,
+          startTime: '',
+          endTime: ' ',
+          pageNum,
+          pageSize,
+        }
+      } else {
+        data = {
+          customerName,
+          salesman,
+          customerState,
+          startTime: dateTimePicker[0],
+          endTime: dateTimePicker[1],
+          pageNum,
+          pageSize,
+        }
       }
-      console.log(data)
+      const { pageNum, pageSize } = this
       getCustomerList(data).then((res) => {
         this.total = res.total
         this.listData = res.rows
