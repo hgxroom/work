@@ -82,7 +82,9 @@
         </el-form-item>
       </template>
       <el-form-item label="状态" prop="customerState">
+        <span v-if="type == 'detail'" class="unit-detail">{{ baseInfo.customerState || '-' }}</span>
         <el-select
+          v-if="type !== 'detail'"
           v-model="baseInfo.customerState"
           placeholder="请选择"
           :disabled="type == 'detail' ? true : false"
@@ -564,7 +566,7 @@ export default {
         contacts: '', //联系人
         position: '', //职位
         contactInformation: '', //联系方式
-
+        customerState: '',
         crowdCircle: [], //人群圈层
         operationModeAbility: '', //运营模式和能力
         timeRhythm: '', //时间节奏（取数据字典label）
