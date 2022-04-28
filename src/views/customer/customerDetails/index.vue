@@ -476,6 +476,43 @@
         </el-dialog>
       </el-col>
     </el-row>
+    <!-- 拜访记录 -->
+    <el-row :gutter="20" v-if="type == 'detail'" style="margin-top: 30px; flex-wrap: wrap">
+      <el-col class="visitCard" v-for="(item, index) in visitDetailVoList" :key="index">
+        <el-card>
+          <el-form label-position="right" label-width="90px" size="mini">
+            <el-form-item label="拜访时间">
+              <span class="unit-detail">{{ item.visitTime }}</span> -
+              <span class="unit-detail" style="padding-left: 0">{{ item.visitEndTime }}</span>
+            </el-form-item>
+            <el-form-item label="拜访对象">
+              <span class="unit-detail">{{ item.visitTarget }}</span>
+            </el-form-item>
+            <el-form-item label="职位">
+              <span class="unit-detail">{{ item.position }}</span>
+            </el-form-item>
+            <el-form-item label="联系方式">
+              <span class="unit-detail">{{ item.contactInformation }}</span>
+            </el-form-item>
+            <el-form-item label="内容">
+              <span class="unit-detail">{{ item.visitContent }}</span>
+            </el-form-item>
+          </el-form>
+          <el-button
+            class="cardBtn"
+            @click="
+              () => {
+                readVisit('detail', item.id)
+              }
+            "
+            type="primary"
+            size="mini"
+            plain
+            >查看详情</el-button
+          >
+        </el-card>
+      </el-col>
+    </el-row>
     <!-- 操作按钮 -->
     <el-row type="flex" v-if="type !== 'detail'">
       <el-col>
@@ -556,6 +593,8 @@ export default {
         categories: '',
         proportion: '',
       },
+      // 拜访记录列表
+      visitDetailVoList: [],
     }
   },
   computed: {
@@ -581,6 +620,12 @@ export default {
       title: `客户(${this.editState})`,
     })
     if (this.type == 'detail') {
+      obj.meta.title = '客户(详情)'
+    }
+    if (this.type == 'edit') {
+      obj.meta.title = '客户(编辑)'
+    }
+    if (this.type == 'detail') {
       obj.title = '客户(详情)'
     }
     this.$tab.updatePage(obj)
@@ -600,6 +645,7 @@ export default {
           createTime,
           brandList,
           customerState,
+          visitDetailVoList,
         } = res.data
 
         // 如果id请求为不存在的客户
@@ -631,6 +677,7 @@ export default {
           customerState,
         }
         this.brandList = brandList
+        this.visitDetailVoList = visitDetailVoList
         console.log('brandList', this.brandList)
         if (brandList.length > 0) {
           this.tabActiveName = brandList[0].id
@@ -949,6 +996,10 @@ export default {
       }
       return flag
     },
+    readVisit(type, id) {
+      console.log(id)
+      this.$router.push({ path: `/customer/visitDetails/${id}`, query: { type } })
+    },
   },
 }
 </script>
@@ -1022,6 +1073,15 @@ export default {
   }
   ::v-deep .el-textarea__inner {
     border-color: transparent;
+  }
+}
+.visitCard {
+  width: 500px;
+  margin: 10px 0;
+  .cardBtn {
+    width: 130px;
+    margin: auto;
+    display: block;
   }
 }
 </style>
