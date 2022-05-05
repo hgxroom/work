@@ -243,6 +243,7 @@ export default {
       }
       getQuoteList(data).then((res) => {
         // 更新页签数据
+
         if (statusTag === '') {
           this.listTypes.forEach((item) => {
             item.num = 0
