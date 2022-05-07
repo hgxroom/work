@@ -94,7 +94,6 @@
         <el-input
           v-model="formInline.titleName"
           placeholder="请输入标题"
-          :clearable="type == 'detail' ? false : true"
           :disabled="type == 'detail' ? true : false"
           :class="[type == 'detail' ? 'input-detail input-customer-name' : '']"
           maxlength="15"
