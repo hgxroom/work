@@ -47,3 +47,13 @@ export function getPlanVisitDeptList() {
     method: 'get',
   })
 }
+/**
+ * 获取状态数量
+ */
+export function getStateList(params) {
+  return request({
+    url: `/system/customerVisitPlan/stateList`,
+    method: 'get',
+    params: params,
+  })
+}

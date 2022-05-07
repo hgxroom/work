@@ -246,8 +246,9 @@ export default {
     if (this.$route.query.planVisit) {
       this.planVisit = JSON.parse(this.$route.query.planVisit)
       this.formInline = Object.assign(this.formInline, this.planVisit)
+      this.formInline.visitPeople = this.planVisit.visitObject
+      this.formInline.post = this.planVisit.position
     }
-
     if (this.id) {
       this.getData()
     } else {
