@@ -4,7 +4,7 @@
     <el-row>
       <el-col :span="20">
         <el-form :model="queryParams" ref="queryForm" label-width="90px" :inline="true">
-          <el-form-item label="部门">
+          <el-form-item label="部门" v-if="showFlag">
             <el-select v-model="queryParams.deptId">
               <el-option label="全部" value=""></el-option>
               <el-option
@@ -201,7 +201,7 @@ export default {
       listData: [],
       pageNum: 1,
       pageSize: 30,
-
+      showFlag: false,
       selectionList: [], //多选选择数据
       deptsList: [],
       //类型标签
@@ -244,6 +244,9 @@ export default {
   methods: {
     //获取状态数量
     getState(val) {
+      delete val.visitState
+      delete val.pageNum
+      delete val.pageSize
       getStateList(val).then((res) => {
         this.listTypes[0].num = res.data.all
         this.listTypes[1].num = res.data.unStarted
@@ -273,6 +276,7 @@ export default {
     getDeptList() {
       getPlanVisitDeptList().then((res) => {
         this.deptsList = res.data.secondarySector
+        this.showFlag = res.data.showFlag
       })
     },
     resetQuery() {
