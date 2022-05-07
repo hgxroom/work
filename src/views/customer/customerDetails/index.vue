@@ -537,6 +537,7 @@ export default {
   dicts: dictMap,
   data() {
     return {
+      addFlag: false,
       labelPosition: 'right',
       type: '', // 表单类型
       // 表单验证规则
@@ -696,6 +697,7 @@ export default {
       const flag = this.validateForm('brandInfoForm')
 
       if (!findItem && flag) {
+        this.addFlag = true
         //没有才创建
         //当前时间戳作为唯一标识 新建时用
         const id = new Date().getTime().toString()
@@ -707,6 +709,7 @@ export default {
 
         this.brandList.push(brandTemp)
         this.tabActiveName = id
+        this.$refs['brandInfoForm'].clearValidate()
       } else {
         this.$notify({
           title: '错误',
@@ -723,6 +726,7 @@ export default {
         type: 'warning',
       })
         .then(() => {
+          this.$refs['brandInfoForm'].clearValidate()
           const delIndex = this.brandList.findIndex((item) => {
             return item.id === this.tabActiveName
           })
@@ -767,6 +771,11 @@ export default {
           type: 'error',
         })
         return validateed
+      }
+      if (this.addFlag) {
+        setTimeout(() => {
+          this.$refs['brandInfoForm'].clearValidate()
+        }, 0)
       }
       //校验通过 先把旧数据存入结构
       this.moveBrandInfoToTabs(oldValue)

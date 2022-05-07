@@ -63,6 +63,7 @@
           :clearable="type == 'detail' ? false : true"
           :disabled="type == 'detail' ? true : false"
           :class="[type == 'detail' ? 'input-detail' : '']"
+          placeholder="请输入对象"
         ></el-input>
       </el-form-item>
       <el-form-item label="职位" prop="position">
@@ -71,6 +72,7 @@
           :clearable="type == 'detail' ? false : true"
           :disabled="type == 'detail' ? true : false"
           :class="[type == 'detail' ? 'input-detail' : '']"
+          placeholder="请输入职位"
         ></el-input>
       </el-form-item>
       <!-- <el-form-item label="拜访目的" prop="visitPurpose">
@@ -136,11 +138,13 @@
       :model="formInline"
       :inline="true"
       :rules="rules"
-      :label-position="'top'"
+      :label-position="'right'"
+      label-width="90px"
     >
       <el-form-item class="fullWidth" label="计划目标" prop="objectivePlan">
         <p v-if="type == 'detail'" class="unit-detail">{{ formInline.objectivePlan }}</p>
         <el-input
+          placeholder="请输入计划目标"
           v-if="type !== 'detail'"
           type="textarea"
           v-model="formInline.objectivePlan"
@@ -368,26 +372,26 @@ export default {
       }
       let flag = this.validateForm('visitForm') && this.validateForm('baseInfoForm')
       if (flag) {
-        if (this.id) {
-          data.id = Number(this.id)
-          editCustomerVisitPlan(data).then((res) => {
-            this.$message({
-              message: '提交成功',
-              type: 'success',
-            })
+        // if (this.id) {
+        //   data.id = Number(this.id)
+        //   editCustomerVisitPlan(data).then((res) => {
+        //     this.$message({
+        //       message: '提交成功',
+        //       type: 'success',
+        //     })
 
-            this.cancel()
+        //     this.cancel()
+        //   })
+        // } else {
+        getcustomerVisitPlan(data).then((res) => {
+          this.$message({
+            message: '提交成功',
+            type: 'success',
           })
-        } else {
-          getcustomerVisitPlan(data).then((res) => {
-            this.$message({
-              message: '提交成功',
-              type: 'success',
-            })
 
-            this.cancel()
-          })
-        }
+          this.cancel()
+        })
+        // }
       }
     },
     /**
@@ -423,6 +427,9 @@ export default {
   .el-form-item {
     width: calc(33.33% - 10px);
   }
+  .el-textarea {
+    width: 53%;
+  }
   .el-select {
     width: 100%;
   }
@@ -435,8 +442,8 @@ export default {
   .fullWidth {
     width: 100%;
     ::v-deep .el-form-item__label {
-      width: 110px;
-      text-align: left;
+      width: 90px;
+      text-align: right;
     }
     ::v-deep .el-form-item__content {
       width: calc(100% - 120px);

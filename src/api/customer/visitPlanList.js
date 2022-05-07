@@ -38,3 +38,12 @@ export function editCustomerVisitPlan(data) {
     data: data,
   })
 }
+/**
+ * 获取部门信息
+ */
+export function getPlanVisitDeptList() {
+  return request({
+    url: `/system/customerVisitPlan/deptList`,
+    method: 'get',
+  })
+}

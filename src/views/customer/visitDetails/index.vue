@@ -98,7 +98,6 @@
           range-separator="-"
           start-placeholder="开始日期"
           end-placeholder="结束日期"
-          :default-time="['00:00:00', '23:59:59']"
           :picker-options="pickerOptions"
           @change="pickTime"
           :clearable="type == 'detail' ? false : true"
@@ -221,7 +220,7 @@ export default {
       },
       pickerOptions: {
         disabledDate(time) {
-          return time.getTime() - 8.64e7 > Date.now()
+          return time.getTime() > Date.now() - 8.64e6
         },
       },
       planVisit: {}, //计划列表跳转数据
@@ -246,6 +245,7 @@ export default {
     this.type = this.$route.query.type
     if (this.$route.query.planVisit) {
       this.planVisit = JSON.parse(this.$route.query.planVisit)
+      this.formInline = Object.assign(this.formInline, this.planVisit)
     }
 
     if (this.id) {
@@ -255,10 +255,10 @@ export default {
     }
 
     const obj = Object.assign({}, this.$route, {
-      title: `拜访(${this.editState})`,
+      title: `拜访记录(${this.editState})`,
     })
     if (this.type == 'detail') {
-      obj.title = '拜访(详情)'
+      obj.title = '拜访记录(详情)'
     }
 
     this.$tab.updatePage(obj)
@@ -374,6 +374,11 @@ export default {
         } else {
           this.formInline.visitTime = picker[0]
           this.formInline.visitEndTime = picker[1]
+          if (picker[1].slice(11, 19) == '00:00:00') {
+            this.formInline.visitEndTime = endDay + ' 23:59:59'
+            this.datePickerTime[1] = this.formInline.visitEndTime
+            this.$set(this.datePickerTime)
+          }
         }
       }
     },
