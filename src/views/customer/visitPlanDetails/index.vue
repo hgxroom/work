@@ -142,7 +142,7 @@
       label-width="90px"
     >
       <el-form-item class="fullWidth" label="计划目标" prop="objectivePlan">
-        <p v-if="type == 'detail'" class="unit-detail">{{ formInline.objectivePlan }}</p>
+        <div v-if="type == 'detail'" class="unit-detail">{{ formInline.objectivePlan }}</div>
         <el-input
           placeholder="请输入计划目标"
           v-if="type !== 'detail'"
@@ -469,6 +469,7 @@ export default {
     background: transparent;
   }
 }
+
 .select-detail {
   ::v-deep .el-input__inner {
     border: 1px solid transparent;
@@ -488,6 +489,7 @@ export default {
 .unit-detail {
   color: #666;
   padding-left: 15px;
+  width: 53%;
 }
 .multiple-detail {
   ::v-deep .el-form-item__content {
