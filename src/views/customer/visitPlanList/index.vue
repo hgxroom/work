@@ -137,7 +137,7 @@
                 type="text"
                 icon="el-icon-edit"
                 @click.native.prevent="handleEditStatus('已取消', scope)"
-                v-if="scope.row.visitState == '未开始' || scope.row.visitState == '未完成'"
+                v-if="scope.row.visitState == '未开始'"
                 >取消</el-button
               >
               <el-button
@@ -328,7 +328,7 @@ export default {
       if (type == 'detail') {
         this.$router.push({ path: url, query: { type } })
       } else {
-        this.$confirm('是否要将该记录延期？', '提示', {
+        this.$confirm('是否要将该计划延期？', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning',
