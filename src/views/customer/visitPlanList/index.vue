@@ -1,35 +1,41 @@
 <template>
   <div class="app-container">
     <!-- 搜索栏 -->
-    <el-form :model="queryParams" ref="queryForm" label-width="90px" :inline="true">
-      <el-form-item label="部门">
-        <el-select v-model="queryParams.deptId">
-          <el-option label="全部" value=""></el-option>
-          <el-option
-            v-for="(dict, index) in deptsList"
-            :key="dict.deptId"
-            :label="dict.deptName"
-            :value="dict.deptId"
-          ></el-option>
-        </el-select>
-      </el-form-item>
+    <el-row>
+      <el-col :span="20">
+        <el-form :model="queryParams" ref="queryForm" label-width="90px" :inline="true">
+          <el-form-item label="部门">
+            <el-select v-model="queryParams.deptId">
+              <el-option label="全部" value=""></el-option>
+              <el-option
+                v-for="(dict, index) in deptsList"
+                :key="dict.value"
+                :label="dict.label"
+                :value="dict.value"
+              ></el-option>
+            </el-select>
+          </el-form-item>
 
-      <el-form-item label="搜索区间">
-        <el-date-picker
-          v-model="queryParams.dateTimePicker"
-          type="datetimerange"
-          value-format="yyyy-MM-dd HH:mm:ss"
-          range-separator="-"
-          start-placeholder="开始日期"
-          end-placeholder="结束日期"
-          :default-time="['00:00:00', '23:59:59']"
-        >
-        </el-date-picker>
-      </el-form-item>
-      <el-form-item>
-        <el-button type="primary" @click="handleQueryBtn">查询</el-button>
-      </el-form-item>
-    </el-form>
+          <el-form-item label="搜索区间">
+            <el-date-picker
+              v-model="queryParams.dateTimePicker"
+              type="datetimerange"
+              value-format="yyyy-MM-dd HH:mm:ss"
+              range-separator="-"
+              start-placeholder="开始日期"
+              end-placeholder="结束日期"
+              :default-time="['00:00:00', '23:59:59']"
+            >
+            </el-date-picker>
+          </el-form-item>
+          <el-form-item>
+            <el-button type="primary" @click="handleQueryBtn">查询</el-button>
+          </el-form-item>
+          <el-button icon="el-icon-refresh" @click="resetQuery">重置</el-button>
+        </el-form>
+      </el-col>
+    </el-row>
+    <el-divider></el-divider>
     <!-- 列表状态 -->
     <el-row class="mb18">
       <el-col :span="22">
@@ -56,101 +62,112 @@
         ></el-col
       >
     </el-row>
+
     <!-- 列表 -->
-    <el-table :data="listData" style="width: 100%">
-      <!-- <el-table-column type="selection" width="55"> </el-table-column>
+    <el-row>
+      <el-col>
+        <el-table :data="listData" style="width: 100%" :max-height="500">
+          <!-- <el-table-column type="selection" width="55"> </el-table-column>
       <el-table-column label="序号" type="index" align="center">
         <template slot-scope="scope">
           <span>{{ (pageNum - 1) * pageSize + scope.$index + 1 }}</span>
         </template>
       </el-table-column> -->
 
-      <el-table-column
-        label="客户名称"
-        align="center"
-        prop="customerName"
-        :show-overflow-tooltip="true"
-      />
-      <el-table-column
-        label="品牌名称"
-        align="center"
-        prop="brandName"
-        :show-overflow-tooltip="true"
-      />
-      <el-table-column
-        label="业务员"
-        align="center"
-        prop="salesman"
-        :show-overflow-tooltip="true"
-      />
-      <el-table-column
-        label="标题名称"
-        align="center"
-        prop="titleName"
-        :show-overflow-tooltip="true"
-      />
-      <el-table-column
-        label="拜访对象"
-        align="center"
-        prop="visitObject"
-        :show-overflow-tooltip="false"
-      />
-      <el-table-column label="职位" align="center" prop="position" :show-overflow-tooltip="false" />
+          <el-table-column
+            label="客户名称"
+            align="center"
+            prop="customerName"
+            :show-overflow-tooltip="true"
+          />
+          <el-table-column
+            label="品牌名称"
+            align="center"
+            prop="brandName"
+            :show-overflow-tooltip="true"
+          />
+          <el-table-column
+            label="业务员"
+            align="center"
+            prop="salesman"
+            :show-overflow-tooltip="true"
+          />
+          <el-table-column
+            label="标题名称"
+            align="center"
+            prop="titleName"
+            :show-overflow-tooltip="true"
+          />
+          <el-table-column
+            label="拜访对象"
+            align="center"
+            prop="visitObject"
+            :show-overflow-tooltip="false"
+          />
+          <el-table-column
+            label="职位"
+            align="center"
+            prop="position"
+            :show-overflow-tooltip="false"
+          />
 
-      <el-table-column label="拜访时间" align="center" :show-overflow-tooltip="true">
-        <template slot-scope="scope">
-          <span>{{ scope.row.planStartTime }}</span> -
-          <span>{{ scope.row.planEndTime.slice(10, 19) }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column
-        label="状态"
-        align="center"
-        prop="visitState"
-        :show-overflow-tooltip="false"
-      />
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
-        <template slot-scope="scope">
-          <el-button
-            size="mini"
-            type="text"
-            icon="el-icon-monitor"
-            @click.native.prevent="handleFromCustomer('detail', scope)"
-            >查看</el-button
-          >
-          <el-button
-            size="mini"
-            type="text"
-            icon="el-icon-monitor"
-            @click.native.prevent="handleEditStatus('已取消', scope)"
-            v-if="scope.row.visitState == '未开始' || scope.row.visitState == '未完成'"
-            >取消</el-button
-          >
-          <el-button
-            size="mini"
-            type="text"
-            icon="el-icon-edit"
-            @click.native.prevent="handleFromCustomer('edit', scope)"
-            v-hasPermi="['customer:visit:edit']"
-            v-if="scope.row.visitState == '未开始'"
-            >改期</el-button
-          >
-          <el-button
-            size="mini"
-            type="text"
-            icon="el-icon-edit"
-            v-hasPermi="['customer:visit:edit']"
-            @click.native.prevent="handleEditStatus('已完成', scope)"
-            v-if="
-              scope.row.visitState == '进行中' ||
-              scope.row.visitState == '未完成' ||
-              scope.row.visitState == '未开始'
-            "
-            >确认拜访</el-button
-          >
-        </template>
-      </el-table-column>
-    </el-table>
+          <el-table-column label="拜访时间" align="center" :show-overflow-tooltip="true">
+            <template slot-scope="scope">
+              <span>{{ scope.row.planStartTime }}</span> -
+              <span>{{ scope.row.planEndTime.slice(10, 19) }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column
+            label="状态"
+            align="center"
+            prop="visitState"
+            :show-overflow-tooltip="false"
+          />
+          <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+            <template slot-scope="scope">
+              <el-button
+                size="mini"
+                type="text"
+                icon="el-icon-monitor"
+                @click.native.prevent="handleFromCustomer('detail', scope)"
+                >查看</el-button
+              >
+              <el-button
+                size="mini"
+                type="text"
+                icon="el-icon-edit"
+                @click.native.prevent="handleEditStatus('已取消', scope)"
+                v-if="scope.row.visitState == '未开始' || scope.row.visitState == '未完成'"
+                >取消</el-button
+              >
+              <el-button
+                size="mini"
+                type="text"
+                icon="el-icon-edit"
+                @click.native.prevent="handleFromCustomer('edit', scope)"
+                v-hasPermi="['customer:visit:edit']"
+                v-if="scope.row.visitState == '未开始'"
+                >改期</el-button
+              >
+              <el-button
+                size="mini"
+                type="text"
+                icon="el-icon-edit"
+                v-hasPermi="['customer:visit:edit']"
+                @click.native.prevent="handleEditStatus('已完成', scope)"
+                v-if="
+                  scope.row.visitState == '进行中' ||
+                  scope.row.visitState == '未完成' ||
+                  scope.row.visitState == '未开始'
+                "
+                >确认拜访</el-button
+              >
+            </template>
+          </el-table-column>
+        </el-table>
+      </el-col>
+    </el-row>
+
     <!-- 分页 -->
     <pagination
       v-show="total > 0"
@@ -163,11 +180,10 @@
 </template>
 <script>
 import {
-  getVisitList,
   getCustomerVisitPlan,
   editCustomerVisitPlan,
+  getPlanVisitDeptList,
 } from '@/api/customer/visitPlanList'
-import { listDept } from '@/api/system/dept'
 export default {
   data() {
     return {
@@ -242,9 +258,15 @@ export default {
       this.getList()
     },
     getDeptList() {
-      listDept().then((res) => {
-        this.deptsList = res.data
+      getPlanVisitDeptList().then((res) => {
+        this.deptsList = res.data.secondarySector
       })
+    },
+    resetQuery() {
+      this.queryParams.deptId = ''
+      this.queryParams.visitState = ''
+      this.queryParams.dateTimePicker = ['', '']
+      this.getList()
     },
     /**
      * 获取拜访信息列表
@@ -317,27 +339,52 @@ export default {
       this.getList()
     },
     handleFromCustomer(type, scope) {
-      let url = '/customer/visitPlanDetails'
-      if (scope) {
-        let id = scope.row.id
-        url = `/customer/visitPlanDetails/${id}`
+      let id = scope.row.id
+      let url = `/customer/visitPlanDetails/${id}`
+      if (type == 'detail') {
+        this.$router.push({ path: url, query: { type } })
+      } else {
+        this.$confirm('是否要将该记录延期？', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning',
+        })
+          .then(() => {
+            scope.row.visitState = '已改期'
+            editCustomerVisitPlan(scope.row).then((res) => {
+              this.$router.push({ path: url, query: { type } })
+            })
+          })
+          .catch(() => {})
       }
-      this.$router.push({ path: url, query: { type } })
     },
     handleCreate() {
       this.$router.push({ path: `/customer/visitPlanDetails` })
     },
     handleEditStatus(val, item) {
+      let self = this
       if (val == '已取消') {
-        item.row.visitState = val
-        editCustomerVisitPlan(item.row),
-          then((res) => {
-            this.getList()
+        self
+          .$confirm('是否确认取消拜访?', '提示', {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: 'warning',
           })
+          .then(() => {
+            self.$message({
+              type: 'success',
+              message: '取消成功!',
+            })
+            item.row.visitState = val
+            editCustomerVisitPlan(item.row).then((res) => {
+              self.getList()
+            })
+          })
+          .catch(() => {})
       } else if (val == '已完成') {
         item.row.visitState = val
 
-        this.$router.push({
+        self.$router.push({
           path: `/customer/visitDetails`,
           query: { type: 'addPlanVisit', planVisit: JSON.stringify(item.row) },
         })
