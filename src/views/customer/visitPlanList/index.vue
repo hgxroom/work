@@ -335,9 +335,11 @@ export default {
         })
           .then(() => {
             scope.row.visitState = '已改期'
-            editCustomerVisitPlan(scope.row).then((res) => {
-              this.$router.push({ path: url, query: { type } })
-            })
+
+            this.$router.push({ path: url, query: { type: type, data: JSON.stringify(scope.row) } })
+            // editCustomerVisitPlan(scope.row).then((res) => {
+
+            // })
           })
           .catch(() => {})
       }
