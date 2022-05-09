@@ -51,8 +51,8 @@
           plain
           icon="el-icon-plus"
           size="mini"
-          @click="handleFromCustomer('add')"
-          v-hasPermi="['customer:customer:add']"
+          @click="addProduct('add')"
+          v-hasPermi="['finance:report:createProduct:add']"
           >新增</el-button
         >
       </el-col>
@@ -91,20 +91,26 @@
         :show-overflow-tooltip="true"
       />
       <el-table-column
+        label="纱线编号"
+        align="center"
+        prop="salesman"
+        :show-overflow-tooltip="true"
+      />
+      <el-table-column
         label="纱支比例"
         align="center"
         prop="customerArea"
         :show-overflow-tooltip="true"
       />
       <el-table-column
-        label="克重"
+        label="克重(g)"
         align="center"
         prop="revenueScale"
         :show-overflow-tooltip="true"
       />
 
       <el-table-column
-        label="幅宽"
+        label="幅宽(g/m2)"
         align="center"
         prop="customerState"
         :show-overflow-tooltip="true"
@@ -206,6 +212,12 @@ export default {
     }
   },
   methods: {
+    //新增自建产品
+    addProduct() {
+      let url = '/finance/addCreateProduct'
+
+      this.$router.push({ path: url })
+    },
     /**
      * 获取客户信息列表
      */
