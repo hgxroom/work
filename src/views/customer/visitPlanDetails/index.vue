@@ -200,6 +200,7 @@ export default {
         visitObject: '', //拜访对象
         visitDesc: '', //
         planStartTime: '', //拜访时间
+        visitPlanData: '', //改期时拜访记录编辑数据
       },
       pickerOptions: {
         disabledDate(time) {
@@ -222,6 +223,7 @@ export default {
 
   created() {
     this.type = this.$route.query.type
+    this.visitPlanData = JSON.parse(this.$route.query.data)
     if (this.id) {
       this.getData()
     } else {
@@ -371,26 +373,23 @@ export default {
       }
       let flag = this.validateForm('visitForm') && this.validateForm('baseInfoForm')
       if (flag) {
-        // if (this.id) {
-        //   data.id = Number(this.id)
-        //   editCustomerVisitPlan(data).then((res) => {
-        //     this.$message({
-        //       message: '提交成功',
-        //       type: 'success',
-        //     })
-
-        //     this.cancel()
-        //   })
-        // } else {
         getcustomerVisitPlan(data).then((res) => {
-          this.$message({
-            message: '提交成功',
-            type: 'success',
-          })
-
-          this.cancel()
+          if ((this.type = 'edit')) {
+            editCustomerVisitPlan(this.visitPlanData).then((val) => {
+              this.$message({
+                message: '提交成功',
+                type: 'success',
+              })
+              this.cancel()
+            })
+          } else {
+            this.$message({
+              message: '提交成功',
+              type: 'success',
+            })
+            this.cancel()
+          }
         })
-        // }
       }
     },
     /**
