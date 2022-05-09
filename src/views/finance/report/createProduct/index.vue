@@ -3,7 +3,7 @@
   <div class="app-container">
     <!-- 搜索栏 -->
     <el-row>
-      <el-col :span="22">
+      <el-col :span="18">
         <el-form :model="queryParams" ref="queryForm" label-width="90px" :inline="true">
           <el-form-item label="布号">
             <el-input
@@ -13,15 +13,17 @@
               size="small"
             ></el-input>
           </el-form-item>
-          <el-form-item label="业务员" v-hasRole="['admin']">
-            <el-input
-              v-model="queryParams.salesman"
-              placeholder="请输入业务员"
-              clearable
-              size="small"
-            ></el-input>
+          <el-form-item label="布类">
+            <el-select v-model="queryParams.customerState" clearable placeholder="请选择">
+              <el-option
+                v-for="(dict, index) in dict.type.customer_state"
+                :key="index"
+                :label="dict.label"
+                :value="dict.label"
+              ></el-option>
+            </el-select>
           </el-form-item>
-          <el-form-item label="状态">
+          <el-form-item label="织机">
             <el-select v-model="queryParams.customerState" clearable placeholder="请选择">
               <el-option
                 v-for="(dict, index) in dict.type.customer_state"
@@ -33,11 +35,12 @@
           </el-form-item>
         </el-form>
       </el-col>
-      <el-col :span="2">
-        <el-form>
+      <el-col :span="6">
+        <el-form :inline="true">
           <el-form-item>
             <el-button type="primary" @click="handleQueryBtn">查询</el-button>
           </el-form-item>
+          <el-button icon="el-icon-refresh" @click="resetQuery">重置</el-button>
         </el-form>
       </el-col>
     </el-row>
@@ -50,93 +53,100 @@
           size="mini"
           @click="handleFromCustomer('add')"
           v-hasPermi="['customer:customer:add']"
-          >新增客户</el-button
-        >
-        <el-button
-          plain
-          size="mini"
-          icon="el-icon-tickets"
-          @click="handleExportBtn"
-          v-hasPermi="['customer:customer:export']"
-          >导出数据</el-button
+          >新增</el-button
         >
       </el-col>
     </el-row>
     <!-- 列表 -->
-    <el-table
-      :data="listData"
-      ref="customerList"
-      @selection-change="handleSelectionChange"
-      style="width: 100%"
-    >
-      <!-- <el-table-column type="selection" width="55"> </el-table-column> -->
-      <!-- <el-table-column label="序号" type="index" align="center">
-        <template slot-scope="scope">
-          <span>{{ (pageNum - 1) * pageSize + scope.$index + 1 }}</span>
-        </template>
-      </el-table-column> -->
-      <el-table-column type="expand">
-        <template slot-scope="props">
-          <el-descriptions
-            class="list-expand-form"
-            v-for="(item, index) in props.row.brandList"
-            :key="index"
-            :column="4"
-            inline
-          >
-            <el-descriptions-item label="品牌名">
-              <el-tag size="small">{{ item.brandName }}</el-tag>
-            </el-descriptions-item>
-            <el-descriptions-item label="营收规模">{{ item.revenueScale }}万</el-descriptions-item>
-            <el-descriptions-item label="品牌分层">{{ item.brandGrade }}</el-descriptions-item>
-            <el-descriptions-item label="合作意向">{{
-              item.cooperationIntention
-            }}</el-descriptions-item>
-          </el-descriptions>
-        </template>
-      </el-table-column>
+    <el-table :data="listData" ref="customerList" border style="width: 100%">
+      <el-table-column label="序号" type="index" align="center"> </el-table-column>
       <el-table-column
-        label="客户编号"
+        label="布号"
         align="center"
         prop="customerNo"
         :show-overflow-tooltip="true"
       />
       <el-table-column
-        label="客户名称"
+        label="参考布号"
         align="center"
         prop="customerName"
         :show-overflow-tooltip="true"
       />
       <el-table-column
-        label="业务员"
+        label="品名"
+        align="center"
+        prop="customerName"
+        :show-overflow-tooltip="true"
+      />
+      <el-table-column
+        label="布类"
+        align="center"
+        prop="customerName"
+        :show-overflow-tooltip="true"
+      />
+      <el-table-column
+        label="纱线品名"
         align="center"
         prop="salesman"
         :show-overflow-tooltip="true"
       />
       <el-table-column
-        label="客户区域"
+        label="纱支比例"
         align="center"
         prop="customerArea"
         :show-overflow-tooltip="true"
       />
       <el-table-column
-        label="营收规模"
+        label="克重"
         align="center"
         prop="revenueScale"
         :show-overflow-tooltip="true"
-      >
-        <template slot-scope="scope">
-          <span>{{ scope.row.revenueScale }} 万</span>
-        </template>
-      </el-table-column>
+      />
+
       <el-table-column
-        label="状态"
+        label="幅宽"
         align="center"
         prop="customerState"
         :show-overflow-tooltip="true"
       />
       <el-table-column
+        label="成分"
+        align="center"
+        prop="createTime"
+        :show-overflow-tooltip="true"
+      />
+      <el-table-column
+        label="织机规模"
+        align="center"
+        prop="createTime"
+        :show-overflow-tooltip="true"
+      />
+      <el-table-column
+        label="特殊工艺"
+        align="center"
+        prop="createTime"
+        :show-overflow-tooltip="true"
+      />
+      <el-table-column
+        label="功能性承诺"
+        align="center"
+        prop="createTime"
+        :show-overflow-tooltip="true"
+      />
+      <el-table-column
+        label="创建人"
+        align="center"
+        prop="createTime"
+        :show-overflow-tooltip="true"
+      />
+      <el-table-column
         label="创建时间"
+        align="center"
+        prop="createTime"
+        :show-overflow-tooltip="true"
+      />
+      <el-table-column
+        label="状态"
         align="center"
         prop="createTime"
         :show-overflow-tooltip="true"
@@ -148,7 +158,7 @@
             type="text"
             icon="el-icon-monitor"
             @click.native.prevent="handleFromCustomer('detail', scope)"
-            >查看</el-button
+            >禁用</el-button
           >
           <el-button
             size="mini"
@@ -156,7 +166,7 @@
             icon="el-icon-edit"
             @click.native.prevent="handleFromCustomer('edit', scope)"
             v-hasPermi="['customer:customer:edit']"
-            >编辑</el-button
+            >启用</el-button
           >
         </template>
       </el-table-column>
@@ -182,7 +192,6 @@ export default {
       queryParams: {
         customerName: '', //客户名称
         salesman: '', //业务员名称
-
         customerState: '',
       },
       // loading
