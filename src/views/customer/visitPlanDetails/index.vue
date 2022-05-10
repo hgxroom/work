@@ -223,7 +223,10 @@ export default {
 
   created() {
     this.type = this.$route.query.type
-    this.visitPlanData = JSON.parse(this.$route.query.data)
+    if (this.$route.query.data) {
+      this.visitPlanData = JSON.parse(this.$route.query.data)
+    }
+
     if (this.id) {
       this.getData()
     } else {
