@@ -222,6 +222,7 @@ export default {
   },
 
   created() {
+    debugger
     this.type = this.$route.query.type
     if (this.$route.query.data) {
       this.visitPlanData = JSON.parse(this.$route.query.data)
@@ -377,7 +378,7 @@ export default {
       let flag = this.validateForm('visitForm') && this.validateForm('baseInfoForm')
       if (flag) {
         getcustomerVisitPlan(data).then((res) => {
-          if ((this.type = 'edit')) {
+          if (this.type == 'edit') {
             editCustomerVisitPlan(this.visitPlanData).then((val) => {
               this.$message({
                 message: '提交成功',

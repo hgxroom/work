@@ -2,13 +2,13 @@ import request, { download } from '@/utils/request'
 /**
  * 拜访计划信息列表（分页）
  */
-export function getCustomerVisitPlan(params) {
-  return request({
-    url: `/system/customerVisitPlan/list`,
-    method: 'get',
-    params: params,
-  })
-}
+// export function getCustomerVisitPlan(params) {
+//   return request({
+//     url: `/system/customerVisitPlan/list`,
+//     method: 'get',
+//     params: params,
+//   })
+// }
 /**
  * 拜访计划信息列表（分页）
  */
@@ -35,7 +35,7 @@ export function editCustomerVisitPlan(data) {
   return request({
     url: `/system/customerVisitPlan/edit`,
     method: 'put',
-    data: data,
+    data: JSON.stringify(data),
   })
 }
 /**
