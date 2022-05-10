@@ -12,30 +12,30 @@
     >
       <el-form-item label="参考布号" prop="cankaobuhao">
         <el-input
-          style="width: 210px"
+          style="width: 100%"
           v-model="baseInfo.cankaobuhao"
           placeholder="请输入参考布号"
         ></el-input>
       </el-form-item>
 
       <el-form-item label="布类" prop="bulei" required>
-        <el-select v-model="baseInfo.bulei" placeholder="请选择" style="width: 210px">
-          <!-- <el-option
-            v-for="(dict, index) in dict.type.customer_area"
+        <el-select v-model="baseInfo.bulei" placeholder="请选择" style="width: 100%">
+          <el-option
+            v-for="(dict, index) in dictlist"
             :key="index"
             :label="dict.label"
             :value="dict.label"
-          ></el-option> -->
+          ></el-option>
         </el-select>
       </el-form-item>
       <el-form-item label="织机规模" prop="zhijiguimo" required>
-        <el-select v-model="baseInfo.zhijiguimo" placeholder="请选择" style="width: 210px">
-          <!-- <el-option
-            v-for="(dict, index) in dict.type.customer_area"
+        <el-select v-model="baseInfo.zhijiguimo" placeholder="请选择" style="width: 100%">
+          <el-option
+            v-for="(dict, index) in dictlist"
             :key="index"
             :label="dict.label"
             :value="dict.label"
-          ></el-option> -->
+          ></el-option>
         </el-select>
       </el-form-item>
       <template>
@@ -44,7 +44,7 @@
             <el-input
               v-model.number="baseInfo.kezhong"
               placeholder="请输入克重"
-              style="width: 210px"
+              style="width: 100%"
             >
               <template slot="append">g</template>
             </el-input>
@@ -54,11 +54,7 @@
       <template>
         <el-form-item label="幅宽" prop="fukuan" required>
           <template>
-            <el-input
-              v-model.number="baseInfo.fukuan"
-              placeholder="请输入幅宽"
-              style="width: 210px"
-            >
+            <el-input v-model.number="baseInfo.fukuan" placeholder="请输入幅宽" style="width: 100%">
               <template slot="append">g/m<sup>2</sup></template>
             </el-input>
           </template>
@@ -70,7 +66,7 @@
             readonly
             v-model="baseInfo.chengfen"
             placeholder="请输入成分"
-            style="width: 210px"
+            style="width: 100%"
           ></el-input>
         </div>
       </el-form-item>
@@ -78,17 +74,111 @@
         <el-input
           v-model="baseInfo.teshugongyi"
           placeholder="请输入特殊工艺"
-          style="width: 210px"
+          style="width: 100%"
         ></el-input>
       </el-form-item>
       <el-form-item label="功能性承诺" prop="function">
         <el-input
           v-model="baseInfo.function"
           placeholder="请输入功能性承诺"
-          style="width: 210px"
+          style="width: 100%"
         ></el-input>
       </el-form-item>
     </el-form>
+    <el-row>
+      <el-form :model="formData" class="shazhi-form" :rules="formData.rules" ref="formRef">
+        <el-table
+          size="small"
+          :data="formData.data"
+          style="width: 100%; font-size: 14px; color: #242424; bordercolor: #000"
+          highlight-current-row
+          header-row-class-name="tableHeader"
+        >
+          <el-table-column label="序号" type="index" align="center" width="100px"></el-table-column>
+          <el-table-column
+            v-for="(item, index) in formData.columns"
+            :key="index"
+            :label="item.label"
+            :prop="item.prop"
+            :width="item.width"
+            :align="item.align"
+          >
+            <template v-slot="scope">
+              <el-form-item
+                v-if="scope.row.editFlag && (item.prop == 'szpm' || item.prop == 'szbh')"
+                :prop="'data.' + scope.$index + '.' + item.prop"
+                :rules="{
+                  required: true,
+                  message: ' ',
+                  trigger: 'blur',
+                }"
+              >
+                <!-- 搜索框 -->
+                <el-autocomplete
+                  v-model="formData.sel[item.prop]"
+                  :fetch-suggestions="queryName"
+                  placeholder="请输入内容"
+                  @select="handleSelect"
+                >
+                  <template slot-scope="{ item }">
+                    <div>{{ item.customerName }}</div>
+                  </template>
+                </el-autocomplete>
+                <!-- <el-input size="small" placeholder="请输入内容" v-model="formData.sel[item.prop]">
+                </el-input> -->
+              </el-form-item>
+              <el-form-item
+                v-else-if="scope.row.editFlag && item.prop == 'bl'"
+                :prop="'data.' + scope.$index + '.' + item.prop"
+                :rules="{
+                  required: true,
+                  message: ' ',
+                  trigger: 'blur',
+                  validator: validatePass,
+                }"
+              >
+                <el-input size="small" placeholder="请输入内容" v-model="formData.sel[item.prop]">
+                </el-input>
+              </el-form-item>
+              <div
+                v-else
+                :class="[
+                  item.prop == 'status'
+                    ? scope.row[item.prop] == 0
+                      ? 'launch-status'
+                      : 'forbid-status'
+                    : '',
+                ]"
+              >
+                {{
+                  item.prop == 'status'
+                    ? statusFilter(scope.row[item.prop])
+                    : scope.row[item.prop] || '--'
+                }}
+              </div>
+            </template>
+          </el-table-column>
+          <el-table-column label="操作" align="center">
+            <template v-slot="scope">
+              <el-button type="text" @click.stop="saveRow(scope.row, scope.$index)" size="small">
+                保存
+              </el-button>
+              <el-button type="text" @click="editRow(scope.row, scope.$index)" size="small">
+                编辑
+              </el-button>
+              <el-button
+                v-if="scope.row.status == 1"
+                type="text"
+                @click="deleteRow(scope.row, scope.$index)"
+                size="small"
+              >
+                删除
+              </el-button>
+            </template>
+          </el-table-column>
+        </el-table>
+      </el-form>
+    </el-row>
     <!-- 弹窗 -->
     <el-dialog
       title="成分比例选择（%）"
@@ -169,9 +259,52 @@
 </template>
 
 <script>
+import { formRules, formRules2 } from './config'
+import { getCustomerInfoByName } from '@/api/customer/visit'
+import _ from 'lodash'
 export default {
   data() {
     return {
+      // 表格数据
+      formData: {
+        sel: null, // 选中行
+        columns: [
+          {
+            label: '纱支品名',
+            align: 'left',
+            type: 'number',
+            prop: 'szpm',
+          },
+          {
+            label: '纱支编号',
+            align: 'left',
+            type: 'number',
+            prop: 'szbh',
+          },
+          {
+            label: '比例(%)',
+            align: 'left',
+            type: 'number',
+            prop: 'bl',
+          },
+        ],
+        data: [
+          {
+            szpm: '是说',
+            szbh: '123654',
+            bl: '12',
+            editFlag: false,
+          },
+        ],
+        rules: formRules2,
+      },
+      // 表单规则
+      rules: _.cloneDeep(formRules),
+
+      dictlist: [
+        { value: '123', label: '哈哈哈' },
+        { value: '123', label: '哈哈哈2' },
+      ],
       componentList: [
         {
           label: '棉',
@@ -298,6 +431,7 @@ export default {
           input: '',
         },
       ],
+
       componentDialogVisible: false,
       labelPosition: 'right',
       baseInfo: {
@@ -320,6 +454,61 @@ export default {
   mounted: {},
 
   methods: {
+    /**
+     * 输入客户名搜索
+     * @param {string} queryString
+     * @param {*} cb
+     */
+    queryName(queryString, cb) {
+      console.log(queryString === '')
+      if (queryString === '') {
+        cb([])
+        return
+      }
+
+      clearTimeout(this.timeout)
+      this.timeout = setTimeout(() => {
+        getCustomerInfoByName(queryString).then((res) => {
+          cb(res.data)
+        })
+      }, 700)
+    },
+    /**
+     * 点选客户名称事件
+     * @param {*} item 选择的客户名称
+     */
+    handleSelect(item) {
+      console.log(item, this.formData.sel)
+      this.formData.sel.szpm = item.customerName
+      this.formData.sel.szbh = item.customerName
+    },
+    saveRow(row, index) {
+      // 保存
+      this.$refs['formRef'].validate((valid) => {
+        if (valid) {
+          // 保存
+          const data = JSON.parse(JSON.stringify(this.formData.sel))
+          for (const k in data) {
+            row[k] = data[k] // 将sel里面的value赋值给这一行。ps(for....in..)的妙用，细心的同学发现这里我并没有循环对象row
+          }
+          row.editFlag = false
+          // editPrice(data).then((data) => {
+          //   this.getList()
+          // })
+        } else {
+          this.$message.error('请先完善必要信息')
+          return false
+        }
+      })
+    },
+    editRow(row) {
+      // 编辑
+      for (const i of this.formData.data) {
+        if (i.editFlag) return this.$message.warning('请先保存当前编辑项')
+      }
+      this.formData.sel = row
+      row.editFlag = true
+    },
     // 确定
     resetQuery(done) {
       this.componentList.forEach((i) => {
@@ -375,6 +564,9 @@ export default {
   margin-right: 0px;
 }
 ::v-deep .dialog-form .el-form-item {
+  margin-bottom: 0px;
+}
+::v-deep .shazhi-form .el-form-item {
   margin-bottom: 0px;
 }
 </style>

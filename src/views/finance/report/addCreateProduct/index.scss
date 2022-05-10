@@ -3,8 +3,11 @@
   flex-wrap: wrap;
   .el-form-item {
     min-width: 180px;
-    width: calc(25% - 50px);
-    margin-right: 50px;
+    width: calc(25% - 40px);
+    margin-right: 40px;
+  }
+  ::v-deep .el-form-item__content{
+     width: calc(100% - 90px);
   }
 }
 .tab-btn-box {
