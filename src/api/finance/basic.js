@@ -1,4 +1,4 @@
-import request from '@/utils/request'
+import request, { download } from '@/utils/request'
 
 // 退税系数维护
 
@@ -98,6 +98,14 @@ export function delPrice(ids) {
     url: `/system/yarnPrice/${ids}`,
     method: 'DELETE',
   })
+}
+
+/**
+ * 导出纱线价格信息
+ * @returns
+ */
+export function yarnPriceExport() {
+  return download(`/system/yarnPrice/export`, {}, '纱线价格信息.xls')
 }
 
 // 特整工艺维护

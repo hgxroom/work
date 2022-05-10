@@ -5,8 +5,8 @@
         <el-button type="primary" @click="add" class="add-btn">新增</el-button>
       </el-col>
       <el-col :span="12" style="text-align: right">
-        <el-button type="default" @click="add" class="right-btn">导出</el-button>
-        <el-button type="default" @click="add" class="right-btn">导入</el-button>
+        <el-button type="default" @click="handleExportBtn" class="right-btn">导出</el-button>
+        <!-- <el-button type="default" @click="handleExportBtn" class="right-btn">导入</el-button> -->
       </el-col>
     </el-row>
     <el-row>
@@ -151,7 +151,7 @@
 </template>
 
 <script>
-import { getPriceList, editPrice, delPrice, addPrice } from '@/api/finance/basic'
+import { getPriceList, editPrice, delPrice, addPrice, yarnPriceExport } from '@/api/finance/basic'
 export default {
   dicts: ['sys_normal_disable'],
   data() {
@@ -384,6 +384,10 @@ export default {
         status: '1',
       }
       this.resetForm('form')
+    },
+    handleExportBtn() {
+      console.log('点击导出')
+      yarnPriceExport()
     },
   },
   created() {
