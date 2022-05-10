@@ -35,7 +35,7 @@ export function editCustomerVisitPlan(data) {
   return request({
     url: `/system/customerVisitPlan/edit`,
     method: 'put',
-    data: data,
+    data: JSON.stringify(data),
   })
 }
 /**
