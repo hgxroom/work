@@ -1,184 +1,284 @@
 <!-- 新增自建产品 -->
 <template>
-  <div class="app-container">
-    <el-form
-      class="base-form"
-      :model="baseInfo"
-      :rules="rules"
-      ref="baseInfoForm"
-      :inline="true"
-      label-width="90px"
-      :label-position="labelPosition"
-    >
-      <el-form-item label="参考布号" prop="cankaobuhao">
-        <el-input
-          style="width: 100%"
-          v-model="baseInfo.cankaobuhao"
-          placeholder="请输入参考布号"
-        ></el-input>
-      </el-form-item>
-
-      <el-form-item label="布类" prop="bulei" required>
-        <el-select v-model="baseInfo.bulei" placeholder="请选择" style="width: 100%">
-          <el-option
-            v-for="(dict, index) in dictlist"
-            :key="index"
-            :label="dict.label"
-            :value="dict.label"
-          ></el-option>
-        </el-select>
-      </el-form-item>
-      <el-form-item label="织机规模" prop="zhijiguimo" required>
-        <el-select v-model="baseInfo.zhijiguimo" placeholder="请选择" style="width: 100%">
-          <el-option
-            v-for="(dict, index) in dictlist"
-            :key="index"
-            :label="dict.label"
-            :value="dict.label"
-          ></el-option>
-        </el-select>
-      </el-form-item>
-      <template>
-        <el-form-item label="克重" prop="kezhong" required>
-          <template>
-            <el-input
-              v-model.number="baseInfo.kezhong"
-              placeholder="请输入克重"
+  <div class="app-main">
+    <div class="head_box">
+      <el-row type="flex" justify="end">
+        <el-col span="4">新增产品</el-col>
+        <el-col v-if="type == 'detail'" class="created-font"
+          >提交人：{{ baseInfo.createBy }} 创建时间：{{ baseInfo.createTime }}</el-col
+        >
+      </el-row>
+    </div>
+    <div class="container">
+      <div class="card-box">
+        <el-form
+          class="base-form"
+          :model="baseInfo"
+          :rules="baserules"
+          ref="baseInfoForm"
+          :inline="true"
+          label-width="90px"
+          :label-position="labelPosition"
+        >
+          <el-form-item label="参考布号" prop="referenceClothNo">
+            <!-- 搜索框 -->
+            <!-- <selectCom></selectCom> -->
+            <el-autocomplete
+              v-model="baseInfo.referenceClothNo"
+              :fetch-suggestions="queryReferenceClothNo"
+              placeholder="请输入参考布号"
+              :disabled="type == 'detail' ? true : false"
+              :class="[type == 'detail' ? 'input-detail' : '']"
+              @select="handleSelectReferenceClothNo"
               style="width: 100%"
             >
-              <template slot="append">g</template>
-            </el-input>
-          </template>
-        </el-form-item>
-      </template>
-      <template>
-        <el-form-item label="幅宽" prop="fukuan" required>
+              <template slot-scope="{ item }">
+                <div>{{ item.clothNo }}</div>
+              </template>
+            </el-autocomplete>
+            <!-- <el-input
+              style="width: 100%"
+              v-model="baseInfo.referenceClothNo"
+              placeholder="请输入参考布号"
+            ></el-input> -->
+          </el-form-item>
+
+          <el-form-item label="布类" prop="clothType" required>
+            <!-- 搜索框 -->
+            <el-autocomplete
+              v-model="baseInfo.clothType"
+              :fetch-suggestions="queryClothType"
+              placeholder="请输入布类"
+              @select="handleSelectClothType"
+              style="width: 100%"
+              :disabled="type == 'detail' ? true : false"
+              :class="[type == 'detail' ? 'input-detail' : '']"
+            >
+              <template slot-scope="{ item }">
+                <div>{{ item.dictLabel }}</div>
+              </template>
+            </el-autocomplete>
+          </el-form-item>
+          <el-form-item label="织机规模" prop="loomSpecification" required>
+            <!-- 搜索框 -->
+            <el-autocomplete
+              v-model="baseInfo.loomSpecification"
+              :fetch-suggestions="queryLoomSpecification"
+              placeholder="请输入织机规模"
+              @select="handleSelectLoomSpecification"
+              style="width: 100%"
+              :disabled="type == 'detail' ? true : false"
+              :class="[type == 'detail' ? 'input-detail' : '']"
+            >
+              <template slot-scope="{ item }">
+                <div>{{ item.dictLabel }}</div>
+              </template>
+            </el-autocomplete>
+          </el-form-item>
           <template>
-            <el-input v-model.number="baseInfo.fukuan" placeholder="请输入幅宽" style="width: 100%">
-              <template slot="append">g/m<sup>2</sup></template>
-            </el-input>
-          </template>
-        </el-form-item>
-      </template>
-      <el-form-item label="成分" prop="chengfen" required>
-        <div @click="componentDialogVisible = true">
-          <el-input
-            readonly
-            v-model="baseInfo.chengfen"
-            placeholder="请输入成分"
-            style="width: 100%"
-          ></el-input>
-        </div>
-      </el-form-item>
-      <el-form-item label="特殊工艺" prop="teshugongyi">
-        <el-input
-          v-model="baseInfo.teshugongyi"
-          placeholder="请输入特殊工艺"
-          style="width: 100%"
-        ></el-input>
-      </el-form-item>
-      <el-form-item label="功能性承诺" prop="function">
-        <el-input
-          v-model="baseInfo.function"
-          placeholder="请输入功能性承诺"
-          style="width: 100%"
-        ></el-input>
-      </el-form-item>
-    </el-form>
-    <el-row>
-      <el-form :model="formData" class="shazhi-form" :rules="formData.rules" ref="formRef">
-        <el-table
-          size="small"
-          :data="formData.data"
-          style="width: 100%; font-size: 14px; color: #242424; bordercolor: #000"
-          highlight-current-row
-          header-row-class-name="tableHeader"
-        >
-          <el-table-column label="序号" type="index" align="center" width="100px"></el-table-column>
-          <el-table-column
-            v-for="(item, index) in formData.columns"
-            :key="index"
-            :label="item.label"
-            :prop="item.prop"
-            :width="item.width"
-            :align="item.align"
-          >
-            <template v-slot="scope">
-              <el-form-item
-                v-if="scope.row.editFlag && (item.prop == 'szpm' || item.prop == 'szbh')"
-                :prop="'data.' + scope.$index + '.' + item.prop"
-                :rules="{
-                  required: true,
-                  message: ' ',
-                  trigger: 'blur',
-                }"
-              >
-                <!-- 搜索框 -->
-                <el-autocomplete
-                  v-model="formData.sel[item.prop]"
-                  :fetch-suggestions="queryName"
-                  placeholder="请输入内容"
-                  @select="handleSelect"
+            <el-form-item label="克重" prop="gramWeight" required>
+              <template>
+                <el-input
+                  :disabled="type == 'detail' ? true : false"
+                  :class="[type == 'detail' ? 'input-detail' : '']"
+                  v-model.number="baseInfo.gramWeight"
+                  placeholder="请输入克重"
+                  style="width: 100%"
                 >
-                  <template slot-scope="{ item }">
-                    <div>{{ item.customerName }}</div>
-                  </template>
-                </el-autocomplete>
-                <!-- <el-input size="small" placeholder="请输入内容" v-model="formData.sel[item.prop]">
-                </el-input> -->
-              </el-form-item>
-              <el-form-item
-                v-else-if="scope.row.editFlag && item.prop == 'bl'"
-                :prop="'data.' + scope.$index + '.' + item.prop"
-                :rules="{
-                  required: true,
-                  message: ' ',
-                  trigger: 'blur',
-                  validator: validatePass,
-                }"
-              >
-                <el-input size="small" placeholder="请输入内容" v-model="formData.sel[item.prop]">
+                  <template slot="append">g</template>
                 </el-input>
-              </el-form-item>
-              <div
-                v-else
-                :class="[
-                  item.prop == 'status'
-                    ? scope.row[item.prop] == 0
-                      ? 'launch-status'
-                      : 'forbid-status'
-                    : '',
-                ]"
+              </template>
+            </el-form-item>
+          </template>
+          <template>
+            <el-form-item label="幅宽" prop="widthCloth" required>
+              <template>
+                <el-input
+                  :disabled="type == 'detail' ? true : false"
+                  :class="[type == 'detail' ? 'input-detail' : '']"
+                  v-model.number="baseInfo.widthCloth"
+                  placeholder="请输入幅宽"
+                  style="width: 100%"
+                >
+                  <template slot="append">g/m<sup>2</sup></template>
+                </el-input>
+              </template>
+            </el-form-item>
+          </template>
+          <el-form-item label="成分" prop="component" required>
+            <div @click="componentDialogVisible = true">
+              <el-input
+                readonly
+                :disabled="type == 'detail' ? true : false"
+                :class="[type == 'detail' ? 'input-detail' : '']"
+                v-model="baseInfo.component"
+                placeholder="请输入成分"
+                style="width: 100%"
+              ></el-input>
+            </div>
+          </el-form-item>
+          <el-form-item label="特殊工艺" prop="specialProcessName">
+            <el-select
+              v-model="baseInfo.specialProcessName"
+              multiple
+              placeholder="请选择"
+              style="width: 100%"
+              :disabled="type == 'detail' ? true : false"
+              :class="[type == 'detail' ? 'select-detail' : '']"
+            >
+              <el-option
+                v-for="(dict, index) in specialList"
+                :key="index"
+                :label="dict.processName"
+                :value="dict.processName"
+              ></el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="功能性承诺" prop="functionName">
+            <el-select
+              v-model="baseInfo.functionName"
+              multiple
+              placeholder="请选择"
+              style="width: 100%"
+              :disabled="type == 'detail' ? true : false"
+              :class="[type == 'detail' ? 'select-detail' : '']"
+            >
+              <el-option
+                v-for="(dict, index) in functionList"
+                :key="index"
+                :label="dict.commitmentName"
+                :value="dict.commitmentName"
+              ></el-option>
+            </el-select>
+          </el-form-item>
+        </el-form>
+      </div>
+      <div class="card-box">
+        <el-row>
+          <p class="font_h1">纱织信息</p>
+          <el-form :model="formData" class="shazhi-form" :rules="formData.rules" ref="formRef">
+            <el-table
+              size="small"
+              :data="formData.data"
+              style="width: 100%; font-size: 14px; color: #242424; bordercolor: #000"
+              highlight-current-row
+              header-row-class-name="tableHeader"
+            >
+              <el-table-column
+                label="序号"
+                type="index"
+                align="center"
+                width="100px"
+              ></el-table-column>
+              <el-table-column
+                v-for="(val, index) in formData.columns"
+                :key="index"
+                :label="val.label"
+                :prop="val.prop"
+                :width="val.width"
+                :align="val.align"
               >
-                {{
-                  item.prop == 'status'
-                    ? statusFilter(scope.row[item.prop])
-                    : scope.row[item.prop] || '--'
-                }}
-              </div>
-            </template>
-          </el-table-column>
-          <el-table-column label="操作" align="center">
-            <template v-slot="scope">
-              <el-button type="text" @click.stop="saveRow(scope.row, scope.$index)" size="small">
-                保存
-              </el-button>
-              <el-button type="text" @click="editRow(scope.row, scope.$index)" size="small">
-                编辑
-              </el-button>
-              <el-button
-                v-if="scope.row.status == 1"
-                type="text"
-                @click="deleteRow(scope.row, scope.$index)"
-                size="small"
-              >
-                删除
-              </el-button>
-            </template>
-          </el-table-column>
-        </el-table>
-      </el-form>
-    </el-row>
+                <template v-slot="scope">
+                  <el-form-item
+                    v-if="scope.row.editFlag && (val.prop == 'yarnName' || val.prop == 'yarnNo')"
+                    :prop="'data.' + scope.$index + '.' + val.prop"
+                    :rules="{
+                      required: true,
+                      message: ' ',
+                      trigger: 'blur',
+                    }"
+                  >
+                    <!-- 搜索框 -->
+                    <el-autocomplete
+                      v-model="formData.sel[val.prop]"
+                      :fetch-suggestions="val.prop == 'yarnName' ? queryName : queryName2"
+                      placeholder="请输入内容"
+                      @select="handleSelect"
+                    >
+                      <template slot-scope="{ item }">
+                        <div>{{ val.prop == 'yarnName' ? item.wlmch : item.wlbh }}</div>
+                      </template>
+                    </el-autocomplete>
+                    <!-- <el-input size="small" placeholder="请输入内容" v-model="formData.sel[item.prop]">
+                </el-input> -->
+                  </el-form-item>
+                  <el-form-item
+                    v-else-if="scope.row.editFlag && val.prop == 'yarnRatio'"
+                    :prop="'data.' + scope.$index + '.' + val.prop"
+                    :rules="{
+                      required: true,
+                      message: ' ',
+                      trigger: 'blur',
+                    }"
+                  >
+                    <el-input
+                      size="small"
+                      class="numrule"
+                      placeholder="请输入内容"
+                      :type="val.type"
+                      v-model="formData.sel[val.prop]"
+                    >
+                    </el-input>
+                  </el-form-item>
+                  <div
+                    v-else
+                    :class="[
+                      val.prop == 'status'
+                        ? scope.row[val.prop] == 0
+                          ? 'launch-status'
+                          : 'forbid-status'
+                        : '',
+                    ]"
+                  >
+                    {{
+                      val.prop == 'status'
+                        ? statusFilter(scope.row[val.prop])
+                        : scope.row[val.prop] || '--'
+                    }}
+                  </div>
+                </template>
+              </el-table-column>
+              <el-table-column label="操作" align="center" v-if="type == 'detail' ? false : true">
+                <template v-slot="scope">
+                  <el-button
+                    type="text"
+                    v-if="scope.row.states === 1"
+                    @click.stop="saveRow(scope.row, scope.$index)"
+                    size="small"
+                  >
+                    保存
+                  </el-button>
+                  <el-button
+                    type="text"
+                    v-if="scope.row.states === 0"
+                    @click="editRow(scope.row, scope.$index)"
+                    size="small"
+                  >
+                    编辑
+                  </el-button>
+                  <el-button type="text" @click="deleteRow(scope.row, scope.$index)" size="small">
+                    删除
+                  </el-button>
+                </template>
+              </el-table-column>
+            </el-table>
+          </el-form>
+          <div class="add_info" v-if="this.formData.data.length < 5 && type !== 'detail'">
+            <el-button @click="addCraft">添加纱织</el-button>
+          </div>
+        </el-row>
+      </div>
+      <div class="footer" v-if="type !== 'detail'">
+        <el-button @click="onCancel" class="save-btn">取消</el-button>
+        <el-button @click="submit" class="sub-btn">确定</el-button>
+      </div>
+    </div>
+
+    <!-- <div class="bottom_end_btn">
+      <el-button @click="onCancel">取消</el-button>
+      <el-button type="primary" @click="submit">确定</el-button>
+    </div> -->
+
     <!-- 弹窗 -->
     <el-dialog
       title="成分比例选择（%）"
@@ -186,20 +286,6 @@
       width="904px"
       :before-close="handleClose"
     >
-      <!-- 把勾选去掉 -->
-      <!-- <el-checkbox-group size="small" v-model="checkList">
-        <el-checkbox
-          v-for="(item, index) in componentList"
-          :key="item.value"
-          :label="index"
-          class="check-item"
-        >
-          <div class="check-title">{{ item.label }}</div>
-          <el-input v-model="item.input" class="check-input" size="small"
-            ><template slot="append">%</template></el-input
-          >
-        </el-checkbox>
-      </el-checkbox-group> -->
       <el-form
         class="dialog-form"
         :model="baseInfo"
@@ -218,38 +304,22 @@
                   :style="item.input ? 'color:#0052D9' : ''"
                   style="margin-right: 10px"
                 >
-                  {{ item.label }}
+                  {{ item.component }}
                 </div>
                 <div class="check-title" :style="item.input ? 'color:#0052D9' : ''">
-                  ({{ item.english }})
+                  ({{ item.componentEnglish }})
                 </div>
               </div>
-              <el-input v-model="item.input" class="check-input" size="mini"></el-input>
+              <el-input
+                v-model="item.input"
+                type="number"
+                class="check-input numrule"
+                size="mini"
+              ></el-input>
             </div>
           </div>
         </el-form-item>
       </el-form>
-      <!-- <div style="margin-bottom: 50px">
-        <div class="check-item" v-for="(item, index) in componentList" :key="index">
-          <div style="display: flex; margin-left: 12px">
-            <div
-              class="check-title"
-              :style="item.input ? 'color:#0052D9' : ''"
-              style="margin-right: 10px"
-            >
-              {{ item.label }}
-            </div>
-            <div class="check-title" :style="item.input ? 'color:#0052D9' : ''">
-              ({{ item.english }})
-            </div>
-          </div>
-          <el-input v-model="item.input" class="check-input" size="mini"></el-input>
-        </div>
-      </div> -->
-      <!-- <div slot="footer" class="dialog-footer">
-        <el-button @click="dialogFormVisible = false">取 消</el-button>
-        <el-button type="primary" @click="dialogFormVisible = false">确 定</el-button>
-      </div> -->
       <div class="bottom_btn">
         <el-button @click="handleClose">取消</el-button>
         <el-button type="primary" @click="resetQuery">确定</el-button>
@@ -261,188 +331,96 @@
 <script>
 import { formRules, formRules2 } from './config'
 import { getCustomerInfoByName } from '@/api/customer/visit'
+import selectCom from '../createProduct/selectCom'
+import {
+  buildProduct,
+  getDictList,
+  getFabricQuotationByBh,
+  getTableDataInfoToAble,
+  getFunctionalCommitmentByName,
+  getRawYarnInfoList,
+  getBuildProductById,
+} from '@/api/finance/report'
+import { findComponentLoss } from '@/api/finance/report'
 import _ from 'lodash'
 export default {
+  // components: {
+  //   selectCom,
+  // },
   data() {
     return {
+      type: 'detail',
+      baserules: {
+        clothType: [{ required: true, message: '请输入布类', trigger: ['blur', 'change'] }],
+        loomSpecification: [
+          { required: true, message: '请输入织机规模', trigger: ['blur', 'change'] },
+        ],
+        gramWeight: [{ required: true, message: '请输入克重', trigger: ['blur', 'change'] }],
+        widthCloth: [{ required: true, message: '请输入幅宽', trigger: ['blur', 'change'] }],
+        component: [{ required: true, message: '请输入成分', trigger: ['blur', 'change'] }],
+      },
+      //纱织信息
+      // yarnInfo: {
+      //   yarnName: '',
+      //   yarnNo: '',
+      //   yarnRatio: '',
+      //   editFlag: false,
+      //   states: 0,
+      // },
+      //纱织信息
+      yarnInfo: {
+        yarnName: '',
+        yarnNo: '',
+        yarnRatio: '',
+        editFlag: false,
+        states: 0,
+      },
+      //特殊工艺
+      specialList: [],
+      //功能性承诺
+      functionList: [],
       // 表格数据
       formData: {
         sel: null, // 选中行
         columns: [
           {
-            label: '纱支品名',
+            label: '纱线品名',
             align: 'left',
             type: 'number',
-            prop: 'szpm',
+            prop: 'yarnName',
           },
           {
-            label: '纱支编号',
+            label: '纱线编号',
             align: 'left',
             type: 'number',
-            prop: 'szbh',
+            prop: 'yarnNo',
           },
           {
             label: '比例(%)',
             align: 'left',
             type: 'number',
-            prop: 'bl',
+            prop: 'yarnRatio',
           },
         ],
-        data: [
-          {
-            szpm: '是说',
-            szbh: '123654',
-            bl: '12',
-            editFlag: false,
-          },
-        ],
+        data: [],
         rules: formRules2,
       },
       // 表单规则
       rules: _.cloneDeep(formRules),
 
-      dictlist: [
-        { value: '123', label: '哈哈哈' },
-        { value: '123', label: '哈哈哈2' },
-      ],
-      componentList: [
-        {
-          label: '棉',
-          value: '1',
-          input: '',
-          english: 'mulberry silk',
-        },
-        {
-          label: '竹纤维',
-          value: '2',
-          input: '',
-          english: 'mulberry silk',
-        },
-        {
-          label: '莫代尔',
-          value: '3',
-          input: '',
-          english: 'mulberry silk',
-        },
-        {
-          label: '聚烯烃',
-          value: '4',
-          input: '',
-          english: 'mulberry silk',
-        },
-        {
-          label: ' EKS',
-          value: '5',
-          input: '',
-        },
-        {
-          label: '涤纶',
-          value: '6',
-          input: '',
-        },
-        {
-          label: '麻',
-          value: '7',
-          input: '',
-        },
-        {
-          label: '羊绒',
-          value: '8',
-          input: '',
-        },
-        {
-          label: '竹代尔',
-          value: '9',
-          input: '',
-        },
-        {
-          label: '铜氨',
-          value: '10',
-          input: '',
-        },
-        {
-          label: '聚乳酸',
-          value: '11',
-          input: '',
-        },
-        {
-          label: '大豆纤维',
-          value: '12',
-          input: '',
-        },
-        {
-          label: '尼龙',
-          value: '13',
-          input: '',
-        },
-        {
-          label: '醋酸',
-          value: '14',
-          input: '',
-        },
-        {
-          label: '氨纶',
-          value: '15',
-          input: '',
-        },
-        {
-          label: '腈纶',
-          value: '16',
-          input: '',
-        },
-        {
-          label: '野蚕丝',
-          value: '17',
-          input: '',
-        },
-        {
-          label: '乙纶',
-          value: '18',
-          input: '',
-        },
-        {
-          label: '天丝',
-          value: '19',
-          input: '',
-        },
-        {
-          label: '桑蚕丝',
-          value: '20',
-          input: '',
-        },
-        {
-          label: '丙纶',
-          value: '21',
-          input: '',
-        },
-        {
-          label: '羊毛',
-          value: '22',
-          input: '',
-        },
-        {
-          label: '粘胶',
-          value: '23',
-          input: '',
-        },
-        {
-          label: '桑巴拿',
-          value: '24',
-          input: '',
-        },
-      ],
+      componentList: [],
 
       componentDialogVisible: false,
       labelPosition: 'right',
       baseInfo: {
-        buhao: '', //参考布号
-        bulei: '', //布类
-        zhijiguimo: '', //织机规模
-        kezhong: '', //克重
-        fukuan: '', //幅宽
-        chengfen: '', //成分
-        teshugongyi: '', // 特殊工艺
-        function: '', // 功能性承诺
+        referenceClothNo: '', //参考布号
+        clothType: '', //布类
+        loomSpecification: '', //织机规模
+        gramWeight: '', //克重
+        widthCloth: '', //幅宽
+        component: '', //成分
+        specialProcessName: '', // 特殊工艺
+        functionName: '', // 功能性承诺
       },
     }
   },
@@ -450,25 +428,204 @@ export default {
   components: {},
 
   computed: {},
-
-  mounted: {},
+  created() {
+    this.getComponentLoss()
+    this.getCheckList()
+    if (this.$route.query.id) {
+      let data = {
+        id: this.$route.query.id,
+      }
+      this.getDetailById(data)
+    }
+    this.type = this.$route.query.type
+    const obj = Object.assign({}, this.$route, {
+      title: `自建产品(新增)`,
+    })
+    if (this.type == 'detail') {
+      obj.meta.title = '自建产品(详情)'
+    }
+    this.$tab.updatePage(obj)
+  },
 
   methods: {
+    //详情通过id初始化
+    getDetailById(data) {
+      getBuildProductById(data).then((res) => {
+        this.formData.data = res.buildProductYarnList
+        delete res.buildProductYarnList
+        this.baseInfo = Object.assign(this.baseInfo, res)
+        this.baseInfo.specialProcessName = this.baseInfo.specialProcessName
+          ? this.baseInfo.specialProcessName.split(',')
+          : []
+        this.baseInfo.functionName = this.baseInfo.functionName
+          ? this.baseInfo.functionName.split(',')
+          : []
+      })
+    },
+    getCheckList() {
+      getTableDataInfoToAble().then((res) => {
+        console.log(res)
+        this.specialList = res.data
+      })
+      getFunctionalCommitmentByName().then((res) => {
+        console.log(res)
+        this.functionList = res.data
+      })
+    },
+    //选择参考布号
+    handleSelectReferenceClothNo(item) {
+      this.baseInfo.referenceClothNo = item.clothNo
+    },
+    //模糊参考布号
+    queryReferenceClothNo(queryString, cb) {
+      if (queryString === '') {
+        cb([])
+        return
+      }
+      let data = {
+        referenceClothNo: queryString,
+      }
+      clearTimeout(this.timeout)
+      this.timeout = setTimeout(() => {
+        getFabricQuotationByBh(data).then((res) => {
+          cb(res.data)
+        })
+      }, 700)
+    },
+    //选择布类
+    handleSelectClothType(item) {
+      this.baseInfo.clothType = item.dictLabel
+    },
+    //模糊搜索布类
+    queryClothType(queryString, cb) {
+      if (queryString === '') {
+        cb([])
+        return
+      }
+      let data = {
+        dictType: 'fabric_type',
+        dictLabel: queryString,
+      }
+      clearTimeout(this.timeout)
+      this.timeout = setTimeout(() => {
+        console.log(data, 'data===')
+        getDictList(data).then((res) => {
+          cb(res.rows)
+        })
+      }, 700)
+    },
+    //选择织机规模
+    handleSelectLoomSpecification(item) {
+      this.baseInfo.loomSpecification = item.dictLabel
+    },
+    //模糊搜索织机规模
+    queryLoomSpecification(queryString, cb) {
+      if (queryString === '') {
+        cb([])
+        return
+      }
+      let data = {
+        dictType: 'loom_specifications',
+        dictLabel: queryString,
+      }
+      clearTimeout(this.timeout)
+      this.timeout = setTimeout(() => {
+        console.log(data, 'data===')
+        getDictList(data).then((res) => {
+          cb(res.rows)
+        })
+      }, 700)
+    },
+    //获取成分列表
+    getComponentLoss() {
+      findComponentLoss().then((res) => {
+        console.log(res)
+        this.componentList = res.data
+      })
+    },
+    //提交
+    submit() {
+      let ac = 0
+      this.formData.data.forEach((item) => {
+        if (item.yarnRatio) {
+          console.log(Number(item.yarnRatio), 'yarnRatio')
+          ac = ac + Number(item.yarnRatio)
+          console.log('listac', ac)
+        }
+      })
+      if (ac === 100) {
+        console.log('确定', this.baseInfo, this.formData)
+        let data = JSON.parse(JSON.stringify(this.baseInfo))
+        data.buildProductYarnList = this.formData.data
+        data.functionName = String(data.functionName)
+        data.specialProcessName = String(data.specialProcessName)
+        buildProduct(data).then((res) => {
+          let url = '/finance/finance/report/createProduct'
+          this.$router.push({ path: url })
+        })
+      } else if (this.formData.data.length == 0) {
+        this.$message.error('请添加纱织信息！')
+      } else {
+        this.$message.error('请填选正确的纱织信息比例！')
+      }
+    },
+    onCancel() {
+      let url = '/finance/finance/report/createProduct'
+      this.$router.push({ path: url })
+    },
+    //删除
+    deleteRow(val, index) {
+      console.log(val, index)
+      this.formData.data.splice(index, 1)
+      console.log(this.formData.data)
+    },
+    //添加纱织
+    addCraft() {
+      if (this.formData.data.length < 5) {
+        let data = JSON.parse(JSON.stringify(this.yarnInfo))
+        this.formData.data.push(data)
+      } else {
+        this.$message.error('纱织信息最多只能新增5条！')
+      }
+    },
+    // validatorNumber(rule, value, callback) {
+    //   if (value && !/^[0-9]+(.[0-9]{1,2})?$/.test(value)) {
+    //     callback(new Error('请输入数字'))
+    //   } else {
+    //     callback()
+    //   }
+    // },
     /**
      * 输入客户名搜索
      * @param {string} queryString
      * @param {*} cb
      */
-    queryName(queryString, cb) {
-      console.log(queryString === '')
+    queryName2(queryString, cb) {
       if (queryString === '') {
         cb([])
         return
       }
-
+      let data = {
+        wlbh: queryString,
+      }
       clearTimeout(this.timeout)
       this.timeout = setTimeout(() => {
-        getCustomerInfoByName(queryString).then((res) => {
+        getRawYarnInfoList(data).then((res) => {
+          cb(res.data)
+        })
+      }, 700)
+    },
+    queryName(queryString, cb) {
+      if (queryString === '') {
+        cb([])
+        return
+      }
+      let data = {
+        wlmch: queryString,
+      }
+      clearTimeout(this.timeout)
+      this.timeout = setTimeout(() => {
+        getRawYarnInfoList(data).then((res) => {
           cb(res.data)
         })
       }, 700)
@@ -479,8 +636,8 @@ export default {
      */
     handleSelect(item) {
       console.log(item, this.formData.sel)
-      this.formData.sel.szpm = item.customerName
-      this.formData.sel.szbh = item.customerName
+      this.formData.sel.yarnName = item.wlmch
+      this.formData.sel.yarnNo = item.wlbh
     },
     saveRow(row, index) {
       // 保存
@@ -492,6 +649,7 @@ export default {
             row[k] = data[k] // 将sel里面的value赋值给这一行。ps(for....in..)的妙用，细心的同学发现这里我并没有循环对象row
           }
           row.editFlag = false
+          row.states = 0
           // editPrice(data).then((data) => {
           //   this.getList()
           // })
@@ -508,17 +666,28 @@ export default {
       }
       this.formData.sel = row
       row.editFlag = true
+      row.states = 1
     },
     // 确定
     resetQuery(done) {
+      let text = ''
+      let ac = 0
       this.componentList.forEach((i) => {
         const item = i
         if (item.input) {
-          text += `${item.label}(${item.input}%);`
+          text += `${item.componentEnglish}(${item.input}%);`
+          console.log(Number(item.input), 'input')
+          ac = ac + Number(item.input)
+          console.log('listac', ac)
         }
       })
-      this.salesmanFormInfo.component = text
-      done()
+      console.log('ac', ac)
+      if (ac === 100) {
+        this.baseInfo.component = text
+        this.componentDialogVisible = false
+      } else {
+        this.$message.error('请填选正确的成分比例')
+      }
     },
     //取消
     handleClose(done) {
@@ -560,13 +729,114 @@ export default {
 ::v-deep .dialog-form .el-form-item--medium .el-form-item__content {
   line-height: 20px !important;
 }
-::v-deep .dialog-form .el-form--inline .el-form-item {
-  margin-right: 0px;
-}
+
 ::v-deep .dialog-form .el-form-item {
   margin-bottom: 0px;
 }
+::v-deep .dialog-form.el-form--inline .el-form-item {
+  margin-right: 0px;
+}
 ::v-deep .shazhi-form .el-form-item {
   margin-bottom: 0px;
+}
+.bottom_end_btn {
+  position: absolute;
+  bottom: 10px;
+  display: flex;
+  justify-content: flex-end;
+  width: calc(100% - 40px);
+}
+.font_h1 {
+  width: 64px;
+  font-size: 16px;
+  font-weight: 600;
+  color: rgba(0, 0, 0, 0.85);
+  margin-bottom: 20px;
+}
+.add_info {
+  text-align: center;
+  margin-top: 20px;
+  .el-button {
+    border: 1px dashed #dcdfe6;
+    color: #266fe8;
+  }
+}
+.container {
+  margin: 24px;
+  .card-box {
+    position: relative;
+    padding: 16px 16px 24px 16px;
+    margin-bottom: 24px;
+    border-radius: 8px;
+    background-color: #fff;
+    .title {
+      color: rgba(0, 0, 0, 0.85);
+      margin: 0 0 16px 0;
+      font-weight: 600;
+      text-align: left;
+    }
+    .btn-box {
+      margin-top: 24px;
+      text-align: center;
+      .el-button {
+        border: 1px dashed rgba(38, 111, 232, 1);
+        border-color: rgba(38, 111, 232, 1);
+        color: rgba(38, 111, 232, 1);
+      }
+    }
+  }
+  .upload-img {
+    display: flex;
+    font-size: 14px;
+    .flex {
+      flex: 1;
+    }
+  }
+}
+.footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  height: 80px;
+  line-height: 80px;
+  width: 100%;
+  padding-right: 24px;
+  background-color: #fff;
+  text-align: right;
+  box-shadow: 0 -1px 6px rgba(245, 247, 250, 0.6);
+  z-index: 99;
+  .sub-btn {
+    background-color: rgba(0, 82, 217, 1);
+    color: #fff;
+  }
+  .el-button {
+    margin-left: 16px;
+  }
+}
+.app-main {
+  background: rgba(245, 247, 250, 1);
+  margin-bottom: 80px;
+}
+.head_box {
+  background-color: #fff;
+  height: 40px;
+  line-height: 40px;
+  color: #242424;
+  padding-left: 24px;
+  font-weight: 600;
+}
+// 消除输入框右边上下箭头
+::v-deep.numrule input::-webkit-outer-spin-button,
+::v-deep.numrule input::-webkit-inner-spin-button {
+  -webkit-appearance: none !important;
+}
+::v-deep.numrule input[type='number'] {
+  -moz-appearance: textfield;
+}
+.created-font {
+  color: rgba(0, 0, 0, 0.4);
+  font-size: 14px;
+  text-align: right;
+  margin-right: 24px;
 }
 </style>

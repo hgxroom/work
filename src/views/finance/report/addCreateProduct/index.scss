@@ -73,3 +73,59 @@
     margin-right: 100px;
   }
 }
+.textarea-detail {
+  width: 100% !important;
+  margin-right: 0 !important;
+  ::v-deep .el-form-item__content {
+    width: calc(100% - 90px);
+  }
+  ::v-deep .el-textarea__inner {
+    border: 1px solid transparent;
+    background: transparent;
+    color: #666;
+    background: transparent;
+    cursor: auto;
+  }
+  ::v-deep .el-textarea__inner {
+    border-color: transparent;
+  }
+}
+.select-detail {
+  ::v-deep .el-input__inner {
+    border: 1px solid transparent;
+    background: transparent;
+    color: #666;
+  }
+  ::v-deep .el-input.is-disabled .el-input__inner {
+    cursor: auto;
+  }
+  ::v-deep .el-input.is-disabled .el-input__inner:hover {
+    border-color: transparent;
+  }
+  ::v-deep .el-input__suffix {
+    display: none;
+  }
+}
+.unit-detail {
+  color: #666;
+  padding-left: 15px;
+}
+.multiple-detail {
+  ::v-deep .el-form-item__content {
+    width: calc(100% - 90px);
+  }
+}
+.input-detail {
+  ::v-deep .el-input__inner {
+    border: 1px solid transparent;
+    background: transparent;
+    cursor: auto;
+    color: #666;
+  }
+  ::v-deep .el-input-group__append {
+    margin: 0;
+    padding: 0;
+    border-color: transparent;
+    background: transparent;
+  }
+}
