@@ -85,21 +85,21 @@
     <!-- 添加或修改参数配置对话框 -->
     <el-dialog title="染整损耗维护" :visible.sync="open" width="600px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="120px" class="from-pop">
-        <el-form-item label="成分(中文)" prop="component">
-          <el-input class="numrule" v-model="form.component" placeholder="请输入成分(中文)" />
+        <el-form-item label="成份(中文)" prop="component">
+          <el-input class="numrule" v-model="form.component" placeholder="请输入成份(中文)" />
         </el-form-item>
-        <el-form-item label="成分(英文)" prop="componentEnglish">
+        <el-form-item label="成份(英文)" prop="componentEnglish">
           <el-input
             class="numrule"
             v-model="form.componentEnglish"
-            placeholder="请输入成分(英文)"
+            placeholder="请输入成份(英文)"
           />
         </el-form-item>
-        <el-form-item label="成分(简称)" prop="componentAbbreviation">
+        <el-form-item label="成份(简称)" prop="componentAbbreviation">
           <el-input
             class="numrule"
             v-model="form.componentAbbreviation"
-            placeholder="请输入成分(简称)"
+            placeholder="请输入成份(简称)"
           />
         </el-form-item>
         <el-form-item label="白色(%)" prop="whiteColor">
@@ -187,19 +187,19 @@ export default {
         sel: null, // 选中行
         columns: [
           {
-            label: '成分(中文)',
+            label: '成份(中文)',
             align: 'left',
             type: 'text',
             prop: 'component',
           },
           {
-            label: '成分(英文)',
+            label: '成份(英文)',
             align: 'left',
             type: 'text',
             prop: 'componentEnglish',
           },
           {
-            label: '成分(简称)',
+            label: '成份(简称)',
             align: 'left',
             type: 'text',
             prop: 'componentAbbreviation',
@@ -255,9 +255,9 @@ export default {
       form: {},
       // 表单校验
       rules: {
-        component: [{ required: true, message: '成分(中文)不能为空', trigger: 'blur' }],
-        componentEnglish: [{ required: true, message: '成分(英文)不能为空', trigger: 'blur' }],
-        componentAbbreviation: [{ required: true, message: '成分(简称)不能为空', trigger: 'blur' }],
+        component: [{ required: true, message: '成份(中文)不能为空', trigger: 'blur' }],
+        componentEnglish: [{ required: true, message: '成份(英文)不能为空', trigger: 'blur' }],
+        componentAbbreviation: [{ required: true, message: '成份(简称)不能为空', trigger: 'blur' }],
         whiteColor: [{ required: true, message: '白色不能为空', trigger: 'blur' }],
         lightColor: [{ required: true, message: '浅色不能为空', trigger: 'blur' }],
         mediumColor: [{ required: true, message: '中色不能为空', trigger: 'blur' }],

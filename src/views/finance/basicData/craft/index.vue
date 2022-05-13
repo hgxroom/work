@@ -66,6 +66,9 @@
               >
                 编辑
               </el-button>
+              <el-button type="text" @click="deleteRow(scope.row, scope.$index)" size="small">
+                删除
+              </el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -131,13 +134,13 @@ export default {
             prop: 'processName',
           },
           {
-            label: '工费',
+            label: '工费(元)',
             align: 'left',
             type: 'number',
             prop: 'laborCost',
           },
           {
-            label: '损耗',
+            label: '损耗(%)',
             align: 'left',
             type: 'number',
             prop: 'loss',
@@ -267,11 +270,11 @@ export default {
         type: 'warning',
       })
         .then(() => {
-          this.$message({
-            type: 'success',
-            message: `${statusText}成功!`,
-          })
           editSpecialFinishingProcess(data).then((res) => {
+            this.$message({
+              type: 'success',
+              message: `${statusText}成功!`,
+            })
             this.getList()
           })
           // rows.splice(index, 1)
@@ -287,6 +290,7 @@ export default {
     submitForm: function () {
       this.$refs['form'].validate((valid) => {
         if (valid) {
+          this.form.status = '0'
           addSpecialFinishingProcess(this.form).then(() => {
             this.open = false
             this.getList()

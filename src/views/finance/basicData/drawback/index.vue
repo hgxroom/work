@@ -103,9 +103,21 @@
     </el-row>
     <!-- 添加或修改参数配置对话框 -->
     <el-dialog title="退税系数维护" :visible.sync="open" width="600px" append-to-body>
-      <el-form ref="form" :model="form" :rules="rules" label-width="80px" class="from-pop">
+      <el-form
+        ref="form"
+        :model="form"
+        :rules="rules"
+        label-width="80px"
+        class="from-pop"
+        @submit.native.prevent
+      >
         <el-form-item label="退税系数" prop="drawbackCoefficient">
-          <el-input v-model="form.drawbackCoefficient" placeholder="请输入退税系数" />
+          <el-input
+            class="numrule"
+            type="number"
+            v-model="form.drawbackCoefficient"
+            placeholder="请输入退税系数"
+          />
         </el-form-item>
         <el-form-item label="状态" prop="status">
           <el-radio-group v-model="form.status">
@@ -283,11 +295,11 @@ export default {
         type: 'warning',
       })
         .then(() => {
-          this.$message({
-            type: 'success',
-            message: `${statusText}成功!`,
-          })
           editDrawback(data).then((res) => {
+            this.$message({
+              type: 'success',
+              message: `${statusText}成功!`,
+            })
             this.getList()
           })
           // rows.splice(index, 1)

@@ -129,13 +129,13 @@ export default {
         sel: null, // 选中行
         columns: [
           {
-            label: '功能性承若名称',
+            label: '功能性承诺名称',
             align: 'left',
             type: 'text',
             prop: 'commitmentName',
           },
           {
-            label: '工费',
+            label: '工费(元)',
             align: 'left',
             type: 'number',
             prop: 'laborCost',
