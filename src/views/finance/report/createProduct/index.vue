@@ -120,21 +120,21 @@
         :show-overflow-tooltip="true"
       /> -->
       <el-table-column
-        label="克重(g)"
+        label="克重(g/m2)"
         align="center"
         prop="gramWeight"
         :show-overflow-tooltip="true"
       />
 
       <el-table-column
-        label="幅宽(g/m2)"
+        label="幅宽(cm)"
         align="center"
         prop="widthCloth"
         :show-overflow-tooltip="true"
       />
       <el-table-column label="成分" align="center" prop="component" :show-overflow-tooltip="true" />
       <el-table-column
-        label="织机规模"
+        label="织机规格"
         align="center"
         prop="loomSpecification"
         :show-overflow-tooltip="true"
@@ -242,9 +242,7 @@ export default {
       }
     },
     toDetail(val) {
-      console.log(val)
       let url = '/finance/addCreateProduct'
-
       this.$router.push({ path: url, query: { type: 'detail', id: val.row.id } })
     },
     //选择布类

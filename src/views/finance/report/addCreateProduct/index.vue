@@ -2,8 +2,8 @@
 <template>
   <div class="app-main">
     <div class="head_box">
-      <el-row type="flex" justify="end">
-        <el-col span="4">新增产品</el-col>
+      <el-row type="flex">
+        <el-col :span="4">新增产品</el-col>
         <el-col v-if="type == 'detail'" class="created-font"
           >提交人：{{ baseInfo.createBy }} 创建时间：{{ baseInfo.createTime }}</el-col
         >
@@ -59,12 +59,12 @@
               </template>
             </el-autocomplete>
           </el-form-item>
-          <el-form-item label="织机规模" prop="loomSpecification" required>
+          <el-form-item label="织机规格" prop="loomSpecification" required>
             <!-- 搜索框 -->
             <el-autocomplete
               v-model="baseInfo.loomSpecification"
               :fetch-suggestions="queryLoomSpecification"
-              placeholder="请输入织机规模"
+              placeholder="请输入织机规格"
               @select="handleSelectLoomSpecification"
               style="width: 100%"
               :disabled="type == 'detail' ? true : false"
@@ -85,7 +85,7 @@
                   placeholder="请输入克重"
                   style="width: 100%"
                 >
-                  <template slot="append">g</template>
+                  <template slot="append">g/m<sup>2</sup></template>
                 </el-input>
               </template>
             </el-form-item>
@@ -100,13 +100,23 @@
                   placeholder="请输入幅宽"
                   style="width: 100%"
                 >
-                  <template slot="append">g/m<sup>2</sup></template>
+                  <template slot="append">cm</template>
                 </el-input>
               </template>
             </el-form-item>
           </template>
           <el-form-item label="成分" prop="component" required>
-            <div @click="componentDialogVisible = true">
+            <div v-if="type == 'detail'">
+              <el-input
+                readonly
+                :disabled="type == 'detail' ? true : false"
+                :class="[type == 'detail' ? 'input-detail' : '']"
+                v-model="baseInfo.component"
+                placeholder="请输入成分"
+                style="width: 100%"
+              ></el-input>
+            </div>
+            <div v-else @click="componentDialogVisible = true">
               <el-input
                 readonly
                 :disabled="type == 'detail' ? true : false"
@@ -168,14 +178,13 @@
                 label="序号"
                 type="index"
                 align="center"
-                width="100px"
+                width="60px"
               ></el-table-column>
               <el-table-column
                 v-for="(val, index) in formData.columns"
                 :key="index"
                 :label="val.label"
                 :prop="val.prop"
-                :width="val.width"
                 :align="val.align"
               >
                 <template v-slot="scope">
@@ -238,7 +247,12 @@
                   </div>
                 </template>
               </el-table-column>
-              <el-table-column label="操作" align="center" v-if="type == 'detail' ? false : true">
+              <el-table-column
+                label="操作"
+                width="112px"
+                align="center"
+                v-if="type == 'detail' ? false : true"
+              >
                 <template v-slot="scope">
                   <el-button
                     type="text"
@@ -353,7 +367,7 @@ export default {
       baserules: {
         clothType: [{ required: true, message: '请输入布类', trigger: ['blur', 'change'] }],
         loomSpecification: [
-          { required: true, message: '请输入织机规模', trigger: ['blur', 'change'] },
+          { required: true, message: '请输入织机规格', trigger: ['blur', 'change'] },
         ],
         gramWeight: [{ required: true, message: '请输入克重', trigger: ['blur', 'change'] }],
         widthCloth: [{ required: true, message: '请输入幅宽', trigger: ['blur', 'change'] }],
@@ -372,8 +386,8 @@ export default {
         yarnName: '',
         yarnNo: '',
         yarnRatio: '',
-        editFlag: false,
-        states: 0,
+        editFlag: true,
+        states: 1,
       },
       //特殊工艺
       specialList: [],
@@ -387,18 +401,21 @@ export default {
             label: '纱线品名',
             align: 'left',
             type: 'number',
+            width: '50%',
             prop: 'yarnName',
           },
           {
             label: '纱线编号',
             align: 'left',
             type: 'number',
+            width: '25%',
             prop: 'yarnNo',
           },
           {
             label: '比例(%)',
             align: 'left',
             type: 'number',
+            width: '25%',
             prop: 'yarnRatio',
           },
         ],
@@ -415,7 +432,7 @@ export default {
       baseInfo: {
         referenceClothNo: '', //参考布号
         clothType: '', //布类
-        loomSpecification: '', //织机规模
+        loomSpecification: '', //织机规格
         gramWeight: '', //克重
         widthCloth: '', //幅宽
         component: '', //成分
@@ -474,7 +491,31 @@ export default {
     },
     //选择参考布号
     handleSelectReferenceClothNo(item) {
+      //基本信息
       this.baseInfo.referenceClothNo = item.clothNo
+      this.baseInfo.component = item.cf
+      this.baseInfo.clothType = item.productCategory
+      this.baseInfo.widthCloth = item.fk
+      this.baseInfo.gramWeight = item.kz
+      this.baseInfo.loomSpecification = item.loomType
+      //纱织信息
+      if (item.quotationYarnVoList) {
+        let list = []
+        item.quotationYarnVoList.forEach((val) => {
+          let param = {
+            yarnName: '',
+            yarnNo: '',
+            yarnRatio: '',
+            editFlag: false,
+            states: 0,
+          }
+          param.yarnName = val.wlmch
+          param.yarnNo = val.wlbh
+          param.yarnRatio = val.bl
+          list.push(param)
+        })
+        this.formData.data = list
+      }
     },
     //模糊参考布号
     queryReferenceClothNo(queryString, cb) {
@@ -485,6 +526,7 @@ export default {
       let data = {
         referenceClothNo: queryString,
       }
+      console.log(queryString.length)
       clearTimeout(this.timeout)
       this.timeout = setTimeout(() => {
         getFabricQuotationByBh(data).then((res) => {
@@ -514,11 +556,11 @@ export default {
         })
       }, 700)
     },
-    //选择织机规模
+    //选择织机规格
     handleSelectLoomSpecification(item) {
       this.baseInfo.loomSpecification = item.dictLabel
     },
-    //模糊搜索织机规模
+    //模糊搜索织机规格
     queryLoomSpecification(queryString, cb) {
       if (queryString === '') {
         cb([])
@@ -581,9 +623,13 @@ export default {
     },
     //添加纱织
     addCraft() {
+      for (const i of this.formData.data) {
+        if (i.editFlag) return this.$message.warning('请先保存当前编辑项')
+      }
       if (this.formData.data.length < 5) {
         let data = JSON.parse(JSON.stringify(this.yarnInfo))
         this.formData.data.push(data)
+        this.formData.sel = data
       } else {
         this.$message.error('纱织信息最多只能新增5条！')
       }

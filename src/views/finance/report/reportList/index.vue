@@ -47,7 +47,10 @@
       </el-col>
     </el-row>
     <el-row>
-      <el-button @click="addList" v-hasPermi="['finance:report:addReport:add']">新增</el-button>
+      <el-col :span="12">
+        <el-button type="primary" @click="addProduct" class="add-btn">新增</el-button>
+      </el-col>
+      <el-col :span="12" style="text-align: right"></el-col>
     </el-row>
     <!-- 列表状态 -->
     <el-row class="tab_head">
@@ -58,9 +61,73 @@
         v-for="(item, index) in tabBtn"
         :key="item.type"
       >
-        {{ item.name }}
+        {{ item.name }} ({{ item.num }})
       </div>
     </el-row>
+    <!-- 列表 -->
+    <el-row>
+      <el-col>
+        <el-table :data="listData" ref="list" :max-height="500" style="width: 100%">
+          <el-table-column
+            label="报价单号"
+            align="center"
+            prop="applyNo"
+            :show-overflow-tooltip="true"
+          >
+            <template slot-scope="scope">
+              <el-button type="text" @click="toDetail(scope)">{{ scope.row.applyNo }}</el-button>
+            </template>
+          </el-table-column>
+          <el-table-column
+            label="状态"
+            align="center"
+            prop="customerName"
+            :show-overflow-tooltip="true"
+          />
+          <el-table-column
+            label="客户名称"
+            align="center"
+            prop="deptName"
+            :show-overflow-tooltip="true"
+          />
+          <el-table-column
+            label="布号"
+            align="center"
+            prop="salesman"
+            :show-overflow-tooltip="true"
+          />
+          <el-table-column
+            label="提交人"
+            align="center"
+            prop="quotedType"
+            :show-overflow-tooltip="true"
+          >
+          </el-table-column>
+          <el-table-column label="部门" align="center" prop="status" :show-overflow-tooltip="true">
+          </el-table-column>
+          <el-table-column
+            label="最终客户"
+            align="center"
+            prop="createTime"
+            :show-overflow-tooltip="true"
+          />
+          <el-table-column
+            label="提交日期"
+            align="center"
+            prop="createTime"
+            :show-overflow-tooltip="true"
+          />
+        </el-table>
+      </el-col>
+    </el-row>
+    <!-- 分页 -->
+    <pagination
+      v-show="total > 0"
+      :total="total"
+      :page.sync="pageNum"
+      :limit.sync="pageSize"
+      @pagination="getList"
+    />
   </div>
 </template>
 
@@ -68,31 +135,41 @@
 export default {
   data() {
     return {
+      pageSize: '',
+      pageNum: '',
+      total: '',
+      listData: [], //数据
       type: 0,
       tabBtn: [
         {
           name: '全部',
           type: 0,
+          num: '1',
         },
         {
           name: '草稿',
           type: 1,
+          num: '2',
         },
         {
           name: '待报价',
           type: 2,
+          num: '3',
         },
         {
           name: '待审核',
           type: 3,
+          num: '4',
         },
         {
           name: '已审核',
           type: 4,
+          num: '5',
         },
         {
           name: '已驳回',
           type: 5,
+          num: '6',
         },
       ],
       queryParams: {
@@ -100,8 +177,9 @@ export default {
         ywy: '',
         khmc: '',
         bm: '',
-        dateTimePicker: '',
+        dateTimePicker: ['', ''],
         bh: '',
+        state: '',
       },
     }
   },
@@ -113,9 +191,53 @@ export default {
   mounted: {},
 
   methods: {
+    //重置
+    resetQuery() {
+      this.queryParams.bjdh = ''
+      this.queryParams.ywy = ''
+      this.queryParams.khmc = ''
+      this.queryParams.bm = ''
+      this.queryParams.dateTimePicker = ''
+      this.queryParams.bh = ''
+      this.getList()
+    },
+    //获取数据
+    getList() {
+      const { bjdh, ywy, khmc, bm, bh, dateTimePicker } = this.queryParams
+      let data = {}
+      if (this.queryParams.dateTimePicker == null) {
+        data = {
+          bjdh,
+          ywy,
+          khmc,
+          bm,
+          bh,
+          startTime: '',
+          endTime: ' ',
+          pageNum: this.pageNum,
+          pageSize: this.pageSize,
+        }
+      } else {
+        data = {
+          bjdh,
+          ywy,
+          khmc,
+          bm,
+          bh,
+          startTime: dateTimePicker[0],
+          endTime: dateTimePicker[1],
+          pageNum: this.pageNum,
+          pageSize: this.pageSize,
+        }
+      }
+      const { pageNum, pageSize } = this
+      getCustomerList(data).then((res) => {
+        this.total = res.total
+        this.listData = res.rows
+      })
+    },
     addList() {
       let url = '/finance/addReport'
-
       this.$router.push({ path: url })
     },
     //状态选择
@@ -126,6 +248,22 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
+.app-container {
+  .add-btn {
+    margin: 16px 0;
+    background-color: #00a870;
+    padding: 8px 15px;
+  }
+  .right-btn {
+    margin: 16px 0 16px 16px;
+    padding: 8px 15px;
+  }
+  margin: 24px;
+  padding: 0 16px;
+  .status {
+    color: #00a870;
+  }
+}
 .base-form {
   display: flex;
   flex-wrap: wrap;
