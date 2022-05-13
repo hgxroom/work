@@ -105,13 +105,24 @@
     <el-dialog title="汇率维护" :visible.sync="open" width="600px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px" class="from-pop">
         <el-form-item label="本币" prop="localCurrency">
-          <el-input type="text" v-model="form.localCurrency" placeholder="请输入物料编号" />
+          <el-input
+            type="text"
+            maxlength="12"
+            v-model="form.localCurrency"
+            placeholder="请输入本币"
+          />
         </el-form-item>
         <el-form-item label="外币" prop="foreignCurrency">
-          <el-input v-model="form.foreignCurrency" placeholder="请输入纱线品名" />
+          <el-input maxlength="12" v-model="form.foreignCurrency" placeholder="请输入外币" />
         </el-form-item>
         <el-form-item label="汇率" prop="exchangeRate">
-          <el-input v-model="form.exchangeRate" placeholder="请输入价格" />
+          <el-input
+            class="numrule"
+            @input="limitNum"
+            type="number"
+            v-model="form.exchangeRate"
+            placeholder="请输入汇率"
+          />
         </el-form-item>
         <el-form-item label="状态" prop="status">
           <el-radio-group v-model="form.status">
@@ -214,6 +225,12 @@ export default {
       }
       return obj[type]
     },
+    limitNum(value) {
+      if (value.toString().length > 11) {
+        this.form.exchangeRate = this.form.exchangeRate.toString().slice(0, 11)
+      }
+    },
+
     /**
      * 获取列表数据
      */
@@ -307,11 +324,11 @@ export default {
         type: 'warning',
       })
         .then(() => {
-          this.$message({
-            type: 'success',
-            message: `${statusText}成功!`,
-          })
           editExchangeRate(data).then((res) => {
+            this.$message({
+              type: 'success',
+              message: `${statusText}成功!`,
+            })
             this.getList()
           })
           // rows.splice(index, 1)
