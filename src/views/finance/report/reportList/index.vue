@@ -130,7 +130,7 @@
           <el-table-column label="状态" align="center" prop="status" :show-overflow-tooltip="true">
             <template v-slot="scope">
               <div>
-                {{ statusFilter(scope.row.status) }}
+                {{ statusFilter(scope.row.orderStatus) }}
               </div>
             </template></el-table-column
           >

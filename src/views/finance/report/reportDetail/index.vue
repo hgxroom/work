@@ -339,19 +339,20 @@ export default {
     toCostOffer(val) {
       console.log(this.baseInfo)
       if (this.baseInfo.orderStatus == 1) {
+        console.log(1111)
         let url = '/finance/reportCalculator'
         this.$router.push({
           path: url,
-          query: { type: 'detail', quotedOrderNo: val.row },
+          query: { type: 'detail', quotedOrderNo: this.$route.query.quotedOrderNo },
         })
       } else if (this.baseInfo.orderStatus == 2) {
-        let url = '/finance/finalReport'
+        let url = '/finance/finance/finalReport'
         this.$router.push({
           path: url,
           query: {
             type: 'add',
-            quotedOrderNo: val.row.quotedOrderNo,
-            newClothNo: val.row.newClothNo,
+            quotedOrderNo: this.$route.query.quotedOrderNo,
+            clothNo: this.baseInfo.clothNo,
           },
         })
       } else if (
@@ -364,8 +365,8 @@ export default {
           path: url,
           query: {
             type: 'detail',
-            quotedOrderNo: val.row.quotedOrderNo,
-            newClothNo: val.row.newClothNo,
+            quotedOrderNo: this.$route.query.quotedOrderNo,
+            clothNo: this.baseInfo.clothNo,
           },
         })
       }

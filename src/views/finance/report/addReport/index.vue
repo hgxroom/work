@@ -595,7 +595,7 @@ export default {
     submit(type) {
       this.baseInfo.orderStatus = type
       addQuotedOrder(this.baseInfo).then((res) => {
-        let url = '/finance/reportList'
+        let url = '/finance/finance/report/reportList'
         this.$router.push({ path: url })
         // console.log(res)
       })

@@ -319,7 +319,7 @@
         </div>
       </div>
       <div class="footer">
-        <el-button @click="add" class="save-btn">取消</el-button>
+        <el-button @click="cancel" class="save-btn">取消</el-button>
         <el-button @click="submit" class="sub-btn">确认报价</el-button>
       </div>
     </div>
@@ -469,11 +469,14 @@ export default {
   mounted() {},
   created() {
     this.type = this.$route.query.type
+    this.quotedOrderNo = this.$route.query.quotedOrderNo
+    this.clothNo = this.$route.query.clothNo
     console.log(this.dict)
     this.getlist()
     this.getCheckList()
   },
   methods: {
+    add() {},
     //确认报价
     submit() {
       let data = {}
@@ -491,7 +494,18 @@ export default {
       data.yarnCostTotal = this.yarnCostTotal
       console.log(data)
       calcQuotedPrice(data).then((res) => {
-        console.log('成功了')
+        let url = '/finance/finance/report/reportDetail'
+        this.$router.push({
+          path: url,
+          query: { type: 'detail', quotedOrderNo: this.$route.query.quotedOrderNo },
+        })
+      })
+    },
+    cancel(val) {
+      let url = '/finance/finance/report/reportDetail'
+      this.$router.push({
+        path: url,
+        query: { type: 'detail', quotedOrderNo: this.$route.query.quotedOrderNo },
       })
     },
     //删除工艺
