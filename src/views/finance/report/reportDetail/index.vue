@@ -143,10 +143,35 @@
               </div>
             </template>
           </el-table-column>
-          <el-table-column label="操作" width="100" align="center">
+          <el-table-column label="操作" width="100" align="center" v-if="baseInfo.orderStatus">
             <template v-slot="scope">
-              <el-button type="text" @click="toCostOffer(scope.row)" size="small">
+              <el-button
+                v-if="baseInfo.orderStatus == 1"
+                type="text"
+                @click="toCostOffer(scope.row)"
+                size="small"
+              >
                 成本报价
+              </el-button>
+              <el-button
+                v-if="baseInfo.orderStatus == 2"
+                type="text"
+                @click="toCostOffer(scope.row)"
+                size="small"
+              >
+                销售报价
+              </el-button>
+              <el-button
+                v-if="
+                  baseInfo.orderStatus == 3 ||
+                  baseInfo.orderStatus == 4 ||
+                  baseInfo.orderStatus == 5
+                "
+                type="text"
+                @click="toCostOffer(scope.row)"
+                size="small"
+              >
+                查看详情
               </el-button>
             </template>
           </el-table-column>
@@ -307,16 +332,35 @@ export default {
       getQuotedPriceByNo(this.quotedOrderNo).then((res) => {
         this.baseInfo = res.data
         this.formData.data = this.baseInfo.productList
+
         // console.log(this.baseInfo)
       })
     },
     toCostOffer(val) {
-      let url = '/finance/finance/reportDetail/quotationPrice'
-      this.$router.push({
-        path: url,
-        query: { type: 'detail', quotedOrderNo: val.row },
-      })
-      console.log(val)
+      console.log(this.baseInfo)
+      if (this.baseInfo.orderStatus == 1) {
+        let url = '/finance/reportCalculator'
+        this.$router.push({
+          path: url,
+          query: { type: 'detail', quotedOrderNo: val.row },
+        })
+      } else if (this.baseInfo.orderStatus == 2) {
+        let url = '/finance/finalReport'
+        this.$router.push({
+          path: url,
+          query: { type: 'add', quotedOrderNo: val.row },
+        })
+      } else if (
+        this.baseInfo.orderStatus == 3 ||
+        this.baseInfo.orderStatus == 4 ||
+        this.baseInfo.orderStatus == 5
+      ) {
+        let url = '/finance/finalReport'
+        this.$router.push({
+          path: url,
+          query: { type: 'detail', quotedOrderNo: val.row },
+        })
+      }
     },
     getCheckList() {
       getTableDataInfoToAble().then((res) => {
