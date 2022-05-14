@@ -11,236 +11,308 @@
       </div>
     </div>
     <div class="container">
+      <!-- 纱线成本 -->
       <div class="card-box">
         <p class="title">纱线成本</p>
         <el-table
           size="small"
-          :data="formData.data"
-          style="width: 100%; font-size: 14px; color: #242424; bordercolor: #000"
+          :span-method="yarnMethod"
+          :data="yarnCostList"
+          style="width: 100%; font-size: 14px; color: #242424; border-color: #000"
           header-row-class-name="tableHeader"
         >
           <el-table-column
-            v-for="(item, index) in formData.columns"
-            :key="index"
-            :label="item.label"
-            :prop="item.prop"
-            :width="item.width"
-            :align="item.align"
+            label="纱线编号"
+            align="left"
+            prop="yarnNo"
+            :show-overflow-tooltip="true"
+          />
+          <el-table-column
+            label="纱线品名"
+            align="left"
+            prop="yarnName"
+            :show-overflow-tooltip="true"
+          />
+
+          <el-table-column
+            label="纱支比例（%）"
+            align="left"
+            prop="yarnRatio"
+            :show-overflow-tooltip="true"
+          />
+          <el-table-column
+            label="纱线价格"
+            align="center"
+            prop="yarnCost"
+            :show-overflow-tooltip="true"
           >
             <template v-slot="scope">
-              <div v-if="item.prop == 'price'">
-                {{ scope.row[item.prop] }}
-              </div>
-              <div v-if="item.prop == 'list'">
-                <div class="info-list" v-for="(j, index) in scope.row[item.prop]" :key="index">
-                  <el-input
-                    type="number"
-                    class="numrule"
-                    v-model="j.price"
-                    placeholder="请输入内容"
-                  ></el-input>
-                </div>
-              </div>
+              <el-input
+                size="small"
+                class="numrule"
+                placeholder="请输入内容"
+                @change="handleCount(scope)"
+                v-model="scope.row.yarnCost"
+              >
+              </el-input>
             </template>
           </el-table-column>
-          <el-table-column label="纱线总成本(元)" align="center">
+          <el-table-column
+            label="纱线总成本"
+            align="center"
+            prop="yarnCost"
+            :show-overflow-tooltip="true"
+          >
             <template v-slot="scope">
-              <div class="total-num">
-                <span>{{ scope.row.total }}</span>
-              </div>
+              <div>{{ yarnCostTotal }}</div>
             </template>
           </el-table-column>
         </el-table>
       </div>
+      <!-- 织布成本 -->
       <div class="card-box">
         <p class="title">织布成本</p>
         <el-table
           size="small"
-          :data="formData.data"
-          style="width: 100%; font-size: 14px; color: #242424; bordercolor: #000"
+          :data="weavingCostList"
+          style="width: 100%; font-size: 14px; color: #242424; border-color: #000"
           header-row-class-name="tableHeader"
         >
           <el-table-column
-            v-for="(item, index) in formData.columns"
-            :key="index"
-            :label="item.label"
-            :prop="item.prop"
-            :width="item.width"
-            :align="item.align"
+            label="织费"
+            align="center"
+            prop="weavingFee"
+            :show-overflow-tooltip="true"
           >
             <template v-slot="scope">
-              <div v-if="item.prop == 'price'">
-                {{ scope.row[item.prop] }}
-              </div>
-              <div v-if="item.prop == 'list'">
-                <div class="info-list" v-for="(j, index) in scope.row[item.prop]" :key="index">
-                  <el-input
-                    type="number"
-                    class="numrule"
-                    v-model="j.price"
-                    placeholder="请输入内容"
-                  ></el-input>
-                </div>
-              </div>
+              <el-input
+                size="small"
+                class="numrule"
+                placeholder="请输入内容"
+                @change="handleweaving(scope)"
+                v-model="scope.row.weavingFee"
+              >
+              </el-input>
             </template>
           </el-table-column>
-          <el-table-column label="纱线总成本(元)" align="center">
-            <template v-slot="scope">
-              <div class="total-num">
-                <span>{{ scope.row.total }}</span>
-              </div>
-            </template>
-          </el-table-column>
+
+          <el-table-column
+            label="织造损耗（%）"
+            align="left"
+            prop="weavingLoss"
+            :show-overflow-tooltip="true"
+          />
+          <el-table-column
+            label="毛坯成本（元）"
+            align="center"
+            prop="blankCost"
+            :show-overflow-tooltip="true"
+          />
         </el-table>
       </div>
+      <!-- 染色成本 -->
       <div class="card-box">
         <p class="title">染色成本</p>
         <el-table
           size="small"
-          :data="formData.data"
-          style="width: 100%; font-size: 14px; color: #242424; bordercolor: #000"
+          :data="dyeingCostList"
+          style="width: 100%; font-size: 14px; color: #242424; border-color: #000"
           header-row-class-name="tableHeader"
         >
           <el-table-column
-            v-for="(item, index) in formData.columns"
-            :key="index"
-            :label="item.label"
-            :prop="item.prop"
-            :width="item.width"
-            :align="item.align"
+            label="颜色"
+            align="left"
+            prop="colorName"
+            :show-overflow-tooltip="true"
+          />
+          <el-table-column
+            label="作业类型"
+            align="left"
+            prop="jobType"
+            :show-overflow-tooltip="true"
           >
             <template v-slot="scope">
-              <div v-if="item.prop == 'price'">
-                {{ scope.row[item.prop] }}
-              </div>
-              <div v-if="item.prop == 'list'">
-                <div class="info-list" v-for="(j, index) in scope.row[item.prop]" :key="index">
-                  <el-input
-                    type="number"
-                    class="numrule"
-                    v-model="j.price"
-                    placeholder="请输入内容"
-                  ></el-input>
-                </div>
-              </div>
+              <el-select
+                v-model="dyeingCostList[scope.$index].jobType"
+                placeholder="请选择"
+                style="width: 100%"
+                @change="jobchange()"
+              >
+                <el-option
+                  v-for="(dicts, index) in dict.type.job_type"
+                  :key="index"
+                  :label="dicts.label"
+                  :value="dicts.label"
+                ></el-option>
+              </el-select>
             </template>
           </el-table-column>
-          <el-table-column label="染色总成本(元)" align="center">
-            <template v-slot="scope">
-              <div class="total-num">
-                <span>{{ scope.row.total }}</span>
-              </div>
-            </template>
-          </el-table-column>
+          <el-table-column
+            label="染整损耗"
+            align="left"
+            prop="dyeingLoss"
+            :show-overflow-tooltip="true"
+          />
+          <el-table-column
+            label="染费"
+            align="center"
+            prop="dyeingFee"
+            :show-overflow-tooltip="true"
+          />
         </el-table>
       </div>
+      <!-- 特整成本 -->
       <div class="card-box">
         <p class="title">特整成本</p>
         <el-table
           size="small"
-          :data="formData.data"
-          style="width: 100%; font-size: 14px; color: #242424; bordercolor: #000"
+          :span-method="specialMethod"
+          :data="specialFinishingList"
+          style="width: 100%; font-size: 14px; color: #242424; border-color: #000"
           header-row-class-name="tableHeader"
         >
-          <el-table-column
-            v-for="(item, index) in formData.columns"
-            :key="index"
-            :label="item.label"
-            :prop="item.prop"
-            :width="item.label == '操作' ? 112 : item.width"
-            :align="item.label == '操作' ? 'center' : item.align"
-          >
+          <el-table-column label="操作" width="112px" align="center">
             <template v-slot="scope">
-              <div v-if="item.label == '操作'">
-                <div
-                  class="info-list delete-btn"
-                  v-for="(j, index) in scope.row[item.prop]"
-                  :key="index"
-                >
-                  <el-button type="text" @click="deleteRow(scope.row, scope.$index)" size="small">
-                    删除
-                  </el-button>
-                </div>
-              </div>
-              <div v-if="item.prop == 'list' && item.label !== '操作'">
-                <div class="info-list" v-for="(j, index) in scope.row[item.prop]" :key="index">
-                  <el-input
-                    type="number"
-                    class="numrule"
-                    v-model="j.price"
-                    placeholder="请输入内容"
-                  ></el-input>
-                </div>
-              </div>
+              <el-button
+                type="text"
+                @click="deleteRow(scope.row, scope.$index, 'special')"
+                size="small"
+              >
+                删除
+              </el-button>
             </template>
           </el-table-column>
-          <el-table-column label="特整总成本(元)" align="center">
+          <el-table-column
+            label="工艺"
+            align="left"
+            prop="processName"
+            :show-overflow-tooltip="true"
+          >
             <template v-slot="scope">
-              <div class="total-num">
-                <span>{{ scope.row.total }}</span>
-              </div>
+              <el-select
+                v-model="specialFinishingList[scope.$index].processName"
+                placeholder="请选择"
+                style="width: 100%"
+                @change="handleType(scope, scope.$index, $event)"
+              >
+                <el-option
+                  v-for="(dict, index) in specialList"
+                  :key="index"
+                  :label="dict.processName"
+                  :value="dict.processName"
+                ></el-option>
+              </el-select>
+            </template>
+          </el-table-column>
+          <el-table-column
+            label="工费"
+            align="left"
+            prop="laborCost"
+            :show-overflow-tooltip="true"
+          />
+          <el-table-column
+            label="特整损耗"
+            align="center"
+            prop="extraLoss"
+            :show-overflow-tooltip="true"
+          />
+          <el-table-column
+            label="特整总损耗(%)"
+            align="center"
+            prop="extraWholeLoss"
+            :show-overflow-tooltip="true"
+          >
+            <template v-slot="scope">
+              <div>{{ extraWholeLoss }}</div>
+            </template>
+          </el-table-column>
+          <el-table-column
+            label="特整总成本(元)"
+            align="center"
+            prop="extraWholeCost"
+            :show-overflow-tooltip="true"
+          >
+            <template v-slot="scope">
+              <div>{{ extraWholeCost }}</div>
             </template>
           </el-table-column>
         </el-table>
-        <div class="btn-box"><el-button @click="add" class="add-btn">添加工艺</el-button></div>
+        <div class="add_info">
+          <el-button @click="addSpecial">添加工艺</el-button>
+        </div>
       </div>
+      <!-- 功能性成本 -->
       <div class="card-box">
         <p class="title">功能性成本</p>
         <el-table
           size="small"
-          :data="formData.data"
-          style="width: 100%; font-size: 14px; color: #242424; bordercolor: #000"
+          :span-method="functionMethod"
+          :data="functionCostList"
+          style="width: 100%; font-size: 14px; color: #242424; border-color: #000"
           header-row-class-name="tableHeader"
         >
-          <el-table-column
-            v-for="(item, index) in formData.columns"
-            :key="index"
-            :label="item.label"
-            :prop="item.prop"
-            :width="item.label == '操作' ? 112 : item.width"
-            :align="item.label == '操作' ? 'center' : item.align"
-          >
+          <el-table-column label="操作" width="112px" align="center">
             <template v-slot="scope">
-              <div v-if="item.label == '操作'">
-                <div
-                  class="info-list delete-btn"
-                  v-for="(j, index) in scope.row[item.prop]"
-                  :key="index"
-                >
-                  <el-button type="text" @click="deleteRow(scope.row, scope.$index)" size="small">
-                    删除{{ index }}
-                  </el-button>
-                </div>
-              </div>
-              <div v-if="item.prop == 'list' && item.label !== '操作'">
-                <div class="info-list" v-for="(j, index) in scope.row[item.prop]" :key="index">
-                  <el-input
-                    type="number"
-                    class="numrule"
-                    v-model="j.price"
-                    placeholder="请输入内容"
-                  ></el-input>
-                </div>
-              </div>
+              <el-button
+                type="text"
+                @click="deleteRow(scope.row, scope.$index, 'function')"
+                size="small"
+              >
+                删除
+              </el-button>
             </template>
           </el-table-column>
-          <el-table-column label="功能性总成本(元)" align="center">
+          <el-table-column
+            label="功能性承诺"
+            align="left"
+            prop="processName"
+            :show-overflow-tooltip="true"
+          >
             <template v-slot="scope">
-              <div class="total-num">
-                <span>{{ scope.row.total }}</span>
-              </div>
+              <el-select
+                v-model="functionCostList[scope.$index].functionalCommitmentName"
+                placeholder="请选择"
+                style="width: 100%"
+                @change="handleFunc(scope, scope.$index, $event)"
+              >
+                <el-option
+                  v-for="(dict, index) in functionList"
+                  :key="index"
+                  :label="dict.commitmentName"
+                  :value="dict.commitmentName"
+                ></el-option>
+              </el-select>
+            </template>
+          </el-table-column>
+          <el-table-column
+            label="工费(元)"
+            align="left"
+            prop="laborCost"
+            :show-overflow-tooltip="true"
+          />
+
+          <el-table-column
+            label="功能性总成本(元)"
+            align="center"
+            prop="functionCostTotal"
+            :show-overflow-tooltip="true"
+          >
+            <template v-slot="scope">
+              <div>{{ functionCostTotal }}</div>
             </template>
           </el-table-column>
         </el-table>
-        <div class="btn-box">
-          <el-button @click="add" class="add-btn">添加功能性承诺</el-button>
+        <div class="add_info">
+          <el-button @click="addFunction">添加功能性承诺</el-button>
         </div>
       </div>
+      <!-- 最终成本报价 -->
       <div class="card-box">
         <p class="title">最终报价</p>
         <div class="computed">
-          <p class="computed-item"><span>白色：</span>3894.3443</p>
-          <p class="computed-item"><span>白色：</span>3894.3443</p>
+          <p class="computed-item" v-for="(item, index) in finalQuotedList" :key="index">
+            <span>{{ item.colorName }}：</span>{{ item.costPrice }}
+          </p>
         </div>
         <div class="btn-box btn-box-left">
           <el-button @click="add" class="computed-btn">计算报价</el-button>
@@ -248,7 +320,7 @@
       </div>
       <div class="footer">
         <el-button @click="add" class="save-btn">取消</el-button>
-        <el-button @click="add" class="sub-btn">确认报价</el-button>
+        <el-button @click="submit" class="sub-btn">确认报价</el-button>
       </div>
     </div>
     <!-- 弹框 -->
@@ -296,32 +368,65 @@
 
 <script>
 import { number } from 'echarts/lib/export'
+import {
+  findQuotedProduct,
+  getTableDataInfoToAble,
+  getFunctionalCommitmentByName,
+  calcQuotedPrice,
+} from '@/api/finance/report'
 export default {
+  dicts: [
+    'job_type', //作业类型
+  ],
   data() {
     return {
+      clothNo: 'YL00056', //布号
+      quotedOrderNo: 'BJ-005', //报价单号
       type: '', // 表单类型
       disabled: false,
-      // 表格数据
+      //最终成本报价数据
+      finalQuotedList: [],
+      //功能性成本数据
+      functionCostList: [],
+      functionCostTotal: '',
+      //特整成本数据
+      specialFinishingList: [],
+      extraWholeCost: [],
+      extraWholeLoss: [],
+      //织布成本数据
+      weavingCostList: [],
+      //染色成本数据
+      dyeingCostList: [],
+      //纱线成本数据
+      yarnCostList: [],
+      yarnCostTotal: [],
+      // 纱线成本表格数据
       formData: {
         sel: null, // 选中行
         columns: [
           {
-            label: '操作',
+            label: '颜色',
             align: 'left',
-            type: 'number',
-            prop: 'list',
+            type: 'text',
+            prop: 'colorName',
           },
           {
-            label: '纱线编号',
+            label: '作业类型',
             align: 'left',
             type: 'number',
-            prop: 'list',
+            prop: 'jobType',
           },
           {
-            label: '纱线编号',
+            label: '染整损耗',
             align: 'left',
             type: 'number',
-            prop: 'list',
+            prop: 'dyeingLoss',
+          },
+          {
+            label: '染费',
+            align: 'left',
+            type: 'number',
+            prop: 'dyeingFee',
           },
         ],
         data: [
@@ -349,6 +454,10 @@ export default {
           },
         ],
       },
+      //特殊工艺
+      specialList: [],
+      //功能性承诺
+      functionList: [],
       productDialogVisible: false,
     }
   },
@@ -358,12 +467,181 @@ export default {
   computed: {},
 
   mounted() {},
-
+  created() {
+    this.type = this.$route.query.type
+    console.log(this.dict)
+    this.getlist()
+    this.getCheckList()
+  },
   methods: {
-    getlist() {},
-    add() {
-      this.productDialogVisible = true
+    //确认报价
+    submit() {
+      let data = {}
+      data.clothNo = this.clothNo
+      data.dyeingCostDtoList = this.dyeingCostList
+      data.extraWholeCost = this.extraWholeCost
+      data.extraWholeLoss = this.extraWholeLoss
+      data.finalCostQuotedDtoList = this.finalQuotedList
+      data.functionCostDtoList = this.functionCostList
+      data.functionCostTotal = this.functionCostTotal
+      data.quotedOrderNo = this.quotedOrderNo
+      data.specialDtoList = this.specialFinishingList
+      data.weavingCostDtoList = this.weavingCostList
+      data.yarnCostDtoList = this.yarnCostList
+      data.yarnCostTotal = this.yarnCostTotal
+      console.log(data)
+      calcQuotedPrice(data).then((res) => {
+        console.log('成功了')
+      })
     },
+    //删除工艺
+    deleteRow(row, index, type) {
+      // 删除接口 成功以后 this.editId = ''
+      this.$confirm('确定删除这条数据, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning',
+      })
+        .then(() => {
+          if (type == 'special') {
+            this.specialFinishingList.splice(index, 1)
+            this.handleType()
+          } else if (type == 'function') {
+            this.functionCostList.splice(index, 1)
+            this.handleFunc()
+          }
+          console.log(row, index)
+        })
+        .catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消删除',
+          })
+        })
+    },
+    //添加工艺
+    addSpecial() {
+      let params = {
+        extraLoss: '',
+        laborCost: '',
+        processName: '',
+      }
+      if (!this.specialFinishingList) {
+        this.specialFinishingList = []
+      }
+      this.specialFinishingList.push(params)
+    },
+    //添加功能性承诺
+    addFunction() {
+      let params = {
+        functionalCommitmentName: '',
+        laborCost: '',
+      }
+      this.functionCostList.push(params)
+    },
+    //功能性改变
+    handleFunc(scope, index, evt) {
+      let cost = 0
+      this.functionList.forEach((val) => {
+        if (val.commitmentName == evt) {
+          this.functionCostList[index].laborCost = val.laborCost
+        }
+      })
+      this.functionCostList.forEach((item) => {
+        cost = item.laborCost + cost
+      })
+      this.functionCostTotal = cost
+    },
+    //工艺改变
+    handleType(scope, index, evt) {
+      let cost = 0
+      let loss = 0
+      this.specialList.forEach((val) => {
+        if (val.processName == evt) {
+          this.specialFinishingList[index].laborCost = val.laborCost
+          this.specialFinishingList[index].extraLoss = val.loss
+        }
+      })
+      this.specialFinishingList.forEach((item) => {
+        cost = item.laborCost + cost
+        loss = item.extraLoss + loss
+      })
+      this.extraWholeCost = cost
+      this.extraWholeLoss = loss
+    },
+    //获取工艺和功能性承诺
+    getCheckList() {
+      getTableDataInfoToAble().then((res) => {
+        console.log(res)
+        this.specialList = res.data
+      })
+      getFunctionalCommitmentByName().then((res) => {
+        console.log(res)
+        this.functionList = res.data
+      })
+    },
+    //织费变化
+    handleweaving(scope) {
+      this.weavingCostList[scope.$index].blankCost =
+        Number(this.weavingCostList[scope.$index].weavingFee) +
+        this.yarnCostTotal +
+        (this.yarnCostTotal * this.weavingCostList[scope.$index].weavingLoss) / 100
+    },
+    //纱线价格变化
+    handleCount(scope) {
+      let count = 0
+      this.yarnCostList.forEach((val) => {
+        count = count + Number(val.yarnCost)
+      })
+      this.yarnCostTotal = count
+      console.log(scope, this.yarnCostList)
+    },
+    //工艺合并单元格
+    specialMethod({ row, column, rowIndex, columnIndex }) {
+      if (column.label == '特整总损耗(%)' && rowIndex === 0 && this.specialFinishingList) {
+        return [this.specialFinishingList.length, 1]
+      }
+      if (column.label == '特整总成本(元)' && rowIndex === 0 && this.specialFinishingList) {
+        return [this.specialFinishingList.length, 1]
+      }
+    },
+    //功能性成本合并单元格
+    functionMethod({ row, column, rowIndex, columnIndex }) {
+      if (column.label == '功能性总成本(元)' && rowIndex === 0) {
+        return [this.functionCostList.length, 1]
+      }
+    },
+    //纱线合并单元格
+    yarnMethod({ row, column, rowIndex, columnIndex }) {
+      if (column.label == '纱线总成本' && rowIndex === 0) {
+        return [this.yarnCostList.length, 1]
+      }
+    },
+    //作业类类型改变
+    jobchange() {
+      console.log('123', this.dyeingCostList)
+    },
+    //获取基本数据
+    getlist() {
+      let data = {
+        clothNo: this.clothNo,
+        quotedOrderNo: this.quotedOrderNo,
+      }
+      findQuotedProduct(data).then((res) => {
+        this.dyeingCostList = res.data.dyeingCostList
+        // this.productYarnVoData = res.data.productYarnVo
+        this.yarnCostList = res.data.productYarnVo.yarnCostList
+        this.yarnCostTotal = res.data.productYarnVo.yarnCostTotal
+        this.weavingCostList = res.data.weavingCostList
+        this.specialFinishingList = res.data.specialVo.specialFinishingList
+        this.extraWholeCost = res.data.specialVo.extraWholeCost
+        this.extraWholeLoss = res.data.specialVo.extraWholeLoss
+        this.functionCostList = res.data.functionCostVo.functionCostList
+        this.functionCostTotal = res.data.functionCostVo.functionCostTotal
+        this.finalQuotedList = res.data.finalQuotedList
+      })
+    },
+
     // 确定
     resetQuery(done) {
       this.componentList.forEach((i) => {
@@ -379,25 +657,6 @@ export default {
     handleClose(done) {
       this.productDialogVisible = false
     },
-    deleteRow(row, index) {
-      let ids = row.id
-      // 删除接口 成功以后 this.editId = ''
-      this.$confirm('确定删除这条数据, 是否继续?', '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning',
-      })
-        .then(() => {})
-        .catch(() => {
-          this.$message({
-            type: 'info',
-            message: '已取消删除',
-          })
-        })
-    },
-  },
-  created() {
-    this.type = this.$route.query.type
   },
 }
 </script>
@@ -736,5 +995,13 @@ export default {
 }
 .el-divider {
   background-color: rgba(243, 243, 243, 1);
+}
+.add_info {
+  text-align: center;
+  margin-top: 20px;
+  .el-button {
+    border: 1px dashed #dcdfe6;
+    color: #266fe8;
+  }
 }
 </style>

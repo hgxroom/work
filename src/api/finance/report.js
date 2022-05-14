@@ -157,8 +157,8 @@ export function addQuotedOrder(data) {
 export function findQuotedProduct(data) {
   return request({
     url: `/system/quotedOrder/findQuotedProduct`,
-    method: 'get',
-    params: data,
+    method: 'post',
+    data: data,
   })
 }
 /**
@@ -193,5 +193,17 @@ export function getWeightStepDtoToAble() {
   return request({
     url: `/system/weightStep/getWeightStepDtoToAble`,
     method: 'GET',
+  })
+}
+/**
+ * 下单重量
+ * @param {*}
+ * @returns
+ */
+export function calcQuotedPrice(data) {
+  return request({
+    url: `/system/quotedOrder/calcQuotedPrice`,
+    method: 'POST',
+    data: data,
   })
 }
