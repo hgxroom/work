@@ -1,111 +1,24 @@
+<!-- 报价计算 -->
 <template>
   <div class="app-main">
     <div class="title-box">
       <div class="tit">成本报价计算</div>
       <div class="tit-info">
-        <span>布号：{{ newClothNo }}</span>
-        <span> 品名：{{ pm }} </span>
-        <el-button @click="submit">尹薇吃龙虾,翻车吃虾壳</el-button>
+        <span>布号：BJ-8930484935</span>
+        <span>
+          品名：60S 皮马棉 精梳 紧密纺+140D 晓星H350氨纶 89/11 弹力罗纹 15寸18针 840T 31*2CM 220G
+        </span>
       </div>
     </div>
     <div class="container">
       <div class="card-box">
-        <p class="title">最终报价</p>
-        <el-table
-          size="small"
-          :data="datalist"
-          :span-method="arraySpanMethod"
-          style="width: 100%; font-size: 14px; color: #242424; border-color: #000"
-          header-row-class-name="tableHeader"
-        >
-          <el-table-column label="利润率" align="center" prop="interestRate">
-            <template v-slot="scope">
-              <el-input
-                v-if="!(scope.$index === 0)"
-                size="small"
-                class="numrule"
-                placeholder="请输入内容"
-                @change="handleCount(scope)"
-                v-model="scope.row.interestRate"
-              >
-              </el-input>
-              <div v-else>{{ scope.row.interestRate }}(成本价)</div>
-            </template>
-          </el-table-column>
-          <!-- <el-table-column label="利润率" align="center" prop="lrl" :show-overflow-tooltip="true"> -->
-          <!-- </el-table-column> -->
-
-          <el-table-column
-            v-for="(val, index) in labelList"
-            :key="index"
-            :label="val.label"
-            align="center"
-            :prop="val.key"
-            :show-overflow-tooltip="true"
-          >
-            <template v-slot="scope">
-              <div v-if="scope.$index === 0">{{ scope.row[val.key] }}(元/kg)</div>
-              <div v-else>{{ scope.row[val.key] }}({{ reportData.settlementMethod }})</div>
-            </template>
-          </el-table-column>
-          <el-table-column label="操作" align="center" prop="lrl">
-            <template v-slot="scope">
-              <div class="info-list checkbox">
-                <el-checkbox v-model="scope.row.choiceflag"></el-checkbox>
-              </div>
-            </template>
-          </el-table-column>
-          <el-table-column label="报价策略" align="center">
-            <template v-slot="scope">
-              <div class="remarks-text">
-                <el-input
-                  type="textarea"
-                  :rows="5"
-                  placeholder="请输入报价策略"
-                  v-model="reportData.quotationStrategy"
-                >
-                </el-input>
-              </div>
-            </template>
-          </el-table-column>
-        </el-table>
-      </div>
-      <div class="card-box">
-        <p class="title">历史报价信息</p>
-        <el-table
-          size="small"
-          :data="formData.data"
-          style="width: 100%; font-size: 14px; color: #242424; border-color: #000"
-          highlight-current-row
-          header-row-class-name="tableHeader"
-        >
-          <el-table-column label="序号" type="index" align="center" width="100px"></el-table-column>
-          <el-table-column
-            v-for="(item, index) in formData.columns"
-            :key="index"
-            :label="item.label"
-            :prop="item.prop"
-            :width="item.width"
-            :align="item.align"
-          >
-            <template v-slot="scope">
-              <div>
-                {{ scope.row[item.prop] }}
-              </div>
-            </template>
-          </el-table-column>
-        </el-table>
-      </div>
-      <div class="card-box">
-        <p class="title">历史订单信息</p>
+        <p class="title">纱线成本</p>
         <el-table
           size="small"
           :data="formData.data"
           style="width: 100%; font-size: 14px; color: #242424; bordercolor: #000"
-          highlight-current-row
           header-row-class-name="tableHeader"
         >
-          <el-table-column label="序号" type="index" align="center" width="100px"></el-table-column>
           <el-table-column
             v-for="(item, index) in formData.columns"
             :key="index"
@@ -115,12 +28,223 @@
             :align="item.align"
           >
             <template v-slot="scope">
-              <div>
-                {{ datalist }}
+              <div v-if="item.prop == 'price'">
+                {{ scope.row[item.prop] }}
+              </div>
+              <div v-if="item.prop == 'list'">
+                <div class="info-list" v-for="(j, index) in scope.row[item.prop]" :key="index">
+                  <el-input
+                    type="number"
+                    class="numrule"
+                    v-model="j.price"
+                    placeholder="请输入内容"
+                  ></el-input>
+                </div>
+              </div>
+            </template>
+          </el-table-column>
+          <el-table-column label="纱线总成本(元)" align="center">
+            <template v-slot="scope">
+              <div class="total-num">
+                <span>{{ scope.row.total }}</span>
               </div>
             </template>
           </el-table-column>
         </el-table>
+      </div>
+      <div class="card-box">
+        <p class="title">织布成本</p>
+        <el-table
+          size="small"
+          :data="formData.data"
+          style="width: 100%; font-size: 14px; color: #242424; bordercolor: #000"
+          header-row-class-name="tableHeader"
+        >
+          <el-table-column
+            v-for="(item, index) in formData.columns"
+            :key="index"
+            :label="item.label"
+            :prop="item.prop"
+            :width="item.width"
+            :align="item.align"
+          >
+            <template v-slot="scope">
+              <div v-if="item.prop == 'price'">
+                {{ scope.row[item.prop] }}
+              </div>
+              <div v-if="item.prop == 'list'">
+                <div class="info-list" v-for="(j, index) in scope.row[item.prop]" :key="index">
+                  <el-input
+                    type="number"
+                    class="numrule"
+                    v-model="j.price"
+                    placeholder="请输入内容"
+                  ></el-input>
+                </div>
+              </div>
+            </template>
+          </el-table-column>
+          <el-table-column label="纱线总成本(元)" align="center">
+            <template v-slot="scope">
+              <div class="total-num">
+                <span>{{ scope.row.total }}</span>
+              </div>
+            </template>
+          </el-table-column>
+        </el-table>
+      </div>
+      <div class="card-box">
+        <p class="title">染色成本</p>
+        <el-table
+          size="small"
+          :data="formData.data"
+          style="width: 100%; font-size: 14px; color: #242424; bordercolor: #000"
+          header-row-class-name="tableHeader"
+        >
+          <el-table-column
+            v-for="(item, index) in formData.columns"
+            :key="index"
+            :label="item.label"
+            :prop="item.prop"
+            :width="item.width"
+            :align="item.align"
+          >
+            <template v-slot="scope">
+              <div v-if="item.prop == 'price'">
+                {{ scope.row[item.prop] }}
+              </div>
+              <div v-if="item.prop == 'list'">
+                <div class="info-list" v-for="(j, index) in scope.row[item.prop]" :key="index">
+                  <el-input
+                    type="number"
+                    class="numrule"
+                    v-model="j.price"
+                    placeholder="请输入内容"
+                  ></el-input>
+                </div>
+              </div>
+            </template>
+          </el-table-column>
+          <el-table-column label="染色总成本(元)" align="center">
+            <template v-slot="scope">
+              <div class="total-num">
+                <span>{{ scope.row.total }}</span>
+              </div>
+            </template>
+          </el-table-column>
+        </el-table>
+      </div>
+      <div class="card-box">
+        <p class="title">特整成本</p>
+        <el-table
+          size="small"
+          :data="formData.data"
+          style="width: 100%; font-size: 14px; color: #242424; bordercolor: #000"
+          header-row-class-name="tableHeader"
+        >
+          <el-table-column
+            v-for="(item, index) in formData.columns"
+            :key="index"
+            :label="item.label"
+            :prop="item.prop"
+            :width="item.label == '操作' ? 112 : item.width"
+            :align="item.label == '操作' ? 'center' : item.align"
+          >
+            <template v-slot="scope">
+              <div v-if="item.label == '操作'">
+                <div
+                  class="info-list delete-btn"
+                  v-for="(j, index) in scope.row[item.prop]"
+                  :key="index"
+                >
+                  <el-button type="text" @click="deleteRow(scope.row, scope.$index)" size="small">
+                    删除
+                  </el-button>
+                </div>
+              </div>
+              <div v-if="item.prop == 'list' && item.label !== '操作'">
+                <div class="info-list" v-for="(j, index) in scope.row[item.prop]" :key="index">
+                  <el-input
+                    type="number"
+                    class="numrule"
+                    v-model="j.price"
+                    placeholder="请输入内容"
+                  ></el-input>
+                </div>
+              </div>
+            </template>
+          </el-table-column>
+          <el-table-column label="特整总成本(元)" align="center">
+            <template v-slot="scope">
+              <div class="total-num">
+                <span>{{ scope.row.total }}</span>
+              </div>
+            </template>
+          </el-table-column>
+        </el-table>
+        <div class="btn-box"><el-button @click="add" class="add-btn">添加工艺</el-button></div>
+      </div>
+      <div class="card-box">
+        <p class="title">功能性成本</p>
+        <el-table
+          size="small"
+          :data="formData.data"
+          style="width: 100%; font-size: 14px; color: #242424; bordercolor: #000"
+          header-row-class-name="tableHeader"
+        >
+          <el-table-column
+            v-for="(item, index) in formData.columns"
+            :key="index"
+            :label="item.label"
+            :prop="item.prop"
+            :width="item.label == '操作' ? 112 : item.width"
+            :align="item.label == '操作' ? 'center' : item.align"
+          >
+            <template v-slot="scope">
+              <div v-if="item.label == '操作'">
+                <div
+                  class="info-list delete-btn"
+                  v-for="(j, index) in scope.row[item.prop]"
+                  :key="index"
+                >
+                  <el-button type="text" @click="deleteRow(scope.row, scope.$index)" size="small">
+                    删除{{ index }}
+                  </el-button>
+                </div>
+              </div>
+              <div v-if="item.prop == 'list' && item.label !== '操作'">
+                <div class="info-list" v-for="(j, index) in scope.row[item.prop]" :key="index">
+                  <el-input
+                    type="number"
+                    class="numrule"
+                    v-model="j.price"
+                    placeholder="请输入内容"
+                  ></el-input>
+                </div>
+              </div>
+            </template>
+          </el-table-column>
+          <el-table-column label="功能性总成本(元)" align="center">
+            <template v-slot="scope">
+              <div class="total-num">
+                <span>{{ scope.row.total }}</span>
+              </div>
+            </template>
+          </el-table-column>
+        </el-table>
+        <div class="btn-box">
+          <el-button @click="add" class="add-btn">添加功能性承诺</el-button>
+        </div>
+      </div>
+      <div class="card-box">
+        <p class="title">最终报价</p>
+        <div class="computed">
+          <p class="computed-item"><span>白色：</span>3894.3443</p>
+          <p class="computed-item"><span>白色：</span>3894.3443</p>
+        </div>
+        <div class="btn-box btn-box-left">
+          <el-button @click="add" class="computed-btn">计算报价</el-button>
+        </div>
       </div>
       <div class="footer">
         <el-button @click="add" class="save-btn">取消</el-button>
@@ -172,46 +296,29 @@
 
 <script>
 import { number } from 'echarts/lib/export'
-import { getBuildProductSaledByNo } from '@/api/finance/report'
 export default {
   data() {
     return {
-      reportData: {},
-      drawbackCoefficient: '', //退税系数
-      meterWeight: null, //米重
-      weightFactor: null, //重量系数
-      exchangeRate: '', //汇率
-      settlementMethod: '', //结算方式
-      newClothNo: 'ZJ2205003-YL01283-2', //布号
-      pm: '60Shgx 皮马棉 精梳 紧密纺+140D 晓星H350氨纶 89/11 弹力罗纹 15寸18针 840T 31*2CM 220G', //品名
-      quotedOrderNo: '123', //报价单号
-      remark: '',
-      //表格渲染数据
-      datalist: [],
-      //表格头列表
-      labelList: [],
       type: '', // 表单类型
       disabled: false,
-      checked: true,
-      textarea: '',
       // 表格数据
       formData: {
         sel: null, // 选中行
         columns: [
           {
-            label: '纱线编号',
-            align: 'left',
-            type: 'number',
-            prop: 'list',
-          },
-          {
-            label: '纱线编号',
-            align: 'left',
-            type: 'number',
-            prop: 'list',
-          },
-          {
             label: '操作',
+            align: 'left',
+            type: 'number',
+            prop: 'list',
+          },
+          {
+            label: '纱线编号',
+            align: 'left',
+            type: 'number',
+            prop: 'list',
+          },
+          {
+            label: '纱线编号',
             align: 'left',
             type: 'number',
             prop: 'list',
@@ -251,137 +358,9 @@ export default {
   computed: {},
 
   mounted() {},
-  created() {
-    this.type = this.$route.query.type
-    console.log('123')
-    this.getList()
-  },
-  methods: {
-    submit() {
-      this.datalist.forEach((val, index) => {
-        this.reportData.buildProductFinalSaleVos[index].choiceflag = val.choiceflag
-        this.reportData.buildProductFinalSaleVos[index].interestRate = val.interestRate
-        this.labelList.forEach((item, ind) => {
-          if (
-            item.label ==
-            this.reportData.buildProductFinalSaleVos[index].buildProductColorPriceVos[ind].colorName
-          ) {
-            this.reportData.buildProductFinalSaleVos[index].buildProductColorPriceVos[ind].price =
-              val[item.key]
-          }
-        })
-      })
-      console.log(this.datalist, this.reportData, this.labelList)
-    },
-    //最终报价数据
-    getList() {
-      const { newClothNo, quotedOrderNo } = this
-      let data = {}
-      data = {
-        newClothNo: newClothNo,
-        quotedOrderNo: quotedOrderNo,
-      }
-      getBuildProductSaledByNo(data).then((res) => {
-        this.reportData = res.data
-        this.ReData(res.data.buildProductFinalSaleVos)
-        console.log(this.reportData)
-      })
-    },
-    ReData(val) {
-      let obj = []
-      let list = []
-      val.forEach((val, inx) => {
-        let pa = {}
-        pa.interestRate = val.interestRate
-        pa.choiceflag = val.choiceflag
-        val.buildProductColorPriceVos.forEach((item, index) => {
-          let hh = {}
-          pa['color' + index] = item.price
-          if (inx === 0) {
-            hh.key = 'color' + index
-            hh.label = item.colorName
-            this.labelList.push(hh)
-          }
-        })
-        this.datalist.push(pa)
-      })
-    },
-    //输入计算
-    handleCount(val) {
-      console.log(val)
-      this.computeWay(this.reportData.settlementMethod, val.$index)
-    },
-    //销售报价计算
-    computeWay(type, index) {
-      let reportNum = null
-      switch (type) {
-        case '元/kg':
-          this.labelList.forEach((element) => {
-            this.datalist[index][element.key] = (
-              this.datalist[0][element.key] *
-              (1 + this.datalist[index].interestRate / 100) *
-              this.reportData.weightFactor
-            ).toFixed(2)
-          })
-          break
-        case '元/米':
-          this.labelList.forEach((element) => {
-            this.datalist[index][element.key] = (
-              this.datalist[0][element.key] *
-              this.reportData.meterWeight *
-              (1 + this.datalist[index].interestRate / 100) *
-              this.reportData.weightFactor
-            ).toFixed(2)
-          })
-          break
 
-        case '美金/kg':
-          this.labelList.forEach((element) => {
-            this.datalist[index][element.key] = (
-              (this.datalist[0][element.key] /
-                this.reportData.drawbackCoefficient /
-                this.reportData.exchangeRate) *
-              (1 + this.datalist[index].interestRate / 100) *
-              this.reportData.weightFactor
-            ).toFixed(2)
-          })
-          break
-        case '美金/磅':
-          this.labelList.forEach((element) => {
-            this.datalist[index][element.key] = (
-              (this.datalist[0][element.key] /
-                this.reportData.drawbackCoefficient /
-                this.reportData.exchangeRate /
-                2.2046) *
-              (1 + this.datalist[index].interestRate / 100) *
-              this.reportData.weightFactor
-            ).toFixed(2)
-          })
-          break
-        case '美金/码':
-          this.labelList.forEach((element) => {
-            this.datalist[index][element.key] = (
-              (this.datalist[0][element.key] /
-                this.reportData.meterWeight /
-                1000 /
-                1.1 /
-                this.reportData.exchangeRate) *
-              0.9144 *
-              (1 + this.datalist[index].interestRate / 100) *
-              this.reportData.weightFactor
-            ).toFixed(2)
-          })
-          break
-        default:
-          break
-      }
-    },
-    //合并单元格
-    arraySpanMethod({ row, column, rowIndex, columnIndex }) {
-      if (column.label == '报价策略' && rowIndex === 0) {
-        return [6, 1]
-      }
-    },
+  methods: {
+    getlist() {},
     add() {
       this.productDialogVisible = true
     },
@@ -416,6 +395,9 @@ export default {
           })
         })
     },
+  },
+  created() {
+    this.type = this.$route.query.type
   },
 }
 </script>
@@ -459,23 +441,22 @@ export default {
       text-align: left;
     }
     .info-list {
-      padding: 6px 0;
+      padding: 16px 0;
       margin: 0 -10px;
       border-bottom: 1px solid rgba(243, 243, 243, 1);
       ::v-deep .el-input__inner {
         width: 80%;
       }
     }
-    .checkbox {
-      position: relative;
-      .el-checkbox {
-        line-height: 36px;
+    .delete-btn {
+      .el-button {
+        height: 36px;
       }
     }
     .info-list:last-child {
       border-bottom: none;
     }
-    .remarks-text {
+    .total-num {
       font-size: 22px;
       font-weight: bold;
       color: #ed7b2f;
@@ -486,17 +467,11 @@ export default {
       bottom: 0;
       margin: 0 -10px;
       border-left: 1px solid rgba(243, 243, 243, 1);
-      .el-textarea {
-        position: relative;
-        height: 100%;
-        ::v-deep.el-textarea__inner {
-          width: 96%;
-          position: absolute;
-          top: 4%;
-          left: 2%;
-          height: 92%;
-          border: 1px solid rgba(243, 243, 243, 1);
-        }
+      span {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translateX(-50%) translateY(-50%);
       }
     }
     .computed {

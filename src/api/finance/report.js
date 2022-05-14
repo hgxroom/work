@@ -125,3 +125,15 @@ export function getReportList(data) {
     params: data,
   })
 }
+/**
+ * 最终报价计算列表
+ * @param {*}
+ * @returns
+ */
+export function getBuildProductSaledByNo(data) {
+  return request({
+    url: `/system/buildProductFinalSale/getBuildProductSaledByNo`,
+    method: 'get',
+    params: data,
+  })
+}
