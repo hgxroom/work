@@ -348,7 +348,11 @@ export default {
         let url = '/finance/finalReport'
         this.$router.push({
           path: url,
-          query: { type: 'add', quotedOrderNo: val.row },
+          query: {
+            type: 'add',
+            quotedOrderNo: val.row.quotedOrderNo,
+            newClothNo: val.row.newClothNo,
+          },
         })
       } else if (
         this.baseInfo.orderStatus == 3 ||
@@ -358,7 +362,11 @@ export default {
         let url = '/finance/finalReport'
         this.$router.push({
           path: url,
-          query: { type: 'detail', quotedOrderNo: val.row },
+          query: {
+            type: 'detail',
+            quotedOrderNo: val.row.quotedOrderNo,
+            newClothNo: val.row.newClothNo,
+          },
         })
       }
     },
