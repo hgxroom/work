@@ -13,19 +13,12 @@
           :label-position="labelPosition"
         >
           <el-form-item label="客户">
-            <!-- 搜索框 -->
-            <el-autocomplete
-              v-model="baseInfo.clothType"
-              :fetch-suggestions="queryClothType"
-              placeholder="请输入客户名称"
-              :trigger-on-focus="false"
-              @select="handleSelectClothType"
-              style="width: 100%"
-            >
-              <template slot-scope="{ item }">
-                <div>{{ item.dictLabel }}</div>
-              </template>
-            </el-autocomplete>
+            <el-input
+              v-model="baseInfo.customerName"
+              placeholder="请输入客户"
+              :clearable="type == 'detail' ? false : true"
+              :class="[type == 'detail' ? 'input-detail' : '']"
+            ></el-input>
           </el-form-item>
           <el-form-item label="最终客户">
             <el-input
@@ -35,15 +28,13 @@
               :class="[type == 'detail' ? 'input-detail' : '']"
             ></el-input>
           </el-form-item>
-          <el-form-item label="结算方式">
-            <el-select v-model="baseInfo.customerArea" clearable placeholder="请选择">
-              <el-option
-                v-for="(dict, index) in dict.type.pay_ways"
-                :key="index"
-                :label="dict.label"
-                :value="dict.label"
-              ></el-option>
-            </el-select>
+          <el-form-item label="结算方式" prop="settlementMethod">
+            <el-input
+              v-model="baseInfo.settlementMethod"
+              placeholder="请输入结算方式"
+              :clearable="type == 'detail' ? false : true"
+              :class="[type == 'detail' ? 'input-detail' : '']"
+            ></el-input>
           </el-form-item>
           <el-form-item label="成品用途">
             <el-input
@@ -67,7 +58,7 @@
             />
           </el-form-item>
         </el-form>
-        <div class="upload-img">
+        <div class="upload-img" v-if="false">
           <div style="width: 90px; text-align: right; padding-right: 12px">上传图片</div>
           <div class="flex">
             <el-upload
@@ -84,7 +75,7 @@
             </el-dialog>
           </div>
         </div>
-        <p class="img-tips">只能上传JPG/JPEG/PNG文件，且单个文件不超过10Mb</p>
+        <p class="img-tips" v-if="false">只能上传JPG/JPEG/PNG文件，且单个文件不超过10Mb</p>
       </div>
       <div class="card-box">
         <p class="title">报价产品</p>
@@ -99,21 +90,21 @@
           <el-table-column label="纱线编号">
             <template v-slot="scope">
               <div v-for="(item, index) in scope.row.rawYarnVoList" :key="index">
-                {{ item.yarnNo }}
+                {{ item.wlbh }}
               </div>
             </template>
           </el-table-column>
           <el-table-column label="纱线品名">
             <template v-slot="scope">
               <div v-for="(item, index) in scope.row.rawYarnVoList" :key="index">
-                {{ item.yarnName }}
+                {{ item.wlmch }}
               </div>
             </template>
           </el-table-column>
           <el-table-column label="纱线比例">
             <template v-slot="scope">
               <div v-for="(item, index) in scope.row.rawYarnVoList" :key="index">
-                {{ item.yarnRatio }}
+                {{ item.bl }}
               </div>
             </template>
           </el-table-column>
@@ -131,177 +122,41 @@
               </div>
             </template>
           </el-table-column>
-          <el-table-column label="特殊工艺">
-            <template v-slot="scope">
-              <div v-for="(item, index) in scope.row.specialProcessName" :key="index">
-                {{ item }}
-              </div>
-            </template>
-          </el-table-column>
-          <el-table-column label="功能性承诺">
-            <template v-slot="scope">
-              <div v-for="(item, index) in scope.row.functionName" :key="index">
-                {{ item }}
-              </div>
-            </template>
-          </el-table-column>
           <el-table-column label="颜色">
             <template v-slot="scope">
-              <div v-for="(item, index) in scope.row.colorName" :key="index">
-                {{ item }}
+              <div v-for="(item, index) in scope.row.dyeingCostList" :key="index">
+                {{ item.colorName }}
               </div>
             </template>
           </el-table-column>
-        </el-table>
-        <div class="btn-box"><el-button @click="add" class="add-btn">添加产品</el-button></div>
-      </div>
-      <div class="footer">
-        <el-button @click="submit(0)" class="save-btn">保存</el-button>
-        <el-button @click="submit(1)" class="sub-btn">提交</el-button>
-      </div>
-    </div>
-    <!-- 弹框 -->
-    <el-dialog
-      title="选择产品"
-      :visible.sync="productDialogVisible"
-      width="1104px"
-      class="dialog-contant"
-      :before-close="handleClose"
-    >
-      <div class="box">
-        <el-form
-          class="base-form"
-          :model="productInfo"
-          :rules="rules"
-          ref="productInfoForm"
-          :inline="true"
-          label-width="100px"
-          :label-position="labelPosition"
-        >
-          <el-form-item label="布号" prop="clothNo">
-            <el-autocomplete
-              v-model="productInfo.clothNo"
-              :fetch-suggestions="queryReferenceClothNo"
-              placeholder="请输入布号"
-              :trigger-on-focus="false"
-              :disabled="type == 'detail' ? true : false"
-              :class="[type == 'detail' ? 'input-detail' : '']"
-              @select="handleSelectReferenceClothNo"
-              style="width: 100%"
-            >
-              <template slot-scope="{ item }">
-                <div>{{ item.clothNo }}</div>
-              </template>
-            </el-autocomplete>
-          </el-form-item>
-          <el-form-item label="特殊工艺" prop="specialProcessName">
-            <el-select
-              v-model="productInfo.specialProcessName"
-              multiple
-              placeholder="请选择"
-              style="width: 100%"
-              :disabled="type == 'detail' ? true : false"
-              :class="[type == 'detail' ? 'select-detail' : '']"
-            >
-              <el-option
-                v-for="(dict, index) in specialList"
-                :key="index"
-                :label="dict.processName"
-                :value="dict.processName"
-              ></el-option>
-            </el-select>
-          </el-form-item>
-          <el-form-item label="功能性承诺" prop="functionName">
-            <el-select
-              v-model="productInfo.functionName"
-              multiple
-              placeholder="请选择"
-              style="width: 100%"
-              :disabled="type == 'detail' ? true : false"
-              :class="[type == 'detail' ? 'select-detail' : '']"
-            >
-              <el-option
-                v-for="(dict, index) in functionList"
-                :key="index"
-                :label="dict.commitmentName"
-                :value="dict.commitmentName"
-              ></el-option>
-            </el-select>
-          </el-form-item>
-          <el-form-item label="颜色" prop="colorName">
-            <el-select
-              v-model="productInfo.colorName"
-              multiple
-              placeholder="请选择"
-              style="width: 100%"
-              :disabled="type == 'detail' ? true : false"
-              :class="[type == 'detail' ? 'select-detail' : '']"
-            >
-              <el-option
-                v-for="(dict, index) in colorList"
-                :key="index"
-                :label="dict.category"
-                :value="dict.category"
-              ></el-option>
-            </el-select>
-          </el-form-item>
-          <el-form-item label="下单重量" prop="orderNum">
-            <el-select
-              v-model="productInfo.orderNum"
-              placeholder="请选择"
-              style="width: 100%"
-              :disabled="type == 'detail' ? true : false"
-              :class="[type == 'detail' ? 'select-detail' : '']"
-            >
-              <el-option
-                v-for="(dict, index) in weightList"
-                :key="index"
-                :label="dict.weightRange"
-                :value="dict.weightRange"
-              ></el-option>
-            </el-select>
-          </el-form-item>
-        </el-form>
-        <el-divider></el-divider>
-        <div class="basic-info">
-          <p class="info">{{ productInfo.cf }}</p>
-          <ul>
-            <li><span class="tit">成分</span>{{ productInfo.component }}</li>
-            <li><span class="tit">布类</span>{{ productInfo.clothType }}</li>
-            <li><span class="tit">织机规格</span>{{ productInfo.loomSpecification }}</li>
-            <li><span class="tit">幅宽(cm)</span>{{ productInfo.widthCloth }}</li>
-            <li><span class="tit">克重(g/㎡)</span>{{ productInfo.gramWeight }}</li>
-            <li><span class="tit">米重(g/m)</span>{{ productInfo.meterWeight }}</li>
-          </ul>
-        </div>
-        <el-table
-          size="small"
-          :data="formProductData.data"
-          style="width: 100%; font-size: 14px; color: #242424; bordercolor: #000"
-          highlight-current-row
-          header-row-class-name="tableHeader"
-        >
-          <el-table-column
-            v-for="(item, index) in formProductData.columns"
-            :key="index"
-            :label="item.label"
-            :prop="item.prop"
-            :width="item.width"
-            :align="item.align"
-          >
+          <el-table-column label="染费">
             <template v-slot="scope">
-              <div>
-                {{ scope.row[item.prop] }}
+              <div v-for="(item, index) in scope.row.dyeingCostList" :key="index">
+                {{ item.dyeingFee }}
               </div>
             </template>
           </el-table-column>
+          <el-table-column label="作业类型">
+            <template v-slot="scope">
+              <div v-for="(item, index) in scope.row.dyeingCostList" :key="index">
+                {{ item.jobType }}
+              </div>
+            </template>
+          </el-table-column>
+          <el-table-column label="操作" width="100" align="center">
+            <template v-slot="scope">
+              <el-button type="text" @click="toCostOffer(scope.row)" size="small">
+                成本报价
+              </el-button>
+            </template>
+          </el-table-column>
         </el-table>
-        <div class="bottom-btn">
-          <el-button class="cancel-btn" @click="handleClose">取消</el-button>
-          <el-button class="sub-btn" type="primary" @click="confirm">确认</el-button>
-        </div>
       </div>
-    </el-dialog>
+      <!-- <div class="footer">
+        <el-button @click="save()" class="save-btn">取消</el-button>
+        <el-button @click="submit()" class="sub-btn">提交</el-button>
+      </div> -->
+    </div>
   </div>
 </template>
 
@@ -314,6 +169,7 @@ import {
   getColorDataToAble,
   getWeightStepDtoToAble,
   addQuotedOrder,
+  getQuotedPriceByNo,
 } from '@/api/finance/report'
 import { formRules, brandInfoTemp, dictMap } from './utils.js'
 export default {
@@ -335,7 +191,6 @@ export default {
       weightList: [],
       //基础信息
       baseInfo: {
-        orderStatus: '',
         customerName: '', // 客户名称
         enclosureAddress: '', // 附件地址：多个用;分割
         finalCustomerName: '', // 最终客户
@@ -415,6 +270,18 @@ export default {
             prop: 'meterWeight',
           },
           {
+            label: '特殊工艺',
+            align: 'center',
+            type: 'text',
+            prop: 'specialProcessName',
+          },
+          {
+            label: '功能性承诺',
+            align: 'center',
+            type: 'text',
+            prop: 'functionName',
+          },
+          {
             label: '下单重量',
             align: 'center',
             type: 'text',
@@ -423,31 +290,7 @@ export default {
         ],
         data: [],
       },
-      // 表格数据
-      formProductData: {
-        sel: null, // 选中行
-        columns: [
-          {
-            label: '纱线编号',
-            align: 'center',
-            type: 'number',
-            prop: 'yarnNo',
-          },
-          {
-            label: '纱线品名',
-            align: 'center',
-            type: 'text',
-            prop: 'yarnName',
-          },
-          {
-            label: '比例(%)',
-            align: 'center',
-            type: 'number',
-            prop: 'yarnRatio',
-          },
-        ],
-        data: [],
-      },
+
       // 添加产品弹框
       productDialogVisible: false,
     }
@@ -460,6 +303,21 @@ export default {
   mounted() {},
 
   methods: {
+    getQuotedPriceByNo() {
+      getQuotedPriceByNo(this.quotedOrderNo).then((res) => {
+        this.baseInfo = res.data
+        this.formData.data = this.baseInfo.productList
+        // console.log(this.baseInfo)
+      })
+    },
+    toCostOffer(val) {
+      let url = '/finance/finance/reportDetail/quotationPrice'
+      this.$router.push({
+        path: url,
+        query: { type: 'detail', quotedOrderNo: val.row },
+      })
+      console.log(val)
+    },
     getCheckList() {
       getTableDataInfoToAble().then((res) => {
         this.specialList = res.data
@@ -501,7 +359,6 @@ export default {
           list.push(param)
         })
         this.formProductData.data = list
-        this.productInfo.rawYarnVoList = JSON.parse(JSON.stringify(list))
       }
     },
     //模糊布号
@@ -579,9 +436,14 @@ export default {
         })
         return
       }
-      this.baseInfo.productList.push(JSON.parse(JSON.stringify(this.productInfo)))
+      for (const item in this.productInfo) {
+        if (this.productInfo[item] instanceof Array) {
+          // this.productInfo[item] = this.productInfo[item].join(',')
+        }
+      }
+      this.baseInfo.productList.push(this.productInfo)
       this.formData.data = this.baseInfo.productList
-      console.log('this.formData.data', this.baseInfo.productList)
+      // this.$refs['productInfoForm'].resetFields()
       this.productDialogVisible = false
     },
     //取消
@@ -591,12 +453,10 @@ export default {
     save() {
       console.log(this.baseInfo)
     },
-    submit(type) {
-      this.baseInfo.orderStatus = type
+    submit() {
+      // let
       addQuotedOrder(this.baseInfo).then((res) => {
-        let url = '/finance/reportList'
-        this.$router.push({ path: url })
-        // console.log(res)
+        console.log(res)
       })
       console.log('this.productInfo', this.productInfo)
       console.log('this.baseInfo', this.baseInfo)
@@ -622,14 +482,15 @@ export default {
   },
   created() {
     this.type = this.$route.query.type
-    this.getCheckList()
+    this.quotedOrderNo = this.$route.query.quotedOrderNo
+    this.getQuotedPriceByNo()
   },
 }
 </script>
 <style lang="scss" scoped>
 .app-main {
   background: rgba(245, 247, 250, 1);
-  margin-bottom: 80px;
+  padding-bottom: 80px;
 }
 .container {
   margin: 24px;

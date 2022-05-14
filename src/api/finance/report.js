@@ -137,3 +137,61 @@ export function getBuildProductSaledByNo(data) {
     params: data,
   })
 }
+/**
+ * 新增报价单
+ * @param {*}
+ * @returns
+ */
+export function addQuotedOrder(data) {
+  return request({
+    url: `/system/quotedOrder/addQuotedOrder`,
+    method: 'POST',
+    data: data,
+  })
+}
+/**
+ * 通过报价单号和布号获取报价产品信息
+ * @param {*}
+ * @returns
+ */
+export function findQuotedProduct(data) {
+  return request({
+    url: `/system/quotedOrder/findQuotedProduct`,
+    method: 'get',
+    params: data,
+  })
+}
+/**
+ * 根据报价单号查询数据
+ * @param {*}
+ * @returns
+ */
+export function getQuotedPriceByNo(quotedOrderNo) {
+  return request({
+    url: `/system/quotedOrder/getQuotedPriceByNo/${quotedOrderNo}`,
+    method: 'get',
+  })
+}
+
+/**
+ * 白色
+ * @param {*}
+ * @returns
+ */
+export function getColorDataToAble() {
+  return request({
+    url: `/system/dyeingFeeData/getDyeingFeeDataToAble`,
+    method: 'GET',
+  })
+}
+/**
+ * 下单重量
+ * @param {*}
+ * @returns
+ */
+export function getWeightStepDtoToAble() {
+  return request({
+    url: `/system/weightStep/getWeightStepDtoToAble`,
+    method: 'GET',
+  })
+}
