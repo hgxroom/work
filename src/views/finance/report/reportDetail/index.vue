@@ -343,7 +343,11 @@ export default {
         let url = '/finance/reportCalculator'
         this.$router.push({
           path: url,
-          query: { type: 'detail', quotedOrderNo: this.$route.query.quotedOrderNo },
+          query: {
+            type: 'detail',
+            quotedOrderNo: this.$route.query.quotedOrderNo,
+            clothNo: val.clothNo,
+          },
         })
       } else if (this.baseInfo.orderStatus == 2) {
         let url = '/finance/finance/finalReport'
@@ -352,7 +356,7 @@ export default {
           query: {
             type: 'add',
             quotedOrderNo: this.$route.query.quotedOrderNo,
-            clothNo: this.baseInfo.clothNo,
+            clothNo: val.clothNo,
           },
         })
       } else if (

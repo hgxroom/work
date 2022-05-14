@@ -4,7 +4,7 @@
     <div class="title-box">
       <div class="tit">成本报价计算</div>
       <div class="tit-info">
-        <span>布号：BJ-8930484935</span>
+        <span>布号：{{ clothNo }}</span>
         <span>
           品名：60S 皮马棉 精梳 紧密纺+140D 晓星H350氨纶 89/11 弹力罗纹 15寸18针 840T 31*2CM 220G
         </span>
