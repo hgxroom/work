@@ -74,14 +74,14 @@
         <p class="title">历史报价信息</p>
         <el-table
           size="small"
-          :data="formData.data"
+          :data="formHistoryData.data"
           style="width: 100%; font-size: 14px; color: #242424; border-color: #000"
           highlight-current-row
           header-row-class-name="tableHeader"
         >
           <el-table-column label="序号" type="index" align="center" width="100px"></el-table-column>
           <el-table-column
-            v-for="(item, index) in formData.columns"
+            v-for="(item, index) in formHistoryData.columns"
             :key="index"
             :label="item.label"
             :prop="item.prop"
@@ -94,85 +94,124 @@
               </div>
             </template>
           </el-table-column>
+          <el-table-column label="纱线编号">
+            <template v-slot="scope">
+              <div v-for="(item, index) in scope.row.quotedOrderYarnCostList" :key="index">
+                {{ item.newClothNo }}
+              </div>
+            </template>
+          </el-table-column>
+          <el-table-column label="纱线品名">
+            <template v-slot="scope">
+              <div v-for="(item, index) in scope.row.quotedOrderYarnCostList" :key="index">
+                {{ item.yarnName }}
+              </div>
+            </template>
+          </el-table-column>
+          <el-table-column label="纱线价格">
+            <template v-slot="scope">
+              <div v-for="(item, index) in scope.row.quotedOrderYarnCostList" :key="index">
+                {{ item.yarnCost }}
+              </div>
+            </template>
+          </el-table-column>
+          <el-table-column label="颜色">
+            <template v-slot="scope">
+              <div v-for="(item, index) in scope.row.quotedOrderPriceVoList" :key="index">
+                {{ item.colorName }}
+              </div>
+            </template>
+          </el-table-column>
+          <el-table-column label="成本价(元/kg)">
+            <template v-slot="scope">
+              <div v-for="(item, index) in scope.row.quotedOrderPriceVoList" :key="index">
+                {{ item.costPrice }}
+              </div>
+            </template>
+          </el-table-column>
+          <el-table-column label="销售报价1(元/kg)">
+            <template v-slot="scope">
+              <div v-for="(item, index) in scope.row.quotedOrderPriceVoList" :key="index">
+                {{ item.finalQuotedPrice1 }}
+              </div>
+            </template>
+          </el-table-column>
+          <el-table-column label="利润率">
+            <template v-slot="scope">
+              <div v-for="(item, index) in scope.row.quotedOrderPriceVoList" :key="index">
+                {{ item.interestRate1 }}
+              </div>
+            </template>
+          </el-table-column>
+          <el-table-column label="销售报价2(元/kg)">
+            <template v-slot="scope">
+              <div v-for="(item, index) in scope.row.quotedOrderPriceVoList" :key="index">
+                {{ item.finalQuotedPrice2 }}
+              </div>
+            </template>
+          </el-table-column>
+          <el-table-column label="利润率">
+            <template v-slot="scope">
+              <div v-for="(item, index) in scope.row.quotedOrderPriceVoList" :key="index">
+                {{ item.interestRate2 }}
+              </div>
+            </template>
+          </el-table-column>
+          <el-table-column label="销售报价3(元/kg)">
+            <template v-slot="scope">
+              <div v-for="(item, index) in scope.row.quotedOrderPriceVoList" :key="index">
+                {{ item.finalQuotedPrice3 }}
+              </div>
+            </template>
+          </el-table-column>
+          <el-table-column label="利润率">
+            <template v-slot="scope">
+              <div v-for="(item, index) in scope.row.quotedOrderPriceVoList" :key="index">
+                {{ item.interestRate3 }}
+              </div>
+            </template>
+          </el-table-column>
+          <el-table-column label="客户" prop="customerName"></el-table-column>
+          <el-table-column label="提交人" prop="createBy"></el-table-column>
         </el-table>
       </div>
       <div class="card-box">
         <p class="title">历史订单信息</p>
         <el-table
           size="small"
-          :data="formData.data"
+          :data="formHistoryOrderData.data"
           style="width: 100%; font-size: 14px; color: #242424; bordercolor: #000"
           highlight-current-row
           header-row-class-name="tableHeader"
         >
           <el-table-column label="序号" type="index" align="center" width="100px"></el-table-column>
           <el-table-column
-            v-for="(item, index) in formData.columns"
+            v-for="(item, index) in formHistoryOrderData.columns"
             :key="index"
             :label="item.label"
             :prop="item.prop"
             :width="item.width"
             :align="item.align"
           >
-            <template v-slot="scope">
-              <div>
-                {{ datalist }}
-              </div>
-            </template>
           </el-table-column>
         </el-table>
       </div>
       <div class="footer">
-        <el-button @click="add" class="save-btn">取消</el-button>
-        <el-button @click="add" class="sub-btn">确认报价</el-button>
+        <el-button @click="cancel" class="save-btn">取消</el-button>
+        <el-button @click="submit" class="sub-btn">确认报价</el-button>
       </div>
     </div>
-    <!-- 弹框 -->
-    <el-dialog
-      title="历史纱价"
-      :visible.sync="productDialogVisible"
-      width="1104px"
-      class="dialog-contant"
-      :before-close="handleClose"
-    >
-      <div class="box">
-        <div class="basic-info">
-          <p class="info">60S 皮马棉 精梳 紧密纺+140D</p>
-        </div>
-        <el-table
-          size="small"
-          :data="formData.data"
-          style="width: 100%; font-size: 14px; color: #242424; bordercolor: #000"
-          header-row-class-name="tableHeader"
-        >
-          <el-table-column label="序号" type="index" align="center" width="100px"></el-table-column>
-          <el-table-column
-            v-for="(item, index) in formData.columns"
-            :key="index"
-            :label="item.label"
-            :prop="item.prop"
-            :width="item.width"
-            :align="item.align"
-          >
-            <template v-slot="scope">
-              <div>
-                {{ scope.row[item.prop] }}
-              </div>
-            </template>
-          </el-table-column>
-        </el-table>
-        <div class="bottom-btn">
-          <el-button class="cancel-btn" @click="handleClose">取消</el-button>
-          <el-button class="sub-btn" type="primary" @click="resetQuery">确认</el-button>
-        </div>
-      </div>
-    </el-dialog>
   </div>
 </template>
 
 <script>
 import { number } from 'echarts/lib/export'
-import { getBuildProductSaledByNo } from '@/api/finance/report'
+import {
+  getBuildProductSaledByNo,
+  getQuotedListByNewClothNo,
+  buildProductFinalSale,
+  findProductOrderDetailByBh,
+} from '@/api/finance/report'
 export default {
   data() {
     return {
@@ -194,53 +233,97 @@ export default {
       disabled: false,
       checked: true,
       textarea: '',
-      // 表格数据
-      formData: {
+      // 历史报价信息
+      formHistoryData: {
         sel: null, // 选中行
         columns: [
           {
-            label: '纱线编号',
+            label: '报价时间',
             align: 'left',
-            type: 'number',
-            prop: 'list',
+            type: 'text',
+            prop: 'createTime',
           },
           {
-            label: '纱线编号',
+            label: '布号',
             align: 'left',
-            type: 'number',
-            prop: 'list',
+            type: 'text',
+            prop: 'clothNo',
           },
           {
-            label: '操作',
+            label: '毛坯成本',
             align: 'left',
-            type: 'number',
+            type: 'text',
             prop: 'list',
           },
         ],
-        data: [
+        data: [],
+      },
+      // 历史订单信息
+      formHistoryOrderData: {
+        sel: null, // 选中行
+        columns: [
           {
-            price: 'SDFA111111',
-            editFlag: false,
-            list: [
-              {
-                delete: '删除',
-                price: 1,
-                type: number,
-              },
-              {
-                delete: '删除',
-                price: 1,
-                type: number,
-              },
-              {
-                delete: '删除',
-                price: 1,
-                type: number,
-              },
-            ],
-            total: 10000,
+            label: '订单时间',
+            align: 'left',
+            type: 'text',
+            prop: 'createTime',
+          },
+          {
+            label: '订单号',
+            align: 'left',
+            type: 'text',
+            prop: 'ddh',
+          },
+          {
+            label: '布号',
+            align: 'left',
+            type: 'text',
+            prop: 'bh',
+          },
+          {
+            label: '品名',
+            align: 'left',
+            type: 'text',
+            prop: 'pm',
+          },
+          {
+            label: '色号',
+            align: 'left',
+            type: 'text',
+            prop: 'sh',
+          },
+          {
+            label: '色称',
+            align: 'left',
+            type: 'text',
+            prop: 'sc',
+          },
+          {
+            label: '单价',
+            align: 'left',
+            type: 'text',
+            prop: 'djkg',
+          },
+          {
+            label: '成品重量',
+            align: 'left',
+            type: 'text',
+            prop: 'cpzl',
+          },
+          {
+            label: '客户',
+            align: 'left',
+            type: 'text',
+            prop: 'khmch',
+          },
+          {
+            label: '业务员',
+            align: 'left',
+            type: 'text',
+            prop: 'ywy',
           },
         ],
+        data: [],
       },
       productDialogVisible: false,
     }
@@ -253,8 +336,11 @@ export default {
   mounted() {},
   created() {
     this.type = this.$route.query.type
-    console.log('123')
+    this.newClothNo = this.$route.query.newClothNo
+    this.quotedOrderNo = this.$route.query.quotedOrderNo
     this.getList()
+    this.getHistory()
+    this.getHistoryOrder()
   },
   methods: {
     submit() {
@@ -271,7 +357,43 @@ export default {
           }
         })
       })
+      this.reportData.quotedOrderNo = this.quotedOrderNo || ''
+      this.reportData.newClothNo = this.newClothNo || ''
+      buildProductFinalSale(this.reportData).then((res) => {
+        let url = '/finance/report/reportList'
+        this.$router.push({
+          path: url,
+          query: { type: 'detail', quotedOrderNo: this.$route.query.quotedOrderNo },
+        })
+      })
       console.log(this.datalist, this.reportData, this.labelList)
+    },
+    cancel(val) {
+      let url = '/finance/finance/report/reportDetail'
+      this.$router.push({
+        path: url,
+        query: { type: 'detail', quotedOrderNo: this.$route.query.quotedOrderNo },
+      })
+    },
+    // 历史报价
+    getHistory() {
+      const { newClothNo } = this
+      let data = {}
+      data = {
+        newClothNo: newClothNo,
+      }
+      getQuotedListByNewClothNo(data).then((res) => {
+        this.formHistoryData.data = res.data
+        console.log(res)
+      })
+    },
+    // 历史订单信息
+    getHistoryOrder() {
+      const { newClothNo } = this
+      findProductOrderDetailByBh(newClothNo).then((res) => {
+        this.formHistoryOrderData.data = res.data
+        // console.log(res)
+      })
     },
     //最终报价数据
     getList() {

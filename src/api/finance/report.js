@@ -203,6 +203,44 @@ export function getWeightStepDtoToAble() {
 export function calcQuotedPrice(data) {
   return request({
     url: `/system/quotedOrder/calcQuotedPrice`,
+    method: 'post',
+    data: data,
+  })
+}
+/**
+ * 历史报价单接口
+ * @param {*}
+ * @returns
+ */
+export function getQuotedListByNewClothNo(data) {
+  return request({
+    url: `/system/quotedOrder/getQuotedListByNewClothNo`,
+    method: 'get',
+    params: data,
+  })
+}
+
+/**
+ * 历史订单信息
+ * @param {*}
+ * @returns
+ */
+export function findProductOrderDetailByBh(bh) {
+  return request({
+    url: `system/buildProductFinalSale/findProductOrderDetailByBh/${bh}`,
+    method: 'get',
+    // params: data,
+  })
+}
+
+/**
+ * 最终报价 -- 确认报价
+ * @param {*}
+ * @returns
+ */
+export function buildProductFinalSale(data) {
+  return request({
+    url: `/system/buildProductFinalSale/saveOrUpdate`,
     method: 'POST',
     data: data,
   })

@@ -357,7 +357,7 @@ export default {
         colorName: '', // 颜色
         orderNum: '', // 重量
         yarnName: '', // 品名
-        meterWeight: 1, // 米重
+        meterWeight: 0, // 米重
       },
       dialogImageUrl: '',
       dialogVisible: false,
@@ -484,6 +484,7 @@ export default {
       this.productInfo.gramWeight = item.kz
       this.productInfo.yarnName = item.yarnName
       this.productInfo.loomSpecification = item.loomType
+      this.productInfo.meterWeight = (+item.fk + 5) * +item.kz * 100 || 0
       //纱织信息
       if (item.quotationYarnVoList) {
         let list = []
