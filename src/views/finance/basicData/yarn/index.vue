@@ -18,7 +18,11 @@
           highlight-current-row
           header-row-class-name="tableHeader"
         >
-          <el-table-column label="序号" type="index" align="center" width="100px"></el-table-column>
+          <el-table-column label="序号" align="center" width="100px">
+            <template v-slot="scope">
+              {{ scope.row.id }}
+            </template>
+          </el-table-column>
           <el-table-column
             v-for="(item, index) in formData.columns"
             :key="index"

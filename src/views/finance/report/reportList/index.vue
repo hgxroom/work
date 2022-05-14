@@ -56,7 +56,7 @@
     </el-row>
     <el-row>
       <el-col :span="12">
-        <el-button type="primary" class="add-btn">新增</el-button>
+        <el-button type="primary" class="add-btn" @click="addRepot()">新增</el-button>
       </el-col>
       <el-col :span="12" style="text-align: right"></el-col>
     </el-row>
@@ -215,6 +215,20 @@ export default {
   },
 
   methods: {
+    addRepot() {
+      let url = '/finance/addReport'
+      this.$router.push({
+        path: url,
+        query: { type: 'add' },
+      })
+    },
+    toDetail(val) {
+      let url = '/finance/reportDetail'
+      this.$router.push({
+        path: url,
+        query: { type: 'detail', quotedOrderNo: val.row.quotedOrderNo },
+      })
+    },
     //获取部门字典
     getDeptList() {
       getPlanVisitDeptList().then((res) => {
