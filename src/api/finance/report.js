@@ -113,3 +113,15 @@ export function getBuildProductById(data) {
     params: data,
   })
 }
+/**
+ * 报价单列表
+ * @param {*}
+ * @returns
+ */
+export function getReportList(data) {
+  return request({
+    url: `/system/quotedOrder/list`,
+    method: 'get',
+    params: data,
+  })
+}

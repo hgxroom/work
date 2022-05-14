@@ -3,6 +3,7 @@
   <div class="app-main">
     <div class="head_box">
       <el-row type="flex">
+        <select-com></select-com>
         <el-col :span="4">新增产品</el-col>
         <el-col v-if="type == 'detail'" class="created-font"
           >提交人：{{ baseInfo.createBy }} 创建时间：{{ baseInfo.createTime }}</el-col
@@ -22,7 +23,7 @@
         >
           <el-form-item label="参考布号" prop="referenceClothNo">
             <!-- 搜索框 -->
-            <!-- <selectCom></selectCom> -->
+
             <el-autocomplete
               v-model="baseInfo.referenceClothNo"
               :fetch-suggestions="queryReferenceClothNo"
@@ -345,7 +346,7 @@
 <script>
 import { formRules, formRules2 } from './config'
 import { getCustomerInfoByName } from '@/api/customer/visit'
-import selectCom from '../createProduct/selectCom'
+
 import {
   buildProduct,
   getDictList,
@@ -358,9 +359,6 @@ import {
 import { findComponentLoss } from '@/api/finance/report'
 import _ from 'lodash'
 export default {
-  // components: {
-  //   selectCom,
-  // },
   data() {
     return {
       type: 'detail',

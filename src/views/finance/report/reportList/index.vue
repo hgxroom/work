@@ -13,17 +13,25 @@
           size="mini"
         >
           <el-form-item label="报价单号">
-            <el-input v-model="queryParams.bjdh"></el-input>
+            <el-input v-model="queryParams.quotedOrderNo"></el-input>
           </el-form-item>
-          <el-form-item label="业务员">
-            <el-input v-model="queryParams.ywy"></el-input>
+          <el-form-item label="提交人">
+            <el-input v-model="queryParams.createBy"></el-input>
           </el-form-item>
 
           <el-form-item label="客户名称">
-            <el-input v-model="queryParams.khmc"></el-input>
+            <el-input v-model="queryParams.customerName"></el-input>
           </el-form-item>
           <el-form-item label="部门">
-            <el-input v-model="queryParams.bm"></el-input>
+            <el-select v-model="queryParams.departmentId">
+              <el-option label="全部" value=""></el-option>
+              <el-option
+                v-for="(dict, index) in deptsList"
+                :key="dict.value"
+                :label="dict.label"
+                :value="dict.value"
+              ></el-option>
+            </el-select>
           </el-form-item>
           <el-form-item label="时间范围" class="time-picker">
             <el-date-picker
@@ -38,7 +46,7 @@
             </el-date-picker>
           </el-form-item>
           <el-form-item label="布号">
-            <el-input v-model="queryParams.bh"></el-input>
+            <el-input v-model="queryParams.clothNo"></el-input>
           </el-form-item> </el-form
       ></el-col>
       <el-col style="width: 224px">
@@ -48,7 +56,7 @@
     </el-row>
     <el-row>
       <el-col :span="12">
-        <el-button type="primary" @click="addProduct" class="add-btn">新增</el-button>
+        <el-button type="primary" class="add-btn">新增</el-button>
       </el-col>
       <el-col :span="12" style="text-align: right"></el-col>
     </el-row>
@@ -71,44 +79,46 @@
           <el-table-column
             label="报价单号"
             align="center"
-            prop="applyNo"
+            prop="quotedOrderNo"
             :show-overflow-tooltip="true"
           >
             <template slot-scope="scope">
-              <el-button type="text" @click="toDetail(scope)">{{ scope.row.applyNo }}</el-button>
+              <el-button type="text" @click="toDetail(scope)">{{
+                scope.row.quotedOrderNo
+              }}</el-button>
             </template>
           </el-table-column>
+
           <el-table-column
-            label="状态"
+            label="客户名称"
             align="center"
             prop="customerName"
             :show-overflow-tooltip="true"
           />
           <el-table-column
-            label="客户名称"
-            align="center"
-            prop="deptName"
-            :show-overflow-tooltip="true"
-          />
-          <el-table-column
             label="布号"
             align="center"
-            prop="salesman"
+            prop="clothNo"
             :show-overflow-tooltip="true"
           />
           <el-table-column
             label="提交人"
             align="center"
-            prop="quotedType"
+            prop="createBy"
             :show-overflow-tooltip="true"
           >
           </el-table-column>
-          <el-table-column label="部门" align="center" prop="status" :show-overflow-tooltip="true">
+          <el-table-column
+            label="部门"
+            align="center"
+            prop="departmentName"
+            :show-overflow-tooltip="true"
+          >
           </el-table-column>
           <el-table-column
             label="最终客户"
             align="center"
-            prop="createTime"
+            prop="finalCustomerName"
             :show-overflow-tooltip="true"
           />
           <el-table-column
@@ -117,6 +127,13 @@
             prop="createTime"
             :show-overflow-tooltip="true"
           />
+          <el-table-column label="状态" align="center" prop="status" :show-overflow-tooltip="true">
+            <template v-slot="scope">
+              <div>
+                {{ statusFilter(scope.row.status) }}
+              </div>
+            </template></el-table-column
+          >
         </el-table>
       </el-col>
     </el-row>
@@ -132,53 +149,57 @@
 </template>
 
 <script>
+import { getReportList } from '@/api/finance/report'
+import { getPlanVisitDeptList } from '@/api/customer/visitPlanList'
 export default {
   data() {
     return {
-      pageSize: '',
-      pageNum: '',
-      total: '',
+      pageNum: 1,
+      pageSize: 10,
+      total: 0,
       listData: [], //数据
-      type: 0,
+      deptsList: [],
+      type: '',
       tabBtn: [
         {
           name: '全部',
-          type: 0,
+          type: '',
           num: '1',
         },
         {
           name: '草稿',
-          type: 1,
+          type: '0',
           num: '2',
         },
         {
           name: '待报价',
-          type: 2,
+          type: '1',
           num: '3',
         },
         {
           name: '待审核',
-          type: 3,
+          type: '2',
           num: '4',
         },
         {
           name: '已审核',
-          type: 4,
+          type: '3',
           num: '5',
         },
         {
           name: '已驳回',
-          type: 5,
+          type: '4',
           num: '6',
         },
       ],
       queryParams: {
-        bjdh: '',
-        ywy: '',
-        khmc: '',
-        bm: '',
+        quotedOrderNo: '',
+        createBy: '',
+        customerName: '',
+        departmentId: '',
+        orderStatus: '',
         dateTimePicker: ['', ''],
-        bh: '',
+        clothNo: '',
         state: '',
       },
     }
@@ -188,30 +209,64 @@ export default {
 
   computed: {},
 
-  mounted: {},
+  created() {
+    this.getList()
+    this.getDeptList()
+  },
 
   methods: {
+    //获取部门字典
+    getDeptList() {
+      getPlanVisitDeptList().then((res) => {
+        this.deptsList = res.data.secondarySector
+      })
+    },
+    statusFilter(type) {
+      let obj = {
+        0: '草稿',
+        1: '待报价',
+        2: '待审核',
+        3: '已审核',
+        4: '已驳回',
+        5: '已完成',
+      }
+      return obj[type]
+    },
+    //查询
+    handleQuery() {
+      this.getList()
+    },
     //重置
     resetQuery() {
-      this.queryParams.bjdh = ''
-      this.queryParams.ywy = ''
-      this.queryParams.khmc = ''
-      this.queryParams.bm = ''
+      this.queryParams.quotedOrderNo = ''
+      this.queryParams.createBy = ''
+      this.queryParams.customerName = ''
+      this.queryParams.departmentId = ''
       this.queryParams.dateTimePicker = ''
-      this.queryParams.bh = ''
+      this.queryParams.clothNo = ''
+      this.queryParams.orderStatus = ''
       this.getList()
     },
     //获取数据
     getList() {
-      const { bjdh, ywy, khmc, bm, bh, dateTimePicker } = this.queryParams
+      const {
+        quotedOrderNo,
+        createBy,
+        customerName,
+        departmentId,
+        clothNo,
+        dateTimePicker,
+        orderStatus,
+      } = this.queryParams
       let data = {}
       if (this.queryParams.dateTimePicker == null) {
         data = {
-          bjdh,
-          ywy,
-          khmc,
-          bm,
-          bh,
+          orderStatus,
+          quotedOrderNo,
+          createBy,
+          customerName,
+          departmentId,
+          clothNo,
           startTime: '',
           endTime: ' ',
           pageNum: this.pageNum,
@@ -219,11 +274,12 @@ export default {
         }
       } else {
         data = {
-          bjdh,
-          ywy,
-          khmc,
-          bm,
-          bh,
+          orderStatus,
+          quotedOrderNo,
+          createBy,
+          customerName,
+          departmentId,
+          clothNo,
           startTime: dateTimePicker[0],
           endTime: dateTimePicker[1],
           pageNum: this.pageNum,
@@ -231,7 +287,7 @@ export default {
         }
       }
       const { pageNum, pageSize } = this
-      getCustomerList(data).then((res) => {
+      getReportList(data).then((res) => {
         this.total = res.total
         this.listData = res.rows
       })
@@ -243,6 +299,8 @@ export default {
     //状态选择
     checkTab(val) {
       this.type = val
+      this.queryParams.orderStatus = val
+      this.getList()
     },
   },
 }
@@ -275,7 +333,11 @@ export default {
   ::v-deep .el-form-item__content {
     width: calc(100% - 90px);
   }
+
   ::v-deep .el-range-editor.el-input__inner {
+    width: 100%;
+  }
+  ::v-deep .el-select {
     width: 100%;
   }
 }
