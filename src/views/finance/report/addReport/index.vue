@@ -12,10 +12,10 @@
           label-width="90px"
           :label-position="labelPosition"
         >
-          <el-form-item label="客户">
+          <el-form-item label="客户" prop="customerName">
             <!-- 搜索框 -->
             <el-autocomplete
-              v-model="baseInfo.clothType"
+              v-model="baseInfo.customerName"
               :fetch-suggestions="queryClothType"
               placeholder="请输入客户名称"
               :trigger-on-focus="false"
@@ -27,7 +27,7 @@
               </template>
             </el-autocomplete>
           </el-form-item>
-          <el-form-item label="最终客户">
+          <el-form-item label="最终客户" prop="finalCustomerName">
             <el-input
               v-model="baseInfo.finalCustomerName"
               placeholder="请输入最终客户"
@@ -35,8 +35,8 @@
               :class="[type == 'detail' ? 'input-detail' : '']"
             ></el-input>
           </el-form-item>
-          <el-form-item label="结算方式">
-            <el-select v-model="baseInfo.customerArea" clearable placeholder="请选择">
+          <el-form-item label="结算方式" prop="settlementMethod">
+            <el-select v-model="baseInfo.settlementMethod" clearable placeholder="请选择">
               <el-option
                 v-for="(dict, index) in dict.type.pay_ways"
                 :key="index"
@@ -76,7 +76,8 @@
               :on-preview="handlePictureCardPreview"
               :on-remove="handleRemove"
               :before-upload="beforeUpload"
-              :auto-upload="false"
+              :auto-upload="true"
+              :headers="headers"
             >
               <i class="el-icon-plus"></i>
             </el-upload>
@@ -93,10 +94,13 @@
           size="small"
           :data="formData.data"
           style="width: 100%; font-size: 14px; color: #242424; bordercolor: #000"
-          highlight-current-row
           header-row-class-name="tableHeader"
+          empty-text=" "
         >
           <el-table-column label="序号" type="index" align="center" width="100px"></el-table-column>
+          <el-table-column label="布号" prop="clothNo"></el-table-column>
+          <el-table-column label="布类" prop="clothType"></el-table-column>
+          <el-table-column label="品名" prop="pm"></el-table-column>
           <el-table-column label="纱线编号">
             <template v-slot="scope">
               <div v-for="(item, index) in scope.row.rawYarnVoList" :key="index">
@@ -153,6 +157,13 @@
               </div>
             </template>
           </el-table-column>
+          <el-table-column label="操作">
+            <template v-slot="scope">
+              <el-button type="text" @click="deleteRow(scope.row, scope.$index)" size="small">
+                删除
+              </el-button>
+            </template>
+          </el-table-column>
         </el-table>
         <div class="btn-box"><el-button @click="add" class="add-btn">添加产品</el-button></div>
       </div>
@@ -173,7 +184,7 @@
         <el-form
           class="base-form"
           :model="productInfo"
-          :rules="rules"
+          :rules="productRules"
           ref="productInfoForm"
           :inline="true"
           label-width="100px"
@@ -265,7 +276,7 @@
         </el-form>
         <el-divider></el-divider>
         <div class="basic-info">
-          <p class="info">{{ productInfo.cf }}</p>
+          <p class="info">{{ productInfo.pm }}</p>
           <ul>
             <li><span class="tit">成分</span>{{ productInfo.component }}</li>
             <li><span class="tit">布类</span>{{ productInfo.clothType }}</li>
@@ -307,6 +318,7 @@
 </template>
 
 <script>
+import { getToken } from '@/utils/auth'
 import {
   getDictList,
   getFabricQuotationByBh,
@@ -315,17 +327,23 @@ import {
   getColorDataToAble,
   getWeightStepDtoToAble,
   addQuotedOrder,
+  getQuotedPriceByNo,
 } from '@/api/finance/report'
-import { formRules, brandInfoTemp, dictMap } from './utils.js'
+import { formRules, formProductRules, brandInfoTemp, dictMap } from './utils.js'
 export default {
   dicts: dictMap,
   data() {
     return {
       uploadUrl: process.env.VUE_APP_BASE_API + '/file/upload', // 上传的图片服务器地址
+      headers: {
+        Authorization: 'Bearer ' + getToken(),
+      },
+      quotedOrderNo: '',
       type: '', // 表单类型
       labelPosition: 'right',
       // 表单验证规则
       rules: Object.freeze(formRules),
+      productRules: Object.freeze(formProductRules),
       brandInfoTemp: Object.freeze(brandInfoTemp),
       //特殊工艺
       specialList: [],
@@ -368,24 +386,6 @@ export default {
       formData: {
         sel: null, // 选中行
         columns: [
-          {
-            label: '布号',
-            align: 'center',
-            type: 'text',
-            prop: 'clothNo',
-          },
-          {
-            label: '布类',
-            align: 'center',
-            type: 'text',
-            prop: 'clothType',
-          },
-          {
-            label: '品名',
-            align: 'center',
-            type: 'text',
-            prop: 'productName',
-          },
           {
             label: '织机规格',
             align: 'center',
@@ -459,9 +459,17 @@ export default {
 
   computed: {},
 
-  mounted() {},
+  mounted() {
+    console.log('process.env.VUE_APP_BASE_API', process.env.VUE_APP_BASE_API)
+  },
 
   methods: {
+    getQuotedPriceByNo() {
+      getQuotedPriceByNo(this.quotedOrderNo).then((res) => {
+        this.baseInfo = res.data
+        this.formData.data = this.baseInfo.productList
+      })
+    },
     getCheckList() {
       getTableDataInfoToAble().then((res) => {
         this.specialList = res.data
@@ -484,9 +492,9 @@ export default {
       this.productInfo.clothType = item.productCategory
       this.productInfo.widthCloth = item.fk
       this.productInfo.gramWeight = item.kz
-      this.productInfo.yarnName = item.yarnName
+      this.productInfo.pm = item.pm
       this.productInfo.loomSpecification = item.loomType
-      this.productInfo.meterWeight = (+item.fk + 5) * +item.kz * 100 || 0
+      this.productInfo.meterWeight = ((+item.fk + 5) / 100) * +item.kz || 0
       //纱织信息
       if (item.quotationYarnVoList) {
         let list = []
@@ -569,6 +577,27 @@ export default {
     },
     add() {
       this.productDialogVisible = true
+      this.productInfo = {
+        clothType: '', //布类
+        loomSpecification: '', //织机规模
+        gramWeight: '', //克重
+        widthCloth: '', //幅宽
+        component: '', //成分
+        specialProcessName: '', // 特殊工艺
+        functionName: '', // 功能性承诺
+        colorName: '', // 颜色
+        orderNum: '', // 重量
+        yarnName: '', // 品名
+        meterWeight: 0, // 米重
+        rawYarnVoList: [], // 纱织信息
+      }
+      this.formProductData.data = []
+      setTimeout(() => {
+        this.$refs['productInfoForm'].clearValidate()
+      }, 0)
+    },
+    deleteRow(row, index) {
+      this.formData.data.splice(index, 1)
     },
     // 弹框--确定按钮
     confirm(done) {
@@ -595,6 +624,20 @@ export default {
       console.log(this.baseInfo)
     },
     submit(type) {
+      let flag = this.validateForm('baseInfoForm')
+      //如果验证未通过
+      if (!flag) {
+        this.$notify({
+          title: '错误',
+          message: '存在必填信息没有填选的情况',
+          type: 'error',
+        })
+        return
+      }
+      if (this.baseInfo.productList.length == 0) {
+        this.$message.error('请添加产品')
+        return
+      }
       this.baseInfo.orderStatus = type
       addQuotedOrder(this.baseInfo).then((res) => {
         let url = '/finance/reportList'
@@ -625,6 +668,10 @@ export default {
   },
   created() {
     this.type = this.$route.query.type
+    if (this.type == 'edit') {
+      this.quotedOrderNo = this.$route.query.quotedOrderNo
+      this.getQuotedPriceByNo()
+    }
     this.getCheckList()
   },
 }

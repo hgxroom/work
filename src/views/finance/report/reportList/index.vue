@@ -273,11 +273,20 @@ export default {
       })
     },
     toDetail(val) {
-      let url = '/finance/reportDetail'
-      this.$router.push({
-        path: url,
-        query: { type: 'detail', quotedOrderNo: val.row.quotedOrderNo },
-      })
+      console.log(val.row.orderStatus)
+      if (val.row.orderStatus == 0) {
+        let url = '/finance/addReport'
+        this.$router.push({
+          path: url,
+          query: { type: 'edit', quotedOrderNo: val.row.quotedOrderNo },
+        })
+      } else {
+        let url = '/finance/reportDetail'
+        this.$router.push({
+          path: url,
+          query: { type: 'detail', quotedOrderNo: val.row.quotedOrderNo },
+        })
+      }
     },
     //获取部门字典
     getDeptList() {
