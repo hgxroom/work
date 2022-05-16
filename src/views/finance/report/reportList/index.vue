@@ -186,11 +186,6 @@ export default {
           type: '3',
           num: '5',
         },
-        {
-          name: '已驳回',
-          type: '4',
-          num: '6',
-        },
       ],
       queryParams: {
         quotedOrderNo: '',

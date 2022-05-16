@@ -315,7 +315,7 @@
           </p>
         </div>
         <div class="btn-box btn-box-left">
-          <el-button @click="add" class="computed-btn">计算报价</el-button>
+          <el-button @click="reportCalculator" class="computed-btn">计算报价</el-button>
         </div>
       </div>
       <div class="footer">
@@ -476,7 +476,11 @@ export default {
     this.getCheckList()
   },
   methods: {
-    add() {},
+    //计算报价
+    reportCalculator() {
+      //（毛胚成本+染费+特整总成本+功能性总成本）*（1+染整损耗+特整总损耗）
+      this.weavingCostList.blankCost
+    },
     //确认报价
     submit() {
       let data = {}
@@ -980,7 +984,7 @@ export default {
 }
 ::v-deep .el-table td {
   border-bottom: 1px solid #f3f3f3;
-  padding: 0;
+  // padding: 0;
 }
 .el-table--border:after,
 .el-table--group:after,
