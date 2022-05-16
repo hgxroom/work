@@ -466,6 +466,17 @@ export default {
   methods: {
     getQuotedPriceByNo() {
       getQuotedPriceByNo(this.quotedOrderNo).then((res) => {
+        res.data.productList.forEach((item) => {
+          let colorArray = []
+          item.dyeingCostList.forEach((j) => {
+            colorArray.push(j.colorName)
+          })
+          item.colorName = []
+          item.colorName = colorArray
+          item.functionName = item.functionName.split(',')
+          item.specialProcessName = item.specialProcessName.split(',')
+          console.log(item, colorArray)
+        })
         this.baseInfo = res.data
         this.formData.data = this.baseInfo.productList
       })
@@ -640,8 +651,10 @@ export default {
       }
       this.baseInfo.orderStatus = type
       addQuotedOrder(this.baseInfo).then((res) => {
-        let url = '/finance/reportList'
-        this.$router.push({ path: url })
+        // let url = '/finance/reportList'
+        // this.$router.push({ path: url })
+        const obj = { path: '/finance/reportList' }
+        this.$tab.closeOpenPage(obj)
         // console.log(res)
       })
       console.log('this.productInfo', this.productInfo)
