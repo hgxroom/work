@@ -3,13 +3,15 @@
   <div class="app-main">
     <div class="head_box">
       <el-row type="flex">
-        <select-com></select-com>
         <el-col :span="4">新增产品</el-col>
-        <el-col v-if="type == 'detail'" class="created-font"
-          >提交人：{{ baseInfo.createBy }} 创建时间：{{ baseInfo.createTime }}</el-col
-        >
       </el-row>
     </div>
+    <el-row v-if="type == 'detail'" type="flex" class="head_box2">
+      <el-col :span="4" class="font">布号：{{ baseInfo.newClothNo }}</el-col>
+      <el-col v-if="type == 'detail'" class="created-font"
+        >提交人：{{ baseInfo.createBy }} 创建时间：{{ baseInfo.createTime }}</el-col
+      >
+    </el-row>
     <div class="container">
       <div class="card-box">
         <el-form
@@ -27,7 +29,7 @@
             <el-autocomplete
               v-model="baseInfo.referenceClothNo"
               :fetch-suggestions="queryReferenceClothNo"
-              placeholder="请输入参考布号"
+              :placeholder="[type == 'detail' ? '' : '请输入参考布号']"
               :disabled="type == 'detail' ? true : false"
               :class="[type == 'detail' ? 'input-detail' : '']"
               @select="handleSelectReferenceClothNo"
@@ -78,8 +80,14 @@
           </el-form-item>
           <template>
             <el-form-item label="克重" prop="gramWeight" required>
-              <template>
+              <template v-if="type == 'detail'">
+                <div class="unit-detail">{{ baseInfo.gramWeight }} g/m<sup>2</sup></div>
+              </template>
+
+              <template v-else>
                 <el-input
+                  class="numrule"
+                  type="number"
                   :disabled="type == 'detail' ? true : false"
                   :class="[type == 'detail' ? 'input-detail' : '']"
                   v-model.number="baseInfo.gramWeight"
@@ -93,8 +101,13 @@
           </template>
           <template>
             <el-form-item label="幅宽" prop="widthCloth" required>
-              <template>
+              <template v-if="type == 'detail'">
+                <div class="unit-detail2">{{ baseInfo.widthCloth }} cm</div>
+              </template>
+              <template v-else>
                 <el-input
+                  class="numrule"
+                  type="number"
                   :disabled="type == 'detail' ? true : false"
                   :class="[type == 'detail' ? 'input-detail' : '']"
                   v-model.number="baseInfo.widthCloth"
@@ -132,7 +145,7 @@
             <el-select
               v-model="baseInfo.specialProcessName"
               multiple
-              placeholder="请选择"
+              :placeholder="type == 'detail' ? '' : '请选择'"
               style="width: 100%"
               :disabled="type == 'detail' ? true : false"
               :class="[type == 'detail' ? 'select-detail' : '']"
@@ -149,7 +162,7 @@
             <el-select
               v-model="baseInfo.functionName"
               multiple
-              placeholder="请选择"
+              :placeholder="type == 'detail' ? '' : '请选择'"
               style="width: 100%"
               :disabled="type == 'detail' ? true : false"
               :class="[type == 'detail' ? 'select-detail' : '']"
@@ -224,6 +237,7 @@
                     <el-input
                       size="small"
                       class="numrule"
+                      onkeyup="value=value.replace(/\D/g, '').replace(/^0{1,}/g, '')"
                       placeholder="请输入内容"
                       :type="val.type"
                       v-model="formData.sel[val.prop]"
@@ -285,7 +299,7 @@
       </div>
       <div class="footer" v-if="type !== 'detail'">
         <el-button @click="onCancel" class="save-btn">取消</el-button>
-        <el-button @click="submit" class="sub-btn">确定</el-button>
+        <el-button @click="submit" class="sub-btn">保存</el-button>
       </div>
     </div>
 
@@ -305,7 +319,7 @@
         class="dialog-form"
         :model="baseInfo"
         :rules="rules"
-        ref="baseInfoForm"
+        ref="Form"
         :inline="true"
         label-width="90px"
         :label-position="labelPosition"
@@ -327,6 +341,7 @@
               </div>
               <el-input
                 v-model="item.input"
+                onkeyup="value=value.replace(/\D/g, '').replace(/^0{1,}/g, '')"
                 type="number"
                 class="check-input numrule"
                 size="mini"
@@ -525,12 +540,15 @@ export default {
         referenceClothNo: queryString,
       }
       console.log(queryString.length)
+
       clearTimeout(this.timeout)
-      this.timeout = setTimeout(() => {
-        getFabricQuotationByBh(data).then((res) => {
-          cb(res.data)
-        })
-      }, 700)
+      if (queryString.length >= 6) {
+        this.timeout = setTimeout(() => {
+          getFabricQuotationByBh(data).then((res) => {
+            cb(res.data)
+          })
+        }, 700)
+      }
     },
     //选择布类
     handleSelectClothType(item) {
@@ -583,8 +601,28 @@ export default {
         this.componentList = res.data
       })
     },
+    /**
+     * 验证表单
+     * @param {string} formName 表单实例的名字
+     */
+    validateForm(formName) {
+      let flag = true
+      if (this.$refs[formName]) {
+        this.$refs[formName].validate((valid) => {
+          if (valid) {
+            // 验证通过
+          } else {
+            // 验证不通过
+            flag = false
+          }
+        })
+      }
+      return flag
+    },
     //提交
     submit() {
+      let flag = this.validateForm('baseInfoForm')
+      if (!flag) return
       let ac = 0
       this.formData.data.forEach((item) => {
         if (item.yarnRatio) {
@@ -684,6 +722,10 @@ export default {
       this.formData.sel.yarnNo = item.wlbh
     },
     saveRow(row, index) {
+      console.log(row)
+      if (row.yarnRatio == '0') {
+        this.formData.sel.yarnRatio = ''
+      }
       // 保存
       this.$refs['formRef'].validate((valid) => {
         if (valid) {
@@ -718,14 +760,15 @@ export default {
       let ac = 0
       this.componentList.forEach((i) => {
         const item = i
+        if (item.input == '0') {
+          item.input = ''
+        }
         if (item.input) {
-          text += `${item.componentEnglish}(${item.input}%);`
+          text += `${item.componentEnglish}(${item.input}%) `
           console.log(Number(item.input), 'input')
           ac = ac + Number(item.input)
-          console.log('listac', ac)
         }
       })
-      console.log('ac', ac)
       if (ac === 100) {
         this.baseInfo.component = text
         this.componentDialogVisible = false
@@ -868,6 +911,20 @@ export default {
   color: #242424;
   padding-left: 24px;
   font-weight: 600;
+  border-bottom: 1px solid #f3f3f3;
+}
+.head_box2 {
+  background-color: #fff;
+  height: 64px;
+  line-height: 64px;
+  color: #242424;
+  padding-left: 24px;
+  border-bottom: 1px solid #f3f3f3;
+  .font {
+    font-size: 14px;
+    font-weight: 600;
+    color: rgba(0, 0, 0, 0.85);
+  }
 }
 // 消除输入框右边上下箭头
 ::v-deep.numrule input::-webkit-outer-spin-button,
@@ -882,5 +939,17 @@ export default {
   font-size: 14px;
   text-align: right;
   margin-right: 24px;
+}
+.unit-detail {
+  color: #666;
+  padding-left: 15px;
+  line-height: 29px;
+}
+.unit-detail2 {
+  color: #666;
+  padding-left: 15px;
+}
+.el-table td.el-table__cell div {
+  width: 100%;
 }
 </style>

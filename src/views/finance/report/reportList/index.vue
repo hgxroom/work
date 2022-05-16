@@ -10,20 +10,19 @@
           ref="queryForm"
           label-width="90px"
           :inline="true"
-          size="mini"
         >
           <el-form-item label="报价单号">
-            <el-input v-model="queryParams.quotedOrderNo"></el-input>
+            <el-input v-model="queryParams.quotedOrderNo" placeholder="请输入报价单号"></el-input>
           </el-form-item>
           <el-form-item label="提交人">
-            <el-input v-model="queryParams.createBy"></el-input>
+            <el-input v-model="queryParams.createBy" placeholder="请输入提交人"></el-input>
           </el-form-item>
 
           <el-form-item label="客户名称">
-            <el-input v-model="queryParams.customerName"></el-input>
+            <el-input v-model="queryParams.customerName" placeholder="请输入客户名称"></el-input>
           </el-form-item>
           <el-form-item label="部门">
-            <el-select v-model="queryParams.departmentId">
+            <el-select v-model="queryParams.departmentId" placeholder="请选择部门">
               <el-option label="全部" value=""></el-option>
               <el-option
                 v-for="(dict, index) in deptsList"
@@ -33,11 +32,11 @@
               ></el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="时间范围" class="time-picker">
+          <el-form-item label="提交时间" class="time-picker">
             <el-date-picker
               v-model="queryParams.dateTimePicker"
-              type="datetimerange"
-              value-format="yyyy-MM-dd HH:mm:ss"
+              type="daterange"
+              value-format="yyyy-MM-dd"
               range-separator="-"
               start-placeholder="开始日期"
               end-placeholder="结束日期"
@@ -46,7 +45,7 @@
             </el-date-picker>
           </el-form-item>
           <el-form-item label="布号">
-            <el-input v-model="queryParams.clothNo"></el-input>
+            <el-input v-model="queryParams.clothNo" placeholder="请输入布号"></el-input>
           </el-form-item> </el-form
       ></el-col>
       <el-col style="width: 224px">
@@ -149,7 +148,7 @@
 </template>
 
 <script>
-import { getReportList } from '@/api/finance/report'
+import { getReportList, getStatusNum } from '@/api/finance/report'
 import { getPlanVisitDeptList } from '@/api/customer/visitPlanList'
 export default {
   data() {
@@ -164,27 +163,27 @@ export default {
         {
           name: '全部',
           type: '',
-          num: '1',
+          num: 0,
         },
         {
           name: '草稿',
           type: '0',
-          num: '2',
+          num: 0,
         },
         {
           name: '待报价',
           type: '1',
-          num: '3',
+          num: 0,
         },
         {
           name: '待审核',
           type: '2',
-          num: '4',
+          num: 0,
         },
         {
           name: '已审核',
           type: '3',
-          num: '5',
+          num: 0,
         },
       ],
       queryParams: {
@@ -210,6 +209,62 @@ export default {
   },
 
   methods: {
+    //获取状态条数
+    getNum() {
+      const { quotedOrderNo, createBy, customerName, departmentId, clothNo, dateTimePicker } =
+        this.queryParams
+      let data = {}
+      if (this.queryParams.dateTimePicker == null) {
+        data = {
+          quotedOrderNo,
+          createBy,
+          customerName,
+          departmentId,
+          clothNo,
+          startTime: '',
+          endTime: ' ',
+          pageNum: this.pageNum,
+          pageSize: this.pageSize,
+        }
+      } else {
+        data = {
+          quotedOrderNo,
+          createBy,
+          customerName,
+          departmentId,
+          clothNo,
+          startTime: dateTimePicker[0],
+          endTime: dateTimePicker[1],
+          pageNum: this.pageNum,
+          pageSize: this.pageSize,
+        }
+      }
+      getStatusNum(data).then((res) => {
+        console.log(res)
+
+        this.tabBtn.forEach((val) => {
+          switch (val.name) {
+            case '全部':
+              val.num = res.data.numAll
+              break
+            case '草稿':
+              val.num = res.data.numDraft
+              break
+            case '待报价':
+              val.num = res.data.numWaiting
+              break
+            case '待审核':
+              val.num = res.data.numPendingReview
+              break
+            case '已审核':
+              val.num = res.data.numReviewed
+              break
+            default:
+              break
+          }
+        })
+      })
+    },
     addRepot() {
       let url = '/finance/addReport'
       this.$router.push({
@@ -299,6 +354,7 @@ export default {
       getReportList(data).then((res) => {
         this.total = res.total
         this.listData = res.rows
+        this.getNum()
       })
     },
     addList() {

@@ -63,7 +63,7 @@
       <el-table-column label="序号" type="index" align="center"> </el-table-column>
       <el-table-column label="布号" align="center" prop="newClothNo" :show-overflow-tooltip="true">
         <template slot-scope="scope">
-          <el-button type="text" @click="toDetail(scope)">{{ scope.row.newClothNo }}</el-button>
+          <div class="cloBtn" @click="toDetail(scope)">{{ scope.row.newClothNo }}</div>
         </template>
       </el-table-column>
       <el-table-column
@@ -380,5 +380,9 @@ export default {
 }
 .list-expand-form {
   padding-left: 150px;
+}
+.cloBtn {
+  color: #1890ff;
+  cursor: pointer;
 }
 </style>

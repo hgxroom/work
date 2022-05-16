@@ -5,7 +5,6 @@
       <div class="tit-info">
         <span>布号：{{ newClothNo }}</span>
         <span> 品名：{{ pm }} </span>
-        <el-button @click="submit">尹薇吃龙虾,翻车吃虾壳</el-button>
       </div>
     </div>
     <div class="container">

@@ -245,3 +245,15 @@ export function buildProductFinalSale(data) {
     data: data,
   })
 }
+/**
+ * 报价单列表获取状态条数
+ * @param {*}
+ * @returns
+ */
+export function getStatusNum(data) {
+  return request({
+    url: `/system/quotedOrder/getStatusNum`,
+    method: 'GET',
+    params: data,
+  })
+}
