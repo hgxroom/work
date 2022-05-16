@@ -218,7 +218,7 @@ export default {
       })
     },
     toDetail(val) {
-      let url = '/finance/finance/report/reportDetail'
+      let url = '/finance/reportDetail'
       this.$router.push({
         path: url,
         query: { type: 'detail', quotedOrderNo: val.row.quotedOrderNo },

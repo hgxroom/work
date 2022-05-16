@@ -498,7 +498,7 @@ export default {
       data.yarnCostTotal = this.yarnCostTotal
       console.log(data)
       calcQuotedPrice(data).then((res) => {
-        let url = '/finance/finance/report/reportDetail'
+        let url = '/finance/reportDetail'
         this.$router.push({
           path: url,
           query: { type: 'detail', quotedOrderNo: this.$route.query.quotedOrderNo },
@@ -506,7 +506,7 @@ export default {
       })
     },
     cancel(val) {
-      let url = '/finance/finance/report/reportDetail'
+      let url = '/finance/reportDetail'
       this.$router.push({
         path: url,
         query: { type: 'detail', quotedOrderNo: this.$route.query.quotedOrderNo },

@@ -336,7 +336,7 @@ export default {
   mounted() {},
   created() {
     this.type = this.$route.query.type
-    this.newClothNo = this.$route.query.newClothNo
+    this.newClothNo = this.$route.query.clothNo
     this.quotedOrderNo = this.$route.query.quotedOrderNo
     this.getList()
     this.getHistory()
@@ -360,7 +360,7 @@ export default {
       this.reportData.quotedOrderNo = this.quotedOrderNo || ''
       this.reportData.newClothNo = this.newClothNo || ''
       buildProductFinalSale(this.reportData).then((res) => {
-        let url = '/finance/report/reportList'
+        let url = '/finance/reportList'
         this.$router.push({
           path: url,
           query: { type: 'detail', quotedOrderNo: this.$route.query.quotedOrderNo },
@@ -369,7 +369,7 @@ export default {
       console.log(this.datalist, this.reportData, this.labelList)
     },
     cancel(val) {
-      let url = '/finance/finance/report/reportDetail'
+      let url = '/finance/reportDetail'
       this.$router.push({
         path: url,
         query: { type: 'detail', quotedOrderNo: this.$route.query.quotedOrderNo },
