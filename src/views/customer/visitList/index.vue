@@ -20,11 +20,13 @@
       </el-form-item>
       <el-form-item label="搜索区间">
         <el-date-picker
-          v-model="queryParams.setDate"
-          type="daterange"
-          range-separator="至"
+          v-model="queryParams.dateTimePicker"
+          type="datetimerange"
+          value-format="yyyy-MM-dd HH:mm:ss"
+          range-separator="-"
           start-placeholder="开始日期"
           end-placeholder="结束日期"
+          :default-time="['00:00:00', '23:59:59']"
         >
         </el-date-picker>
       </el-form-item>
@@ -104,12 +106,12 @@
           </el-popover>
         </template>
       </el-table-column>
-      <el-table-column
-        label="拜访时间"
-        align="center"
-        prop="visitTime"
-        :show-overflow-tooltip="true"
-      />
+      <el-table-column label="拜访时间" align="center" :show-overflow-tooltip="true">
+        <template slot-scope="scope">
+          <span>{{ scope.row.visitTime }}</span> -
+          <span>{{ scope.row.visitEndTime.slice(10, 19) }}</span>
+        </template>
+      </el-table-column>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
@@ -141,7 +143,7 @@
   </div>
 </template>
 <script>
-import { getVisitList, visitExport } from '@/api/customer/visit'
+import { getVisitList, visitExport, getStateList } from '@/api/customer/visit'
 export default {
   data() {
     return {
@@ -170,15 +172,27 @@ export default {
     getList() {
       const { customerName, salesman, dateTimePicker } = this.queryParams
       const { pageNum, pageSize } = this
-      const data = {
-        customerName,
-        salesman,
-        startTime: dateTimePicker[0],
-        endTime: dateTimePicker[1],
-        pageNum,
-        pageSize,
+      let data = {}
+      if (this.queryParams.dateTimePicker == null) {
+        data = {
+          customerName,
+          salesman,
+          startTime: '',
+          endTime: '',
+          pageNum: this.pageNum,
+          pageSize: this.pageSize,
+        }
+      } else {
+        data = {
+          customerName,
+          salesman,
+          startTime: dateTimePicker[0],
+          endTime: dateTimePicker[1],
+          pageNum: this.pageNum,
+          pageSize: this.pageSize,
+        }
       }
-
+      console.log(data)
       getVisitList(data).then((res) => {
         this.total = res.total
         this.listData = res.rows

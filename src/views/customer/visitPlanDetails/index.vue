@@ -1,9 +1,11 @@
+<!-- 拜访计划新增、编辑页面 -->
 <template>
   <div class="app-container">
     <el-form
       class="visitForm"
       :model="formInline"
       :inline="true"
+      ref="visitForm"
       :rules="rules"
       label-width="90px"
       :label-position="labelPosition"
@@ -24,14 +26,14 @@
           </template>
         </el-autocomplete>
       </el-form-item>
-      <el-form-item label="客户区域" prop="customerArea">
+      <!-- <el-form-item label="客户区域" prop="customerArea">
         <el-input
           v-model="formInline.customerArea"
           disabled
           :clearable="type == 'detail' ? false : true"
           :class="[type == 'detail' ? 'input-detail' : '']"
         ></el-input>
-      </el-form-item>
+      </el-form-item> -->
       <el-form-item label="品牌名称" prop="brandName">
         <el-select
           v-model="formInline.brandName"
@@ -47,31 +49,33 @@
           ></el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="业务员" prop="salesman">
+      <!-- <el-form-item label="业务员" prop="salesman">
         <el-input
           v-model="formInline.salesman"
           :disabled="true"
           :clearable="type == 'detail' ? false : true"
           :class="[type == 'detail' ? 'input-detail' : '']"
         ></el-input>
-      </el-form-item>
-      <el-form-item label="拜访对象" prop="visitPeople">
+      </el-form-item> -->
+      <el-form-item label="拜访对象" prop="visitObject">
         <el-input
-          v-model="formInline.visitPeople"
+          v-model="formInline.visitObject"
           :clearable="type == 'detail' ? false : true"
           :disabled="type == 'detail' ? true : false"
           :class="[type == 'detail' ? 'input-detail' : '']"
+          placeholder="请输入对象"
         ></el-input>
       </el-form-item>
-      <el-form-item label="职位" prop="post">
+      <el-form-item label="职位" prop="position">
         <el-input
-          v-model="formInline.post"
+          v-model="formInline.position"
           :clearable="type == 'detail' ? false : true"
           :disabled="type == 'detail' ? true : false"
           :class="[type == 'detail' ? 'input-detail' : '']"
+          placeholder="请输入职位"
         ></el-input>
       </el-form-item>
-      <el-form-item label="拜访目的" prop="visitPurpose">
+      <!-- <el-form-item label="拜访目的" prop="visitPurpose">
         <el-select
           v-model="formInline.visitPurpose"
           placeholder="请选择"
@@ -85,10 +89,20 @@
             :value="dict.label"
           ></el-option>
         </el-select>
+      </el-form-item> -->
+      <el-form-item label="标题" prop="titleName">
+        <el-input
+          v-model="formInline.titleName"
+          placeholder="请输入标题"
+          :disabled="type == 'detail' ? true : false"
+          :class="[type == 'detail' ? 'input-detail input-customer-name' : '']"
+          maxlength="15"
+          show-word-limit
+        ></el-input>
       </el-form-item>
-      <el-form-item label="拜访时间" prop="visitTime">
+      <el-form-item label="拜访时间" prop="planStartTime">
         <span v-if="type == 'detail'" style="color: #666; padding-left: 15px">
-          {{ formInline.visitTime }} - {{ formInline.visitEndTime }}
+          {{ formInline.planStartTime }} - {{ formInline.planEndTime }}
         </span>
         <el-date-picker
           v-if="type !== 'detail'"
@@ -98,6 +112,7 @@
           range-separator="-"
           start-placeholder="开始日期"
           end-placeholder="结束日期"
+          :default-time="['00:00:00', '23:59:59']"
           :picker-options="pickerOptions"
           @change="pickTime"
           :clearable="type == 'detail' ? false : true"
@@ -106,7 +121,7 @@
         >
         </el-date-picker>
       </el-form-item>
-      <el-form-item label="联系方式" prop="contactInfo">
+      <!-- <el-form-item label="联系方式" prop="contactInfo">
         <el-input
           v-model="formInline.contactInfo"
           maxlength="11"
@@ -114,57 +129,24 @@
           :disabled="type == 'detail' ? true : false"
           :class="[type == 'detail' ? 'input-detail' : '']"
         ></el-input>
-      </el-form-item>
+      </el-form-item> -->
     </el-form>
     <el-form
       class="visitForm"
+      ref="baseInfoForm"
       :model="formInline"
       :inline="true"
       :rules="rules"
-      :label-position="'top'"
+      :label-position="'right'"
+      label-width="90px"
     >
-      <el-form-item class="fullWidth" label="拓客策略">
-        <p v-if="type == 'detail'" class="unit-detail">{{ formInline.expansionStrategy }}</p>
+      <el-form-item class="fullWidth" label="计划目标" prop="objectivePlan">
+        <div v-if="type == 'detail'" class="unit-detail">{{ formInline.objectivePlan }}</div>
         <el-input
+          placeholder="请输入计划目标"
           v-if="type !== 'detail'"
           type="textarea"
-          autosize
-          v-model="formInline.expansionStrategy"
-          :clearable="type == 'detail' ? false : true"
-          :disabled="type == 'detail' ? true : false"
-          :class="[type == 'detail' ? 'input-textarea-detail' : '']"
-        ></el-input>
-      </el-form-item>
-      <el-form-item class="fullWidth" label="推进计划">
-        <p v-if="type == 'detail'" class="unit-detail">{{ formInline.advancePlan }}</p>
-        <el-input
-          v-if="type !== 'detail'"
-          type="textarea"
-          autosize
-          v-model="formInline.advancePlan"
-          :clearable="type == 'detail' ? false : true"
-          :disabled="type == 'detail' ? true : false"
-          :class="[type == 'detail' ? 'input-textarea-detail' : '']"
-        ></el-input>
-      </el-form-item>
-      <el-form-item class="fullWidth" label="需求资源和支持">
-        <p v-if="type == 'detail'" class="unit-detail">{{ formInline.needSupport }}</p>
-        <el-input
-          v-if="type !== 'detail'"
-          type="textarea"
-          autosize
-          v-model="formInline.needSupport"
-          :clearable="type == 'detail' ? false : true"
-          :disabled="type == 'detail' ? true : false"
-          :class="[type == 'detail' ? 'input-textarea-detail' : '']"
-        ></el-input>
-      </el-form-item>
-      <el-form-item class="fullWidth" label="拜访内容" prop="visitContent">
-        <p v-if="type == 'detail'" class="unit-detail">{{ formInline.visitContent }}</p>
-        <el-input
-          v-if="type !== 'detail'"
-          type="textarea"
-          v-model="formInline.visitContent"
+          v-model="formInline.objectivePlan"
           :clearable="type == 'detail' ? false : true"
           :disabled="type == 'detail' ? true : false"
           :class="[type == 'detail' ? 'input-textarea-detail' : '']"
@@ -182,13 +164,16 @@
 <script>
 import { mapGetters } from 'vuex'
 import {
+  getcustomerVisitPlan,
+  getcustomerVisitPlanDetailsById,
+  editCustomerVisitPlan,
+} from '@/api/customer/visitPlanList'
+import {
   getCustomerInfoByName,
   createCustomerVisit,
   editCustomerVisit,
   getVisitById,
 } from '@/api/customer/visit'
-import { editCustomerVisitPlan } from '@/api/customer/visitPlanList'
-
 import { formRules } from './utils'
 export default {
   dicts: ['customer_visit_purpose'],
@@ -202,28 +187,26 @@ export default {
       datePickerTime: [],
       //表单信息
       formInline: {
+        titleName: '',
+        objectivePlan: '',
         customerId: '',
-        customerName: '',
-        customerArea: '',
-        brandName: '',
+        brandName: '', //品牌名称
+        customerArea: '', //客户区域
+        customerName: '', //客户名称
+        position: '', //职位
         salesman: '',
-        visitPeople: '',
-        post: '',
-        contactInfo: '',
-        visitPurpose: '',
-        visitTime: '',
-        visitEndTime: '',
-        expansionStrategy: '',
-        advancePlan: '',
-        needSupport: '',
-        visitContent: '',
+        visitState: '', //拜访状态
+        planEndTime: '',
+        visitObject: '', //拜访对象
+        visitDesc: '', //
+        planStartTime: '', //拜访时间
+        visitPlanData: '', //改期时拜访记录编辑数据
       },
       pickerOptions: {
         disabledDate(time) {
-          return time.getTime() > Date.now() - 8.64e6
+          return time.getTime() < Date.now()
         },
       },
-      planVisit: {}, //计划列表跳转数据
     }
   },
   computed: {
@@ -239,16 +222,12 @@ export default {
   },
 
   created() {
-    /**
-     * type==addPlanVisit时，是从计划列表确认拜访跳转过来的
-     */
+    debugger
     this.type = this.$route.query.type
-    if (this.$route.query.planVisit) {
-      this.planVisit = JSON.parse(this.$route.query.planVisit)
-      this.formInline = Object.assign(this.formInline, this.planVisit)
-      this.formInline.visitPeople = this.planVisit.visitObject
-      this.formInline.post = this.planVisit.position
+    if (this.$route.query.data) {
+      this.visitPlanData = JSON.parse(this.$route.query.data)
     }
+
     if (this.id) {
       this.getData()
     } else {
@@ -256,12 +235,11 @@ export default {
     }
 
     const obj = Object.assign({}, this.$route, {
-      title: `拜访记录(${this.editState})`,
+      title: `计划(${this.editState})`,
     })
     if (this.type == 'detail') {
-      obj.title = '拜访记录(详情)'
+      obj.title = '计划(详情)'
     }
-
     this.$tab.updatePage(obj)
   },
   methods: {
@@ -271,48 +249,45 @@ export default {
           message: '当前的拜访ID不存在，退回列表页',
           type: 'error',
         })
-        const obj = { path: '/customer/visitList' }
+        const obj = { path: '/customer/visitPlanList' }
         this.$tab.closeOpenPage(obj)
         return
       }
-      getVisitById(this.id).then((res) => {
+
+      getcustomerVisitPlanDetailsById(this.id).then((res) => {
         const {
+          titleName,
+          objectivePlan,
           customerId,
-          customerName,
-          customerArea,
-          brandName,
+          brandName, //品牌名称
+          customerArea, //客户区域
+          customerName, //客户名称
+          position, //职位
           salesman,
-          visitObject,
-          position,
-          contactInformation,
-          visitTarget,
-          visitTime,
-          visitEndTime,
-          strategy,
-          advancePlan,
-          resourceSupport,
-          visitContent,
+          visitState, //拜访状态
+          planEndTime,
+          visitObject, //拜访对象
+          visitDesc, //
+          planStartTime, //拜访时间
         } = res.data
 
         this.formInline = {
+          titleName,
+          objectivePlan,
           customerId,
-          customerName,
-          customerArea,
-          brandName,
+          brandName, //品牌名称
+          customerArea, //客户区域
+          customerName, //客户名称
+          position, //职位
           salesman,
-          visitPeople: visitObject,
-          post: position,
-          contactInfo: contactInformation,
-          visitPurpose: visitTarget,
-          visitTime,
-          visitEndTime,
-          expansionStrategy: strategy,
-          advancePlan,
-          needSupport: resourceSupport,
-          visitContent,
+          visitState, //拜访状态
+          planEndTime,
+          visitObject, //拜访对象
+          visitDesc, //
+          planStartTime, //拜访时间
         }
-        this.datePickerTime[0] = this.formInline.visitTime
-        this.datePickerTime[1] = this.formInline.visitEndTime
+        this.datePickerTime[0] = this.formInline.planStartTime
+        this.datePickerTime[1] = this.formInline.planEndTime
         this.$set(this.datePickerTime)
         if (this.type == 'detail') {
           for (let item in this.formInline) {
@@ -365,24 +340,10 @@ export default {
     },
 
     pickTime(picker) {
-      console.log(picker)
-      if (picker) {
-        let startDay = picker[0].slice(0, 10)
-        let endDay = picker[1].slice(0, 10)
-        if (startDay !== endDay) {
-          this.$message.error('拜访时间必须是同一天哦')
-          this.datePickerTime = ''
-        } else {
-          this.formInline.visitTime = picker[0]
-          this.formInline.visitEndTime = picker[1]
-          if (picker[1].slice(11, 19) == '00:00:00') {
-            this.formInline.visitEndTime = endDay + ' 23:59:59'
-            this.datePickerTime[1] = this.formInline.visitEndTime
-            this.$set(this.datePickerTime)
-          }
-        }
-      }
+      this.formInline.planStartTime = picker[0]
+      this.formInline.planEndTime = picker[1]
     },
+
     submit() {
       const {
         customerId,
@@ -390,16 +351,14 @@ export default {
         customerArea,
         brandName,
         salesman,
-        visitPeople: visitObject,
-        post: position,
-        contactInfo: contactInformation,
-        visitPurpose: visitTarget,
-        visitTime,
-        visitEndTime,
-        expansionStrategy: strategy,
-        advancePlan,
-        needSupport: resourceSupport,
-        visitContent,
+        objectivePlan,
+        planEndTime,
+        planStartTime,
+        position,
+        titleName,
+        visitDesc,
+        visitObject,
+        visitState,
       } = this.formInline
       const data = {
         customerId,
@@ -407,31 +366,20 @@ export default {
         customerArea,
         brandName,
         salesman,
-        visitObject,
+        objectivePlan,
+        planEndTime,
+        planStartTime,
         position,
-        contactInformation,
-        visitTarget,
-        visitTime,
-        visitEndTime,
-        strategy,
-        advancePlan,
-        resourceSupport,
-        visitContent,
+        titleName,
+        visitDesc,
+        visitObject,
+        visitState,
       }
-      if (this.id) {
-        data.id = Number(this.id)
-        editCustomerVisit(data).then((res) => {
-          this.$message({
-            message: '提交成功',
-            type: 'success',
-          })
-
-          this.cancel()
-        })
-      } else {
-        createCustomerVisit(data).then((res) => {
-          if (this.type == 'addPlanVisit') {
-            editCustomerVisitPlan(this.planVisit).then((res) => {
+      let flag = this.validateForm('visitForm') && this.validateForm('baseInfoForm')
+      if (flag) {
+        getcustomerVisitPlan(data).then((res) => {
+          if (this.type == 'edit') {
+            editCustomerVisitPlan(this.visitPlanData).then((val) => {
               this.$message({
                 message: '提交成功',
                 type: 'success',
@@ -443,14 +391,31 @@ export default {
               message: '提交成功',
               type: 'success',
             })
+            this.cancel()
           }
-
-          this.cancel()
         })
       }
     },
+    /**
+     * 验证表单
+     * @param {string} formName 表单实例的名字
+     */
+    validateForm(formName) {
+      let flag = true
+      if (this.$refs[formName]) {
+        this.$refs[formName].validate((valid) => {
+          if (valid) {
+            // 验证通过
+          } else {
+            // 验证不通过
+            flag = false
+          }
+        })
+      }
+      return flag
+    },
     cancel() {
-      const obj = { path: '/customer/visitList' }
+      const obj = { path: '/customer/visitPlanList' }
       this.$tab.closeOpenPage(obj)
     },
   },
@@ -464,6 +429,9 @@ export default {
   .el-form-item {
     width: calc(33.33% - 10px);
   }
+  .el-textarea {
+    width: 53%;
+  }
   .el-select {
     width: 100%;
   }
@@ -476,8 +444,8 @@ export default {
   .fullWidth {
     width: 100%;
     ::v-deep .el-form-item__label {
-      width: 110px;
-      text-align: left;
+      width: 90px;
+      text-align: right;
     }
     ::v-deep .el-form-item__content {
       width: calc(100% - 120px);
@@ -503,6 +471,7 @@ export default {
     background: transparent;
   }
 }
+
 .select-detail {
   ::v-deep .el-input__inner {
     border: 1px solid transparent;
@@ -522,6 +491,7 @@ export default {
 .unit-detail {
   color: #666;
   padding-left: 15px;
+  width: 53%;
 }
 .multiple-detail {
   ::v-deep .el-form-item__content {

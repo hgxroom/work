@@ -20,6 +20,16 @@
               size="small"
             ></el-input>
           </el-form-item>
+          <el-form-item label="状态">
+            <el-select v-model="queryParams.customerState" clearable placeholder="请选择">
+              <el-option
+                v-for="(dict, index) in dict.type.customer_state"
+                :key="index"
+                :label="dict.label"
+                :value="dict.label"
+              ></el-option>
+            </el-select>
+          </el-form-item>
           <el-form-item label="搜索区间">
             <el-date-picker
               v-model="queryParams.dateTimePicker"
@@ -131,6 +141,12 @@
         </template>
       </el-table-column>
       <el-table-column
+        label="状态"
+        align="center"
+        prop="customerState"
+        :show-overflow-tooltip="true"
+      />
+      <el-table-column
         label="创建时间"
         align="center"
         prop="createTime"
@@ -168,7 +184,9 @@
 </template>
 <script>
 import { getCustomerList, customerExport } from '@/api/customer/customer'
+import { dictMap } from '../customerDetails/utils'
 export default {
+  dicts: dictMap,
   data() {
     return {
       // 查询参数
@@ -176,6 +194,7 @@ export default {
         customerName: '', //客户名称
         salesman: '', //业务员名称
         dateTimePicker: ['', ''], //时间区间 Array
+        customerState: '',
       },
       // loading
       loading: false,
@@ -193,16 +212,30 @@ export default {
      * 获取客户信息列表
      */
     getList() {
-      const { customerName, salesman, dateTimePicker } = this.queryParams
-      const { pageNum, pageSize } = this
-      const data = {
-        customerName,
-        salesman,
-        startTime: dateTimePicker[0],
-        endTime: dateTimePicker[1],
-        pageNum,
-        pageSize,
+      const { customerName, salesman, customerState, dateTimePicker } = this.queryParams
+      let data = {}
+      if (this.queryParams.dateTimePicker == null) {
+        data = {
+          customerName,
+          salesman,
+          customerState,
+          startTime: '',
+          endTime: ' ',
+          pageNum: this.pageNum,
+          pageSize: this.pageSize,
+        }
+      } else {
+        data = {
+          customerName,
+          salesman,
+          customerState,
+          startTime: dateTimePicker[0],
+          endTime: dateTimePicker[1],
+          pageNum: this.pageNum,
+          pageSize: this.pageSize,
+        }
       }
+      const { pageNum, pageSize } = this
       getCustomerList(data).then((res) => {
         this.total = res.total
         this.listData = res.rows

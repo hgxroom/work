@@ -81,6 +81,23 @@
           </template>
         </el-form-item>
       </template>
+      <el-form-item label="状态" prop="customerState">
+        <span v-if="type == 'detail'" class="unit-detail">{{ baseInfo.customerState || '-' }}</span>
+        <el-select
+          v-if="type !== 'detail'"
+          v-model="baseInfo.customerState"
+          placeholder="请选择"
+          :disabled="type == 'detail' ? true : false"
+          :class="[type == 'detail' ? 'select-detail' : '']"
+        >
+          <el-option
+            v-for="(dict, index) in dict.type.customer_state"
+            :key="index"
+            :label="dict.label"
+            :value="dict.label"
+          ></el-option>
+        </el-select>
+      </el-form-item>
     </el-form>
     <!-- 标签 -->
     <el-row>
@@ -170,6 +187,7 @@
       <el-form-item label="联系人" prop="contacts">
         <el-input
           v-model="brandInfo.contacts"
+          maxlength="11"
           placeholder="请输入联系人"
           :clearable="type == 'detail' ? false : true"
           :disabled="type == 'detail' ? true : false"
@@ -345,6 +363,7 @@
         :class="['mark-textarea', type == 'detail' ? 'textarea-detail' : '']"
       >
         <el-input
+          maxlength="200"
           v-model="brandInfo.brandRemark"
           rows="2"
           type="textarea"
@@ -460,6 +479,43 @@
         </el-dialog>
       </el-col>
     </el-row>
+    <!-- 拜访记录 -->
+    <el-row :gutter="20" v-if="type == 'detail'" style="margin-top: 30px; flex-wrap: wrap">
+      <el-col class="visitCard" v-for="(item, index) in visitDetailVoList" :key="index">
+        <el-card>
+          <el-form label-position="right" label-width="90px" size="mini">
+            <el-form-item label="拜访时间">
+              <span class="unit-detail">{{ item.visitTime }}</span> -
+              <span class="unit-detail" style="padding-left: 0">{{ item.visitEndTime }}</span>
+            </el-form-item>
+            <el-form-item label="拜访对象">
+              <span class="unit-detail">{{ item.visitObject }}</span>
+            </el-form-item>
+            <el-form-item label="职位">
+              <span class="unit-detail">{{ item.position }}</span>
+            </el-form-item>
+            <el-form-item label="联系方式">
+              <span class="unit-detail">{{ item.contactInformation }}</span>
+            </el-form-item>
+            <el-form-item label="内容">
+              <span class="unit-detail">{{ item.visitContent }}</span>
+            </el-form-item>
+          </el-form>
+          <el-button
+            class="cardBtn"
+            @click="
+              () => {
+                readVisit('detail', item.id)
+              }
+            "
+            type="primary"
+            size="mini"
+            plain
+            >查看详情</el-button
+          >
+        </el-card>
+      </el-col>
+    </el-row>
     <!-- 操作按钮 -->
     <el-row type="flex" v-if="type !== 'detail'">
       <el-col>
@@ -481,6 +537,7 @@ export default {
   dicts: dictMap,
   data() {
     return {
+      addFlag: false,
       labelPosition: 'right',
       type: '', // 表单类型
       // 表单验证规则
@@ -494,6 +551,7 @@ export default {
         revenueScale: '', //收入规模
         customerArea: '', //客户区域
         createTime: '', //创建时间
+        customerState: '', // 状态
       },
       //品牌列表
       brandList: [],
@@ -510,7 +568,7 @@ export default {
         contacts: '', //联系人
         position: '', //职位
         contactInformation: '', //联系方式
-
+        customerState: '',
         crowdCircle: [], //人群圈层
         operationModeAbility: '', //运营模式和能力
         timeRhythm: '', //时间节奏（取数据字典label）
@@ -539,6 +597,8 @@ export default {
         categories: '',
         proportion: '',
       },
+      // 拜访记录列表
+      visitDetailVoList: [],
     }
   },
   computed: {
@@ -564,6 +624,12 @@ export default {
       title: `客户(${this.editState})`,
     })
     if (this.type == 'detail') {
+      obj.meta.title = '客户(详情)'
+    }
+    if (this.type == 'edit') {
+      obj.meta.title = '客户(编辑)'
+    }
+    if (this.type == 'detail') {
       obj.title = '客户(详情)'
     }
     this.$tab.updatePage(obj)
@@ -582,6 +648,8 @@ export default {
           customerArea,
           createTime,
           brandList,
+          customerState,
+          visitDetailVoList,
         } = res.data
 
         // 如果id请求为不存在的客户
@@ -610,8 +678,10 @@ export default {
           revenueScale,
           customerArea,
           createTime,
+          customerState,
         }
         this.brandList = brandList
+        this.visitDetailVoList = visitDetailVoList
         console.log('brandList', this.brandList)
         if (brandList.length > 0) {
           this.tabActiveName = brandList[0].id
@@ -627,6 +697,7 @@ export default {
       const flag = this.validateForm('brandInfoForm')
 
       if (!findItem && flag) {
+        this.addFlag = true
         //没有才创建
         //当前时间戳作为唯一标识 新建时用
         const id = new Date().getTime().toString()
@@ -638,6 +709,7 @@ export default {
 
         this.brandList.push(brandTemp)
         this.tabActiveName = id
+        this.$refs['brandInfoForm'].clearValidate()
       } else {
         this.$notify({
           title: '错误',
@@ -654,6 +726,7 @@ export default {
         type: 'warning',
       })
         .then(() => {
+          this.$refs['brandInfoForm'].clearValidate()
           const delIndex = this.brandList.findIndex((item) => {
             return item.id === this.tabActiveName
           })
@@ -698,6 +771,11 @@ export default {
           type: 'error',
         })
         return validateed
+      }
+      if (this.addFlag) {
+        setTimeout(() => {
+          this.$refs['brandInfoForm'].clearValidate()
+        }, 0)
       }
       //校验通过 先把旧数据存入结构
       this.moveBrandInfoToTabs(oldValue)
@@ -930,6 +1008,10 @@ export default {
       }
       return flag
     },
+    readVisit(type, id) {
+      console.log(id)
+      this.$router.push({ path: `/customer/visitDetails/${id}`, query: { type } })
+    },
   },
 }
 </script>
@@ -1003,6 +1085,15 @@ export default {
   }
   ::v-deep .el-textarea__inner {
     border-color: transparent;
+  }
+}
+.visitCard {
+  width: 500px;
+  margin: 10px 0;
+  .cardBtn {
+    width: 130px;
+    margin: auto;
+    display: block;
   }
 }
 </style>

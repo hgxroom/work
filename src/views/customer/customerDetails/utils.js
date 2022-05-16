@@ -13,6 +13,12 @@ export const formRules = {
     message: '请输入客户区域',
     trigger: 'change',
   },
+  // 状态
+  customerState: {
+    required: true,
+    message: '请选择状态',
+    trigger: 'change',
+  },
   //品牌名称
   brandName: [
     {
@@ -136,4 +142,5 @@ export const dictMap = [
   'customer_category_coverage', //覆盖品类
   'customer_cooperation_intention', //合作意向
   'customer_sales_channel', //销售渠道
+  'customer_state', // 状态
 ]

@@ -15,11 +15,11 @@ export const formRules = {
     {
       required: true,
       message: '请输入品牌名称',
-      trigger: 'blur',
+      trigger: 'change',
     },
   ],
   //拜访对象
-  visitPeople: [
+  visitObject: [
     {
       required: true,
       message: '请输入拜访对象',
@@ -27,15 +27,15 @@ export const formRules = {
     },
   ],
   // 拜访目的
-  visitPurpose: [
+  titleName: [
     {
       required: true,
-      message: '请输入拜访目的',
+      message: '请输入标题',
       trigger: 'blur',
     },
   ],
   //职位
-  post: {
+  position: {
     required: true,
     message: '职位必填',
     trigger: 'blur',
@@ -47,21 +47,21 @@ export const formRules = {
     trigger: 'blur',
   },
   //拜访时间
-  visitTime: {
+  planStartTime: {
     required: true,
     message: '拜访时间必填',
     trigger: 'blur',
   },
   //拜访内容
-  visitContent: [
+  objectivePlan: [
     {
       required: true,
       message: '拜访内容必填',
       trigger: 'blur',
     },
     {
-      min: 30,
-      message: '最少30字',
+      min: 20,
+      message: '最少20字',
       trigger: 'change',
     },
   ],
