@@ -638,7 +638,7 @@ export default {
         data.functionName = String(data.functionName)
         data.specialProcessName = String(data.specialProcessName)
         buildProduct(data).then((res) => {
-          let url = '/finance/finance/report/createProduct'
+          let url = '/finance/createProduct'
           this.$router.push({ path: url })
         })
       } else if (this.formData.data.length == 0) {
@@ -648,7 +648,7 @@ export default {
       }
     },
     onCancel() {
-      let url = '/finance/finance/report/createProduct'
+      let url = '/finance/createProduct'
       this.$router.push({ path: url })
     },
     //删除
