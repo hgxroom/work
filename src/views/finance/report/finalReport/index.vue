@@ -336,7 +336,7 @@ export default {
   mounted() {},
   created() {
     this.type = this.$route.query.type
-    this.newClothNo = this.$route.query.newClothNo
+    this.newClothNo = this.$route.query.clothNo
     this.quotedOrderNo = this.$route.query.quotedOrderNo
     this.getList()
     this.getHistory()

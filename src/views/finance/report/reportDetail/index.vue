@@ -350,7 +350,7 @@ export default {
           },
         })
       } else if (this.baseInfo.orderStatus == 2) {
-        let url = '/finance/finance/finalReport'
+        let url = '/finance/finalReport'
         this.$router.push({
           path: url,
           query: {
