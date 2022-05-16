@@ -154,6 +154,7 @@ import {
   editExchangeRate,
   delExchangeRate,
   addExchangeRate,
+  statusExchangeRate,
 } from '@/api/finance/basic'
 export default {
   dicts: ['sys_normal_disable'],
@@ -311,7 +312,7 @@ export default {
       // 启用、禁用
       if (row.status == 1) {
         for (const i of this.formData.data) {
-          if (i.status == 0) return this.$message.warning('请先禁用其他退税系数')
+          if (i.status == 0) return this.$message.warning('请先禁用其他汇率')
         }
       }
       // 状态改变
@@ -328,7 +329,7 @@ export default {
         type: 'warning',
       })
         .then(() => {
-          editExchangeRate(data).then((res) => {
+          statusExchangeRate(data).then((res) => {
             this.$message({
               type: 'success',
               message: `${statusText}成功!`,

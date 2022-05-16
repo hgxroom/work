@@ -5,7 +5,7 @@
         <el-button type="primary" @click="add" class="add-btn">新增</el-button>
       </el-col>
       <el-col :span="12" style="text-align: right">
-        <!-- <el-button type="default" @click="handleImport" class="right-btn">导入</el-button> -->
+        <el-button type="default" @click="handleImport" class="right-btn">导入</el-button>
         <el-button type="default" @click="handleExportBtn" class="right-btn">导出</el-button>
       </el-col>
     </el-row>
@@ -289,7 +289,7 @@ export default {
         // 设置上传的请求头部
         headers: { Authorization: 'Bearer ' + getToken() },
         // 上传的地址
-        url: process.env.VUE_APP_BASE_API + '/system/user/importData',
+        url: process.env.VUE_APP_BASE_API + '/system/yarnPrice/importYarnPrice',
       },
     }
   },
@@ -475,6 +475,7 @@ export default {
     },
     // 提交上传文件
     submitFileForm() {
+      this.upload.open = false
       this.$refs.upload.submit()
     },
   },
