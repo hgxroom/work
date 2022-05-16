@@ -71,11 +71,12 @@
           <div style="width: 90px; text-align: right; padding-right: 12px">上传图片</div>
           <div class="flex">
             <el-upload
-              action="https://jsonplaceholder.typicode.com/posts/"
+              :action="uploadUrl"
               list-type="picture-card"
               :on-preview="handlePictureCardPreview"
               :on-remove="handleRemove"
               :before-upload="beforeUpload"
+              :auto-upload="false"
             >
               <i class="el-icon-plus"></i>
             </el-upload>
@@ -320,6 +321,7 @@ export default {
   dicts: dictMap,
   data() {
     return {
+      uploadUrl: process.env.VUE_APP_BASE_API + '/file/upload', // 上传的图片服务器地址
       type: '', // 表单类型
       labelPosition: 'right',
       // 表单验证规则
@@ -595,7 +597,7 @@ export default {
     submit(type) {
       this.baseInfo.orderStatus = type
       addQuotedOrder(this.baseInfo).then((res) => {
-        let url = '/finance/finance/report/reportList'
+        let url = '/finance/reportList'
         this.$router.push({ path: url })
         // console.log(res)
       })
