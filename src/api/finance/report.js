@@ -257,3 +257,15 @@ export function getStatusNum(data) {
     params: data,
   })
 }
+/**
+ * 通过作业类型查询染费
+ * @param {*}
+ * @returns
+ */
+export function getDyeingFeeDataByJobStatus(data) {
+  return request({
+    url: `/system/dyeingFeeData/getDyeingFeeDataByJobStatus`,
+    method: 'GET',
+    params: data,
+  })
+}

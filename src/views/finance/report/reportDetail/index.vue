@@ -339,7 +339,6 @@ export default {
     toCostOffer(val) {
       console.log(this.baseInfo)
       if (this.baseInfo.orderStatus == 1) {
-        console.log(1111)
         let url = '/finance/reportCalculator'
         this.$router.push({
           path: url,
@@ -347,6 +346,7 @@ export default {
             type: 'detail',
             quotedOrderNo: this.$route.query.quotedOrderNo,
             clothNo: val.clothNo,
+            component: val.component,
           },
         })
       } else if (this.baseInfo.orderStatus == 2) {

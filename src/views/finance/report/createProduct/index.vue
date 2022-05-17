@@ -60,8 +60,18 @@
     </el-row>
     <!-- 列表 -->
     <el-table :data="listData" ref="customerList" border style="width: 100%" :row-style="rowstyle">
-      <el-table-column label="序号" type="index" align="center"> </el-table-column>
-      <el-table-column label="布号" align="center" prop="newClothNo" :show-overflow-tooltip="true">
+      <el-table-column label="序号" align="center" width="100px">
+        <template v-slot="scope">
+          {{ (pageNum - 1) * pageSize + scope.$index + 1 }}
+        </template>
+      </el-table-column>
+      <el-table-column
+        label="布号"
+        align="center"
+        prop="newClothNo"
+        width="170px"
+        :show-overflow-tooltip="true"
+      >
         <template slot-scope="scope">
           <div class="cloBtn" @click="toDetail(scope)">{{ scope.row.newClothNo }}</div>
         </template>
@@ -91,7 +101,7 @@
         prop="salesman"
         :show-overflow-tooltip="true"
       /> -->
-      <el-table-column label="纱线品名" align="center" :show-overflow-tooltip="true">
+      <el-table-column label="纱线品名" align="center" width="280px" :show-overflow-tooltip="true">
         <template v-slot="scope">
           <div v-for="(j, index) in scope.row.buildProductYarnList" :key="index">
             {{ j.yarnName }}
