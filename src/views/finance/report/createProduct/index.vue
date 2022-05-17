@@ -54,20 +54,20 @@
     </el-row>
     <el-row>
       <el-col :span="12">
-        <el-button type="primary" @click="addProduct" class="add-btn">新增</el-button>
+        <el-button style="color: #fff" @click="addProduct" class="add-btn">新增</el-button>
       </el-col>
       <el-col :span="12" style="text-align: right"></el-col>
     </el-row>
     <!-- 列表 -->
     <el-table :data="listData" ref="customerList" border style="width: 100%" :row-style="rowstyle">
-      <el-table-column label="序号" align="center" width="100px">
+      <el-table-column label="序号" align="center" width="60px">
         <template v-slot="scope">
           {{ (pageNum - 1) * pageSize + scope.$index + 1 }}
         </template>
       </el-table-column>
       <el-table-column
         label="布号"
-        align="center"
+        align="left"
         prop="newClothNo"
         width="170px"
         :show-overflow-tooltip="true"
@@ -78,46 +78,41 @@
       </el-table-column>
       <el-table-column
         label="参考布号"
-        align="center"
+        align="left"
         prop="referenceClothNo"
         :show-overflow-tooltip="true"
       />
-      <el-table-column
-        label="品名"
-        align="center"
-        prop="productName"
-        :show-overflow-tooltip="true"
-      />
-      <el-table-column label="布类" align="center" prop="clothType" :show-overflow-tooltip="true" />
+      <el-table-column label="品名" align="left" prop="productName" :show-overflow-tooltip="true" />
+      <el-table-column label="布类" align="left" prop="clothType" :show-overflow-tooltip="true" />
       <!-- <el-table-column
         label="纱线品名"
-        align="center"
+        align="left"
         prop="salesman"
         :show-overflow-tooltip="true"
       /> -->
       <!-- <el-table-column
         label="纱线编号"
-        align="center"
+        align="left"
         prop="salesman"
         :show-overflow-tooltip="true"
       /> -->
-      <el-table-column label="纱线品名" align="center" width="280px" :show-overflow-tooltip="true">
+      <el-table-column label="纱线品名" align="left" width="280px" :show-overflow-tooltip="true">
         <template v-slot="scope">
-          <div v-for="(j, index) in scope.row.buildProductYarnList" :key="index">
+          <div class="tab-div" v-for="(j, index) in scope.row.buildProductYarnList" :key="index">
             {{ j.yarnName }}
           </div>
         </template>
       </el-table-column>
-      <el-table-column label="纱线编号" align="center" :show-overflow-tooltip="true">
+      <el-table-column label="纱线编号" width="120px" align="left" :show-overflow-tooltip="true">
         <template v-slot="scope">
-          <div v-for="(j, index) in scope.row.buildProductYarnList" :key="index">
+          <div class="tab-div" v-for="(j, index) in scope.row.buildProductYarnList" :key="index">
             {{ j.yarnNo }}
           </div>
         </template>
       </el-table-column>
-      <el-table-column label="纱线比例" align="center" :show-overflow-tooltip="true">
+      <el-table-column label="纱线比例" align="left" :show-overflow-tooltip="true">
         <template v-slot="scope">
-          <div v-for="(j, index) in scope.row.buildProductYarnList" :key="index">
+          <div class="tab-div" v-for="(j, index) in scope.row.buildProductYarnList" :key="index">
             {{ j.yarnRatio }}
           </div>
         </template>
@@ -125,55 +120,60 @@
 
       <!-- <el-table-column
         label="纱线比例"
-        align="center"
+        align="left"
         prop="customerArea"
         :show-overflow-tooltip="true"
       /> -->
       <el-table-column
         label="克重(g/m2)"
-        align="center"
+        align="left"
+        width="100px"
         prop="gramWeight"
         :show-overflow-tooltip="true"
       />
 
       <el-table-column
         label="幅宽(cm)"
-        align="center"
+        align="left"
         prop="widthCloth"
         :show-overflow-tooltip="true"
       />
-      <el-table-column label="成分" align="center" prop="component" :show-overflow-tooltip="true" />
+      <el-table-column label="成分" align="left" prop="component" :show-overflow-tooltip="true" />
       <el-table-column
         label="织机规格"
-        align="center"
+        align="left"
         prop="loomSpecification"
         :show-overflow-tooltip="true"
       />
       <el-table-column
         label="特殊工艺"
-        align="center"
-        prop="createTime"
-        :show-overflow-tooltip="true"
-      />
-      <el-table-column
-        label="功能性承诺"
-        align="center"
+        align="left"
         prop="specialProcessName"
         :show-overflow-tooltip="true"
       />
       <el-table-column
-        label="创建人"
-        align="center"
-        prop="createBy"
+        label="功能性承诺"
+        width="100px"
+        align="left"
+        prop="functionName"
+        :show-overflow-tooltip="true"
+      />
+      <el-table-column label="创建人" align="left" prop="createBy" :show-overflow-tooltip="true" />
+      <el-table-column
+        label="创建时间"
+        align="left"
+        prop="createTime"
+        width="170px"
         :show-overflow-tooltip="true"
       />
       <el-table-column
-        label="创建时间"
+        label="状态"
         align="center"
-        prop="createTime"
+        fixed="right"
+        prop="status"
+        width="112px"
         :show-overflow-tooltip="true"
-      />
-      <el-table-column label="状态" align="center" prop="status" :show-overflow-tooltip="true">
+      >
         <template v-slot="scope">
           <div :style="scope.row.status == '0' ? 'color: #00a870' : ''">
             {{ statusFilter(scope.row.status) }}
@@ -183,7 +183,7 @@
       <el-table-column
         label="操作"
         align="center"
-        min-width="150px"
+        width="112px"
         class-name="small-padding fixed-width"
         fixed="right"
       >
@@ -395,5 +395,21 @@ export default {
 .cloBtn {
   color: #1890ff;
   cursor: pointer;
+}
+.tab-div {
+  border-bottom: 1px solid #dfe6ec;
+  margin: 0 -10px;
+  padding: 8px 10px;
+}
+.tab-divline {
+  padding-left: 0;
+  margin-left: 0px;
+}
+.tab-divline2 {
+  padding-right: 0;
+  margin-right: 0px;
+}
+.tab-div:last-child {
+  border-bottom: none;
 }
 </style>

@@ -368,6 +368,7 @@ export default {
             quotedOrderNo: this.$route.query.quotedOrderNo,
             clothNo: val.clothNo,
             component: val.component,
+            yarnName: val.pm,
           },
         })
       } else if (this.baseInfo.orderStatus == 2) {
