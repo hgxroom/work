@@ -16,6 +16,7 @@
             <el-input
               v-model="baseInfo.customerName"
               placeholder="请输入客户"
+              disabled
               :clearable="type == 'detail' ? false : true"
               :class="[type == 'detail' ? 'input-detail' : '']"
             ></el-input>
@@ -24,6 +25,7 @@
             <el-input
               v-model="baseInfo.finalCustomerName"
               placeholder="请输入最终客户"
+              disabled
               :clearable="type == 'detail' ? false : true"
               :class="[type == 'detail' ? 'input-detail' : '']"
             ></el-input>
@@ -32,6 +34,7 @@
             <el-input
               v-model="baseInfo.settlementMethod"
               placeholder="请输入结算方式"
+              disabled
               :clearable="type == 'detail' ? false : true"
               :class="[type == 'detail' ? 'input-detail' : '']"
             ></el-input>
@@ -40,6 +43,7 @@
             <el-input
               v-model="baseInfo.productApplication"
               placeholder="请输入成品用途"
+              disabled
               :clearable="type == 'detail' ? false : true"
               :class="[type == 'detail' ? 'input-detail' : '']"
             ></el-input>
@@ -48,14 +52,7 @@
             label="备注"
             :class="['mark-textarea', type == 'detail' ? 'textarea-detail' : '']"
           >
-            <el-input
-              maxlength="200"
-              v-model="baseInfo.remark"
-              rows="3"
-              type="textarea"
-              :disabled="type == 'detail' ? true : false"
-              placeholder="请输入备注"
-            />
+            <span>{{ baseInfo.remark }}</span>
           </el-form-item>
         </el-form>
         <div class="upload-img" v-if="false">
@@ -83,28 +80,38 @@
           size="small"
           :data="formData.data"
           style="width: 100%; font-size: 14px; color: #242424; bordercolor: #000"
-          highlight-current-row
           header-row-class-name="tableHeader"
         >
-          <el-table-column label="序号" type="index" align="center" width="100px"></el-table-column>
-          <el-table-column label="纱线编号">
+          <el-table-column label="序号" type="index" align="center" width="100"></el-table-column>
+          <el-table-column label="布号" prop="clothNo" width="100"></el-table-column>
+          <el-table-column label="布类" prop="clothType" width="100"></el-table-column>
+          <el-table-column label="品名" prop="pm" width="260"></el-table-column>
+          <el-table-column label="纱线编号" width="150">
             <template v-slot="scope">
-              <div v-for="(item, index) in scope.row.rawYarnVoList" :key="index">
-                {{ item.wlbh }}
+              <div
+                class="tab-div tab-divline"
+                v-for="(item, index) in scope.row.rawYarnVoList"
+                :key="index"
+              >
+                {{ item.yarnNo }}
               </div>
             </template>
           </el-table-column>
-          <el-table-column label="纱线品名">
+          <el-table-column label="纱线品名" width="260">
             <template v-slot="scope">
-              <div v-for="(item, index) in scope.row.rawYarnVoList" :key="index">
-                {{ item.wlmch }}
+              <div class="tab-div" v-for="(item, index) in scope.row.rawYarnVoList" :key="index">
+                {{ item.yarnName }}
               </div>
             </template>
           </el-table-column>
-          <el-table-column label="纱线比例">
+          <el-table-column label="纱线比例(%)" width="100">
             <template v-slot="scope">
-              <div v-for="(item, index) in scope.row.rawYarnVoList" :key="index">
-                {{ item.bl }}
+              <div
+                class="tab-div tab-divline2"
+                v-for="(item, index) in scope.row.rawYarnVoList"
+                :key="index"
+              >
+                {{ item.yarnRatio }}
               </div>
             </template>
           </el-table-column>
@@ -119,6 +126,20 @@
             <template v-slot="scope">
               <div>
                 {{ scope.row[item.prop] }}
+              </div>
+            </template>
+          </el-table-column>
+          <el-table-column label="特殊工艺">
+            <template v-slot="scope">
+              <div v-for="(item, index) in scope.row.specialProcessName" :key="index">
+                {{ item }}
+              </div>
+            </template>
+          </el-table-column>
+          <el-table-column label="功能性承诺" width="120">
+            <template v-slot="scope">
+              <div v-for="(item, index) in scope.row.functionName" :key="index">
+                {{ item }}
               </div>
             </template>
           </el-table-column>
@@ -237,7 +258,7 @@ export default {
         colorName: '', // 颜色
         orderNum: '', // 重量
         yarnName: '', // 品名
-        meterWeight: 1, // 米重
+        meterWeight: 0, // 米重
       },
       dialogImageUrl: '',
       dialogVisible: false,
@@ -246,24 +267,6 @@ export default {
       formData: {
         sel: null, // 选中行
         columns: [
-          {
-            label: '布号',
-            align: 'center',
-            type: 'text',
-            prop: 'clothNo',
-          },
-          {
-            label: '布类',
-            align: 'center',
-            type: 'text',
-            prop: 'clothType',
-          },
-          {
-            label: '品名',
-            align: 'center',
-            type: 'text',
-            prop: 'productName',
-          },
           {
             label: '织机规格',
             align: 'center',
@@ -295,18 +298,6 @@ export default {
             prop: 'meterWeight',
           },
           {
-            label: '特殊工艺',
-            align: 'center',
-            type: 'text',
-            prop: 'specialProcessName',
-          },
-          {
-            label: '功能性承诺',
-            align: 'center',
-            type: 'text',
-            prop: 'functionName',
-          },
-          {
             label: '下单重量',
             align: 'center',
             type: 'text',
@@ -330,6 +321,17 @@ export default {
   methods: {
     getQuotedPriceByNo() {
       getQuotedPriceByNo(this.quotedOrderNo).then((res) => {
+        res.data.productList.forEach((item) => {
+          let colorArray = []
+          item.dyeingCostList.forEach((j) => {
+            colorArray.push(j.colorName)
+          })
+          item.colorName = []
+          item.colorName = colorArray
+          item.functionName = item.functionName.split(',')
+          item.specialProcessName = item.specialProcessName.split(',')
+          console.log(item, colorArray)
+        })
         this.baseInfo = res.data
         this.formData.data = this.baseInfo.productList
 
@@ -692,6 +694,12 @@ export default {
     cursor: auto;
   }
 }
+.textarea-detail {
+  span {
+    color: #666;
+    padding-left: 15px;
+  }
+}
 // 弹框样式
 .dialog-contant {
   ::v-deep .el-dialog {
@@ -774,6 +782,9 @@ export default {
 ::v-deep .el-table td {
   border-bottom: 1px solid #f3f3f3;
 }
+::v-deep .el-table tr:hover > td {
+  background-color: #fff !important;
+}
 .el-table--border:after,
 .el-table--group:after,
 .el-table:before {
@@ -785,6 +796,22 @@ export default {
     font-weight: normal !important;
     color: rgba(36, 36, 36, 1);
   }
+}
+.tab-div {
+  border-bottom: 1px solid #f3f3f3;
+  margin: 0 -10px;
+  padding: 8px 10px;
+}
+.tab-divline {
+  padding-left: 0;
+  margin-left: 0px;
+}
+.tab-divline2 {
+  padding-right: 0;
+  margin-right: 0px;
+}
+.tab-div:last-child {
+  border-bottom: none;
 }
 .el-divider {
   background-color: rgba(243, 243, 243, 1);

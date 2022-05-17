@@ -17,7 +17,7 @@
         >
           <el-table-column label="序号" align="center" width="100px">
             <template v-slot="scope">
-              {{ scope.row.id }}
+              {{ (pageNum - 1) * pageSize + scope.$index + 1 }}
             </template>
           </el-table-column>
           <el-table-column
@@ -318,8 +318,8 @@ export default {
           for (const k in data) {
             row[k] = data[k] // 将sel里面的value赋值给这一行。ps(for....in..)的妙用，细心的同学发现这里我并没有循环对象row
           }
-          row.editFlag = false
           editDyeingFinishingLoss(data).then((data) => {
+            row.editFlag = false
             this.getList()
           })
         } else {

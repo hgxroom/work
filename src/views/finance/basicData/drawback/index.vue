@@ -17,7 +17,7 @@
         >
           <el-table-column label="序号" align="center" width="100px">
             <template v-slot="scope">
-              {{ scope.row.id }}
+              {{ (pageNum - 1) * pageSize + scope.$index + 1 }}
             </template>
           </el-table-column>
           <el-table-column
