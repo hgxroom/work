@@ -55,21 +55,12 @@
             <span>{{ baseInfo.remark }}</span>
           </el-form-item>
         </el-form>
-        <div class="upload-img" v-if="false">
+        <div class="upload-img">
           <div style="width: 90px; text-align: right; padding-right: 12px">上传图片</div>
           <div class="flex">
-            <el-upload
-              action="https://jsonplaceholder.typicode.com/posts/"
-              list-type="picture-card"
-              :on-preview="handlePictureCardPreview"
-              :on-remove="handleRemove"
-              :before-upload="beforeUpload"
-            >
-              <i class="el-icon-plus"></i>
-            </el-upload>
-            <el-dialog :visible.sync="dialogVisible">
-              <img width="100%" :src="dialogImageUrl" alt="" />
-            </el-dialog>
+            <span v-for="item in this.imgList" :key="item" style="padding-right: 15px">
+              <el-image style="width: 100px; height: 100px" :src="item" fit="fill"></el-image>
+            </span>
           </div>
         </div>
         <p class="img-tips" v-if="false">只能上传JPG/JPEG/PNG文件，且单个文件不超过10Mb</p>
@@ -85,7 +76,13 @@
           <el-table-column label="序号" type="index" align="center" width="100"></el-table-column>
           <el-table-column label="布号" prop="clothNo" width="100"></el-table-column>
           <el-table-column label="布类" prop="clothType" width="100"></el-table-column>
-          <el-table-column label="品名" prop="pm" width="260"></el-table-column>
+          <el-table-column label="品名" prop="pm" width="260" :show-overflow-tooltip="true">
+            <template v-slot="scope">
+              <div class="content-colum">
+                {{ scope.row.pm }}
+              </div>
+            </template>
+          </el-table-column>
           <el-table-column label="纱线编号" width="150">
             <template v-slot="scope">
               <div
@@ -252,6 +249,7 @@ export default {
       colorList: [],
       // 下单重量选择
       weightList: [],
+      imgList: [],
       //基础信息
       baseInfo: {
         customerName: '', // 客户名称
@@ -349,11 +347,13 @@ export default {
           item.colorName = colorArray
           item.functionName = item.functionName.split(',')
           item.specialProcessName = item.specialProcessName.split(',')
-          console.log(item, colorArray)
         })
         this.baseInfo = res.data
         this.formData.data = this.baseInfo.productList
-
+        if (res.data.enclosureAddress) {
+          this.imgList = res.data.enclosureAddress.split(';')
+        }
+        console.log(res.data.enclosureAddress.split(';'))
         // console.log(this.baseInfo)
       })
     },

@@ -1,114 +1,116 @@
 <template>
-  <div class="container">
-    <el-row>
-      <el-col :span="12">
-        <el-button type="primary" @click="add" class="add-btn">新增</el-button>
-      </el-col>
-      <el-col :span="12" style="text-align: right"></el-col>
-    </el-row>
-    <el-row>
-      <el-form :model="formData" :rules="formData.rules" ref="formRef">
-        <el-table
-          size="small"
-          :data="formData.data"
-          style="width: 100%; font-size: 14px; color: #242424; bordercolor: #000"
-          highlight-current-row
-          header-row-class-name="tableHeader"
-        >
-          <el-table-column label="序号" align="center" width="100px">
-            <template v-slot="scope">
-              {{ (pageNum - 1) * pageSize + scope.$index + 1 }}
-            </template>
-          </el-table-column>
-          <el-table-column
-            v-for="(item, index) in formData.columns"
-            :key="index"
-            :label="item.label"
-            :prop="item.prop"
-            :width="item.width"
-            :align="item.align"
+  <div class="app-main">
+    <div class="container">
+      <el-row>
+        <el-col :span="12">
+          <el-button type="primary" @click="add" class="add-btn">新增</el-button>
+        </el-col>
+        <el-col :span="12" style="text-align: right"></el-col>
+      </el-row>
+      <el-row>
+        <el-form :model="formData" :rules="formData.rules" ref="formRef">
+          <el-table
+            size="small"
+            :data="formData.data"
+            style="width: 100%; font-size: 14px; color: #242424; bordercolor: #000"
+            highlight-current-row
+            header-row-class-name="tableHeader"
           >
-            <template v-slot="scope">
-              <el-form-item
-                v-if="scope.row.editFlag && item.prop !== 'status'"
-                :prop="'data.' + scope.$index + '.' + item.prop"
-                :rules="{
-                  required: true,
-                  message: ' ',
-                  trigger: 'blur',
-                }"
-              >
-                <el-input
-                  class="numrule"
-                  :type="item.type"
-                  size="small"
-                  placeholder="请输入内容"
-                  v-model="formData.sel[item.prop]"
+            <el-table-column label="序号" align="center" width="100px">
+              <template v-slot="scope">
+                {{ (pageNum - 1) * pageSize + scope.$index + 1 }}
+              </template>
+            </el-table-column>
+            <el-table-column
+              v-for="(item, index) in formData.columns"
+              :key="index"
+              :label="item.label"
+              :prop="item.prop"
+              :width="item.width"
+              :align="item.align"
+            >
+              <template v-slot="scope">
+                <el-form-item
+                  v-if="scope.row.editFlag && item.prop !== 'status'"
+                  :prop="'data.' + scope.$index + '.' + item.prop"
+                  :rules="{
+                    required: true,
+                    message: ' ',
+                    trigger: 'blur',
+                  }"
                 >
-                </el-input>
-              </el-form-item>
-              <div v-else>
-                {{ scope.row[item.prop] }}
-              </div>
-            </template>
-          </el-table-column>
-          <el-table-column label="操作" align="center">
-            <template v-slot="scope">
-              <el-button
-                v-if="scope.row.editFlag"
-                type="text"
-                @click.stop="saveRow(scope.row, scope.$index)"
-                size="small"
-              >
-                保存
-              </el-button>
-              <el-button
-                type="text"
-                v-if="!scope.row.editFlag"
-                @click="editRow(scope.row, scope.$index)"
-                size="small"
-              >
-                编辑
-              </el-button>
-              <el-button type="text" @click="deleteRow(scope.row, scope.$index)" size="small">
-                删除
-              </el-button>
-            </template>
-          </el-table-column>
-        </el-table>
-      </el-form>
-      <!-- 分页 -->
-      <pagination
-        v-show="total > 0"
-        :total="total"
-        :page.sync="pageNum"
-        :limit.sync="pageSize"
-        @pagination="getList"
-      />
-    </el-row>
-    <!-- 添加或修改参数配置对话框 -->
-    <el-dialog title="特整工艺维护" :visible.sync="open" width="600px" append-to-body>
-      <el-form ref="form" :model="form" :rules="rules" label-width="80px" class="from-pop">
-        <el-form-item label="工艺名称" prop="processName">
-          <el-input class="numrule" v-model="form.processName" placeholder="请输入工艺名称" />
-        </el-form-item>
-        <el-form-item label="工费" prop="laborCost">
-          <el-input
-            class="numrule"
-            type="number"
-            v-model="form.laborCost"
-            placeholder="请输入工费"
-          />
-        </el-form-item>
-        <el-form-item label="损耗" prop="loss">
-          <el-input class="numrule" type="number" v-model="form.loss" placeholder="请输入损耗" />
-        </el-form-item>
-      </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button @click="cancel">取 消</el-button>
-        <el-button type="primary" @click="submitForm">确 定</el-button>
-      </div>
-    </el-dialog>
+                  <el-input
+                    class="numrule"
+                    :type="item.type"
+                    size="small"
+                    placeholder="请输入内容"
+                    v-model="formData.sel[item.prop]"
+                  >
+                  </el-input>
+                </el-form-item>
+                <div v-else>
+                  {{ scope.row[item.prop] }}
+                </div>
+              </template>
+            </el-table-column>
+            <el-table-column label="操作" align="center">
+              <template v-slot="scope">
+                <el-button
+                  v-if="scope.row.editFlag"
+                  type="text"
+                  @click.stop="saveRow(scope.row, scope.$index)"
+                  size="small"
+                >
+                  保存
+                </el-button>
+                <el-button
+                  type="text"
+                  v-if="!scope.row.editFlag"
+                  @click="editRow(scope.row, scope.$index)"
+                  size="small"
+                >
+                  编辑
+                </el-button>
+                <el-button type="text" @click="deleteRow(scope.row, scope.$index)" size="small">
+                  删除
+                </el-button>
+              </template>
+            </el-table-column>
+          </el-table>
+        </el-form>
+        <!-- 分页 -->
+        <pagination
+          v-show="total > 0"
+          :total="total"
+          :page.sync="pageNum"
+          :limit.sync="pageSize"
+          @pagination="getList"
+        />
+      </el-row>
+      <!-- 添加或修改参数配置对话框 -->
+      <el-dialog title="特整工艺维护" :visible.sync="open" width="600px" append-to-body>
+        <el-form ref="form" :model="form" :rules="rules" label-width="80px" class="from-pop">
+          <el-form-item label="工艺名称" prop="processName">
+            <el-input class="numrule" v-model="form.processName" placeholder="请输入工艺名称" />
+          </el-form-item>
+          <el-form-item label="工费" prop="laborCost">
+            <el-input
+              class="numrule"
+              type="number"
+              v-model="form.laborCost"
+              placeholder="请输入工费"
+            />
+          </el-form-item>
+          <el-form-item label="损耗" prop="loss">
+            <el-input class="numrule" type="number" v-model="form.loss" placeholder="请输入损耗" />
+          </el-form-item>
+        </el-form>
+        <div slot="footer" class="dialog-footer">
+          <el-button @click="cancel">取 消</el-button>
+          <el-button type="primary" @click="submitForm">确 定</el-button>
+        </div>
+      </el-dialog>
+    </div>
   </div>
 </template>
 
@@ -354,11 +356,18 @@ export default {
 ::v-deep.numrule input[type='number'] {
   -moz-appearance: textfield;
 }
-
+.app-main {
+  background: rgba(245, 247, 250, 1);
+}
 .container {
+  margin: 24px;
+  background-color: #fff;
+  border-radius: 8px;
+  padding: 0 16px 36px !important;
   .add-btn {
     margin: 16px 0;
     background-color: #00a870;
+    border-color: #00a870;
     padding: 8px 15px;
   }
   .right-btn {
