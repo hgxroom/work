@@ -100,7 +100,18 @@
           <el-table-column label="纱线品名" width="260">
             <template v-slot="scope">
               <div class="tab-div" v-for="(item, index) in scope.row.rawYarnVoList" :key="index">
-                {{ item.yarnName }}
+                <el-popover
+                  trigger="hover"
+                  placement="top"
+                  popper-class="popper-class"
+                  :visible-arrow="false"
+                >
+                  <p style="max-width: 600px; margin: 0">{{ item.yarnName }}</p>
+                  <div slot="reference" class="content-colum">
+                    {{ item.yarnName }}
+                  </div>
+                </el-popover>
+                <!-- {{ item.yarnName }} -->
               </div>
             </template>
           </el-table-column>
@@ -164,7 +175,13 @@
               </div>
             </template>
           </el-table-column>
-          <el-table-column label="操作" width="100" align="center" v-if="baseInfo.orderStatus">
+          <el-table-column
+            label="操作"
+            width="100"
+            align="center"
+            v-if="baseInfo.orderStatus"
+            fixed="right"
+          >
             <template v-slot="scope">
               <el-button
                 v-if="baseInfo.orderStatus == 1"
@@ -323,9 +340,11 @@ export default {
       getQuotedPriceByNo(this.quotedOrderNo).then((res) => {
         res.data.productList.forEach((item) => {
           let colorArray = []
-          item.dyeingCostList.forEach((j) => {
-            colorArray.push(j.colorName)
-          })
+          if (item.dyeingCostList) {
+            item.dyeingCostList.forEach((j) => {
+              colorArray.push(j.colorName)
+            })
+          }
           item.colorName = []
           item.colorName = colorArray
           item.functionName = item.functionName.split(',')
@@ -543,6 +562,13 @@ export default {
     this.type = this.$route.query.type
     this.quotedOrderNo = this.$route.query.quotedOrderNo
     this.getQuotedPriceByNo()
+  },
+  watch: {
+    $route(to, from) {
+      this.type = this.$route.query.type
+      this.quotedOrderNo = this.$route.query.quotedOrderNo
+      this.getQuotedPriceByNo()
+    },
   },
 }
 </script>
@@ -815,5 +841,11 @@ export default {
 }
 .el-divider {
   background-color: rgba(243, 243, 243, 1);
+}
+</style>
+<style>
+.popper-class {
+  background-color: rgba(48, 49, 51, 0.95);
+  color: #fff;
 }
 </style>

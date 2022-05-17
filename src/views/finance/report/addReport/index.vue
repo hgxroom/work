@@ -112,10 +112,21 @@
               </div>
             </template>
           </el-table-column>
-          <el-table-column label="纱线品名" width="260">
+          <el-table-column label="纱线品名" width="260" :show-overflow-tooltip="false">
             <template v-slot="scope">
               <div class="tab-div" v-for="(item, index) in scope.row.rawYarnVoList" :key="index">
-                {{ item.yarnName }}
+                <el-popover
+                  trigger="hover"
+                  placement="top"
+                  popper-class="popper-class"
+                  :visible-arrow="false"
+                >
+                  <p style="max-width: 600px; margin: 0">{{ item.yarnName }}</p>
+                  <div slot="reference" class="content-colum">
+                    {{ item.yarnName }}
+                  </div>
+                </el-popover>
+                <!-- {{ item.yarnName }} -->
               </div>
             </template>
           </el-table-column>
@@ -165,7 +176,7 @@
               </div>
             </template>
           </el-table-column>
-          <el-table-column label="操作" width="100">
+          <el-table-column label="操作" width="100" align="center" fixed="right">
             <template v-slot="scope">
               <el-button type="text" @click="deleteRow(scope.row, scope.$index)" size="small">
                 删除
@@ -380,7 +391,7 @@ export default {
         gramWeight: '', //克重
         widthCloth: '', //幅宽
         component: '', //成分
-        specialProcessName: '', // 特殊工艺
+        specialProcessName: [], // 特殊工艺
         functionName: '', // 功能性承诺
         colorName: '', // 颜色
         orderNum: '', // 重量
@@ -476,9 +487,11 @@ export default {
       getQuotedPriceByNo(this.quotedOrderNo).then((res) => {
         res.data.productList.forEach((item) => {
           let colorArray = []
-          item.dyeingCostList.forEach((j) => {
-            colorArray.push(j.colorName)
-          })
+          if (item.dyeingCostList) {
+            item.dyeingCostList.forEach((j) => {
+              colorArray.push(j.colorName)
+            })
+          }
           item.colorName = []
           item.colorName = colorArray
           item.functionName = item.functionName.split(',')
@@ -512,6 +525,8 @@ export default {
       this.productInfo.widthCloth = item.fk
       this.productInfo.gramWeight = item.kz
       this.productInfo.pm = item.pm
+      this.productInfo.specialProcessName = item.specialProcessName
+      this.productInfo.functionName = item.functionName
       this.productInfo.loomSpecification = item.loomType
       this.productInfo.meterWeight = ((+item.fk + 5) / 100) * +item.kz || 0
       //纱织信息
@@ -620,6 +635,7 @@ export default {
     },
     // 弹框--确定按钮
     confirm(done) {
+      console.log(this.productInfo)
       let flag = this.validateForm('productInfoForm')
       //如果验证未通过
       if (!flag) {
@@ -960,5 +976,17 @@ export default {
 }
 .el-divider {
   background-color: rgba(243, 243, 243, 1);
+}
+.content-colum {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  -o-text-overflow: ellipsis; /* for Opera */
+}
+</style>
+<style>
+.popper-class {
+  background-color: rgba(48, 49, 51, 0.95);
+  color: #fff;
 }
 </style>

@@ -390,23 +390,21 @@ export default {
       }
       // 状态改变
       let statusText = row.status == 0 ? '禁用' : '启用'
-      let { id, status } = row
+      let { status } = row
       status = status == 0 ? 1 : 0
-      let data = {
-        id: id, // 序号
-        status: status, // 状态
-      }
+      let data = JSON.parse(JSON.stringify(row))
+      data.status = status
       this.$confirm(`确定${statusText}这条数据, 是否继续?`, '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning',
       })
         .then(() => {
-          this.$message({
-            type: 'success',
-            message: `${statusText}成功!`,
-          })
           editPrice(data).then((res) => {
+            this.$message({
+              type: 'success',
+              message: `${statusText}成功!`,
+            })
             this.getList()
           })
           // rows.splice(index, 1)
