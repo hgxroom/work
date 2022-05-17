@@ -26,7 +26,14 @@
             align="left"
             prop="yarnNo"
             :show-overflow-tooltip="true"
-          />
+          >
+            <template v-slot="scope">
+              <div class="hostory-box">
+                <div>{{ scope.row.yarnNo }}</div>
+                <div class="el-icon-search font">历史纱价</div>
+              </div>
+            </template>
+          </el-table-column>
           <el-table-column
             label="纱线品名"
             align="left"
@@ -42,13 +49,14 @@
           />
           <el-table-column
             label="纱线价格"
-            align="center"
+            align="left"
             prop="yarnCost"
             :show-overflow-tooltip="true"
           >
             <template v-slot="scope">
               <el-input
                 size="small"
+                type="number"
                 class="numrule"
                 placeholder="请输入内容"
                 @change="handleCount(scope)"
@@ -59,12 +67,12 @@
           </el-table-column>
           <el-table-column
             label="纱线总成本"
-            align="center"
+            align="left"
             prop="yarnCost"
             :show-overflow-tooltip="true"
           >
             <template v-slot="scope">
-              <div>{{ yarnCostTotal }}</div>
+              <div class="total-num">{{ yarnCostTotal }}</div>
             </template>
           </el-table-column>
         </el-table>
@@ -87,6 +95,7 @@
             <template v-slot="scope">
               <el-input
                 size="small"
+                type="number"
                 class="numrule"
                 placeholder="请输入内容"
                 @change="handleweaving(scope)"
@@ -107,7 +116,11 @@
             align="center"
             prop="blankCost"
             :show-overflow-tooltip="true"
-          />
+          >
+            <template v-slot="scope">
+              <div class="total-num">{{ scope.row.blankCost }}</div>
+            </template>
+          </el-table-column>
         </el-table>
       </div>
       <!-- 染色成本 -->
@@ -136,7 +149,7 @@
                 v-model="dyeingCostList[scope.$index].jobType"
                 placeholder="请选择"
                 style="width: 100%"
-                @change="jobchange()"
+                @change="handleJob(scope)"
               >
                 <el-option
                   v-for="(dicts, index) in dict.type.job_type"
@@ -158,7 +171,11 @@
             align="center"
             prop="dyeingFee"
             :show-overflow-tooltip="true"
-          />
+          >
+            <template v-slot="scope">
+              <div class="total-num">{{ scope.row.dyeingFee }}</div>
+            </template>
+          </el-table-column>
         </el-table>
       </div>
       <!-- 特整成本 -->
@@ -223,7 +240,7 @@
             :show-overflow-tooltip="true"
           >
             <template v-slot="scope">
-              <div>{{ extraWholeLoss }}</div>
+              <div class="total-num">{{ extraWholeLoss }}</div>
             </template>
           </el-table-column>
           <el-table-column
@@ -233,7 +250,7 @@
             :show-overflow-tooltip="true"
           >
             <template v-slot="scope">
-              <div>{{ extraWholeCost }}</div>
+              <div class="total-num">{{ extraWholeCost }}</div>
             </template>
           </el-table-column>
         </el-table>
@@ -298,7 +315,7 @@
             :show-overflow-tooltip="true"
           >
             <template v-slot="scope">
-              <div>{{ functionCostTotal }}</div>
+              <div class="total-num">{{ functionCostTotal }}</div>
             </template>
           </el-table-column>
         </el-table>
@@ -320,7 +337,7 @@
       </div>
       <div class="footer">
         <el-button @click="cancel" class="save-btn">取消</el-button>
-        <el-button @click="submit" class="sub-btn">确认报价</el-button>
+        <el-button @click="submit" :disabled="reportBtn" class="sub-btn">确认报价</el-button>
       </div>
     </div>
     <!-- 弹框 -->
@@ -373,6 +390,7 @@ import {
   getTableDataInfoToAble,
   getFunctionalCommitmentByName,
   calcQuotedPrice,
+  getDyeingFeeDataByJobStatus,
 } from '@/api/finance/report'
 export default {
   dicts: [
@@ -380,8 +398,10 @@ export default {
   ],
   data() {
     return {
-      clothNo: 'YL00056', //布号
-      quotedOrderNo: 'BJ-005', //报价单号
+      component: '', //成分
+      reportBtn: false, //是否能点击确认报价按钮
+      clothNo: '', //布号
+      quotedOrderNo: '', //报价单号
       type: '', // 表单类型
       disabled: false,
       //最终成本报价数据
@@ -394,7 +414,13 @@ export default {
       extraWholeCost: [],
       extraWholeLoss: [],
       //织布成本数据
-      weavingCostList: [],
+      weavingCostList: [
+        {
+          weavingFee: '', //织费
+          blankCost: '', //毛坯成本
+          weavingLoss: '2.5', //织造损耗
+        },
+      ],
       //染色成本数据
       dyeingCostList: [],
       //纱线成本数据
@@ -471,7 +497,8 @@ export default {
     this.type = this.$route.query.type
     this.quotedOrderNo = this.$route.query.quotedOrderNo
     this.clothNo = this.$route.query.clothNo
-    console.log(this.dict)
+    this.component = this.$route.query.component
+    console.log(this.dict, this.component)
     this.getlist()
     this.getCheckList()
   },
@@ -636,21 +663,31 @@ export default {
       }
     },
     //作业类类型改变
-    jobchange() {
-      console.log('123', this.dyeingCostList)
+    handleJob(scope) {
+      let data = {
+        colorName: scope.row.colorName,
+        jobStatus: scope.row.jobType,
+      }
+      getDyeingFeeDataByJobStatus(data).then((res) => {
+        scope.row.dyeingFee = res.data
+      })
     },
     //获取基本数据
     getlist() {
       let data = {
         clothNo: this.clothNo,
         quotedOrderNo: this.quotedOrderNo,
+        component: this.component,
       }
       findQuotedProduct(data).then((res) => {
         this.dyeingCostList = res.data.dyeingCostList
         // this.productYarnVoData = res.data.productYarnVo
         this.yarnCostList = res.data.productYarnVo.yarnCostList
         this.yarnCostTotal = res.data.productYarnVo.yarnCostTotal
-        this.weavingCostList = res.data.weavingCostList
+        if (res.data.weavingCostList) {
+          this.weavingCostList = res.data.weavingCostList
+        }
+
         this.specialFinishingList = res.data.specialVo.specialFinishingList
         this.extraWholeCost = res.data.specialVo.extraWholeCost
         this.extraWholeLoss = res.data.specialVo.extraWholeLoss
@@ -658,6 +695,7 @@ export default {
         this.functionCostTotal = res.data.functionCostVo.functionCostTotal
         this.finalQuotedList = res.data.finalQuotedList
       })
+      console.log('this.weavingCostList', this.weavingCostList)
     },
 
     // 确定
@@ -737,13 +775,14 @@ export default {
       font-size: 22px;
       font-weight: bold;
       color: #ed7b2f;
-      position: absolute;
-      top: 0;
-      width: 100%;
-      height: 100%;
-      bottom: 0;
-      margin: 0 -10px;
-      border-left: 1px solid rgba(243, 243, 243, 1);
+      text-align: center;
+      // position: absolute;
+      // top: 0;
+      // width: 100%;
+      // height: 100%;
+      // bottom: 0;
+      // margin: 0 -10px;
+      // border-left: 1px solid rgba(243, 243, 243, 1);
       span {
         position: absolute;
         left: 50%;
@@ -814,6 +853,9 @@ export default {
   }
   .el-button {
     margin-left: 16px;
+  }
+  .is-disabled {
+    opacity: 0.5;
   }
 }
 .base-form {
@@ -1020,6 +1062,14 @@ export default {
   .el-button {
     border: 1px dashed #dcdfe6;
     color: #266fe8;
+  }
+}
+.hostory-box {
+  display: flex;
+  justify-content: space-between;
+  .font {
+    color: #0052d9;
+    cursor: pointer;
   }
 }
 </style>

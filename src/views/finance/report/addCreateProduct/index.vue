@@ -638,8 +638,9 @@ export default {
         data.functionName = String(data.functionName)
         data.specialProcessName = String(data.specialProcessName)
         buildProduct(data).then((res) => {
-          let url = '/finance/createProduct'
-          this.$router.push({ path: url })
+          // let url = '/finance/createProduct'
+          // this.$router.push({ path: url })
+          this.onCancel()
         })
       } else if (this.formData.data.length == 0) {
         this.$message.error('请添加纱织信息！')
@@ -648,8 +649,10 @@ export default {
       }
     },
     onCancel() {
-      let url = '/finance/createProduct'
-      this.$router.push({ path: url })
+      const obj = { path: '/finance/createProduct' }
+      this.$tab.closeOpenPage(obj)
+      // let url = '/finance/createProduct'
+      // this.$router.push({ path: url })
     },
     //删除
     deleteRow(val, index) {
