@@ -5,9 +5,7 @@
       <div class="tit">成本报价计算</div>
       <div class="tit-info">
         <span>布号：{{ clothNo }}</span>
-        <span>
-          品名：60S 皮马棉 精梳 紧密纺+140D 晓星H350氨纶 89/11 弹力罗纹 15寸18针 840T 31*2CM 220G
-        </span>
+        <span> 品名：{{ yarnName }} </span>
       </div>
     </div>
     <div class="container">
@@ -88,7 +86,7 @@
         >
           <el-table-column
             label="织费"
-            align="center"
+            align="left"
             prop="weavingFee"
             :show-overflow-tooltip="true"
           >
@@ -145,19 +143,24 @@
             :show-overflow-tooltip="true"
           >
             <template v-slot="scope">
-              <el-select
-                v-model="dyeingCostList[scope.$index].jobType"
-                placeholder="请选择"
-                style="width: 100%"
-                @change="handleJob(scope)"
-              >
-                <el-option
-                  v-for="(dicts, index) in dict.type.job_type"
-                  :key="index"
-                  :label="dicts.label"
-                  :value="dicts.label"
-                ></el-option>
-              </el-select>
+              <div v-if="scope.$index === 0">
+                <el-select
+                  v-model="dyeingCostList[scope.$index].jobType"
+                  placeholder="请选择"
+                  style="width: 100%"
+                  @change="handleJob(scope)"
+                >
+                  <el-option
+                    v-for="(dicts, index) in dict.type.job_type"
+                    :key="index"
+                    :label="dicts.label"
+                    :value="dicts.label"
+                  ></el-option>
+                </el-select>
+              </div>
+              <div v-else>
+                <div>{{ dyeingCostList[scope.$index].jobType }}</div>
+              </div>
             </template>
           </el-table-column>
           <el-table-column
@@ -398,6 +401,7 @@ export default {
   ],
   data() {
     return {
+      yarnName: '', //品名
       component: '', //成分
       reportBtn: false, //是否能点击确认报价按钮
       clothNo: '', //布号
@@ -498,6 +502,7 @@ export default {
     this.quotedOrderNo = this.$route.query.quotedOrderNo
     this.clothNo = this.$route.query.clothNo
     this.component = this.$route.query.component
+    this.yarnName = this.$route.query.yarnName
     console.log(this.dict, this.component)
     this.getlist()
     this.getCheckList()
@@ -506,7 +511,19 @@ export default {
     //计算报价
     reportCalculator() {
       //（毛胚成本+染费+特整总成本+功能性总成本）*（1+染整损耗+特整总损耗）
-      this.weavingCostList.blankCost
+      this.dyeingCostList.forEach((item, index) => {
+        this.finalQuotedList.forEach((val) => {
+          if (item.colorName == val.colorName) {
+            val.costPrice =
+              (this.weavingCostList[0].blankCost +
+                this.dyeingCostList[index].dyeingFee +
+                this.functionCostTotal +
+                this.extraWholeCost) *
+              (1 + this.extraWholeLoss / 100 + this.dyeingCostList[index].dyeingLoss / 100)
+            val.costPrice = Number(val.costPrice).toFixed(4)
+          }
+        })
+      })
     },
     //确认报价
     submit() {
@@ -627,10 +644,14 @@ export default {
     },
     //织费变化
     handleweaving(scope) {
+      if (!this.yarnCostTotal) {
+        return this.$message.error(`请将纱线价格填写完整`)
+      }
       this.weavingCostList[scope.$index].blankCost =
         Number(this.weavingCostList[scope.$index].weavingFee) +
         this.yarnCostTotal +
         (this.yarnCostTotal * this.weavingCostList[scope.$index].weavingLoss) / 100
+      console.log(this.weavingCostList[scope.$index].blankCost)
     },
     //纱线价格变化
     handleCount(scope) {
@@ -664,12 +685,18 @@ export default {
     },
     //作业类类型改变
     handleJob(scope) {
-      let data = {
-        colorName: scope.row.colorName,
-        jobStatus: scope.row.jobType,
-      }
-      getDyeingFeeDataByJobStatus(data).then((res) => {
-        scope.row.dyeingFee = res.data
+      this.dyeingCostList.forEach((val) => {
+        val.jobType = scope.row.jobType
+      })
+      //遍历获取对应颜色染费
+      this.dyeingCostList.forEach((val) => {
+        let data = {
+          colorName: val.colorName,
+          jobStatus: val.jobType,
+        }
+        getDyeingFeeDataByJobStatus(data).then((res) => {
+          val.dyeingFee = res.data
+        })
       })
     },
     //获取基本数据

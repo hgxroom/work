@@ -511,6 +511,8 @@ export default {
       this.baseInfo.widthCloth = item.fk
       this.baseInfo.gramWeight = item.kz
       this.baseInfo.loomSpecification = item.loomType
+      this.baseInfo.functionName = item.functionName
+      this.baseInfo.specialProcessName = item.specialProcessName
       //纱织信息
       if (item.quotationYarnVoList) {
         let list = []
