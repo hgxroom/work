@@ -842,6 +842,12 @@ export default {
 .el-divider {
   background-color: rgba(243, 243, 243, 1);
 }
+.content-colum {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  -o-text-overflow: ellipsis; /* for Opera */
+}
 </style>
 <style>
 .popper-class {

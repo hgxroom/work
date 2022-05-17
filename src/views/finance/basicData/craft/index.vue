@@ -213,8 +213,8 @@ export default {
           for (const k in data) {
             row[k] = data[k] // 将sel里面的value赋值给这一行。ps(for....in..)的妙用，细心的同学发现这里我并没有循环对象row
           }
-          row.editFlag = false
           editSpecialFinishingProcess(data).then((data) => {
+            row.editFlag = false
             this.getList()
           })
         } else {
