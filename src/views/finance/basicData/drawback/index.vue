@@ -17,7 +17,7 @@
         >
           <el-table-column label="序号" align="center" width="100px">
             <template v-slot="scope">
-              {{ scope.row.id }}
+              {{ (pageNum - 1) * pageSize + scope.$index + 1 }}
             </template>
           </el-table-column>
           <el-table-column
@@ -145,7 +145,13 @@
 </template>
 
 <script>
-import { getDrawbackList, editDrawback, delDrawback, addDrawback } from '@/api/finance/basic'
+import {
+  getDrawbackList,
+  editDrawback,
+  statusDrawback,
+  delDrawback,
+  addDrawback,
+} from '@/api/finance/basic'
 export default {
   dicts: ['sys_normal_disable'],
   data() {
@@ -299,7 +305,7 @@ export default {
         type: 'warning',
       })
         .then(() => {
-          editDrawback(data).then((res) => {
+          statusDrawback(data).then((res) => {
             this.$message({
               type: 'success',
               message: `${statusText}成功!`,

@@ -27,6 +27,18 @@ export function editDrawback(data = {}) {
   })
 }
 /**
+ * 状态退税系数信息
+ * @param {*} query
+ * @returns
+ */
+export function statusDrawback(data) {
+  return request({
+    url: '/system/drawback/editStatus',
+    method: 'POST',
+    params: data,
+  })
+}
+/**
  * 新增退税系数信息
  * @param {*} query
  * @returns
@@ -280,6 +292,18 @@ export function editExchangeRate(data = {}) {
     url: '/system/exchangeRate',
     method: 'PUT',
     data: data,
+  })
+}
+/**
+ * 编辑、修改汇率维护信息
+ * @param {*} query
+ * @returns
+ */
+export function statusExchangeRate(data = {}) {
+  return request({
+    url: '/system/exchangeRate/editStatus',
+    method: 'POST',
+    params: data,
   })
 }
 /**
