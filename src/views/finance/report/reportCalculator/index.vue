@@ -498,7 +498,7 @@ export default {
     this.quotedOrderNo = this.$route.query.quotedOrderNo
     this.clothNo = this.$route.query.clothNo
     this.component = this.$route.query.component
-    console.log(this.dict)
+    console.log(this.dict, this.component)
     this.getlist()
     this.getCheckList()
   },
@@ -677,6 +677,7 @@ export default {
       let data = {
         clothNo: this.clothNo,
         quotedOrderNo: this.quotedOrderNo,
+        component: this.component,
       }
       findQuotedProduct(data).then((res) => {
         this.dyeingCostList = res.data.dyeingCostList
