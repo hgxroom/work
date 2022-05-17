@@ -1,173 +1,175 @@
 <template>
-  <div class="container">
-    <el-row>
-      <el-col :span="12">
-        <el-button type="primary" @click="add" class="add-btn">新增</el-button>
-      </el-col>
-      <el-col :span="12" style="text-align: right"></el-col>
-    </el-row>
-    <el-row>
-      <el-form :model="formData" :rules="formData.rules" ref="formRef">
-        <el-table
-          size="small"
-          :data="formData.data"
-          style="width: 100%; font-size: 14px; color: #242424; bordercolor: #000"
-          highlight-current-row
-          header-row-class-name="tableHeader"
-        >
-          <el-table-column label="序号" align="center" width="100px">
-            <template v-slot="scope">
-              {{ (pageNum - 1) * pageSize + scope.$index + 1 }}
-            </template>
-          </el-table-column>
-          <el-table-column
-            v-for="(item, index) in formData.columns"
-            :key="index"
-            :label="item.label"
-            :prop="item.prop"
-            :width="item.width"
-            :align="item.align"
+  <div class="app-main">
+    <div class="container">
+      <el-row>
+        <el-col :span="12">
+          <el-button type="primary" @click="add" class="add-btn">新增</el-button>
+        </el-col>
+        <el-col :span="12" style="text-align: right"></el-col>
+      </el-row>
+      <el-row>
+        <el-form :model="formData" :rules="formData.rules" ref="formRef">
+          <el-table
+            size="small"
+            :data="formData.data"
+            style="width: 100%; font-size: 14px; color: #242424; bordercolor: #000"
+            highlight-current-row
+            header-row-class-name="tableHeader"
           >
-            <template v-slot="scope">
-              <el-form-item
-                v-if="scope.row.editFlag && item.prop !== 'status'"
-                :prop="'data.' + scope.$index + '.' + item.prop"
-                :rules="{
-                  required: true,
-                  message: ' ',
-                  trigger: 'blur',
-                }"
-              >
-                <el-input
-                  class="numrule"
-                  :type="item.type"
-                  size="small"
-                  placeholder="请输入内容"
-                  v-model="formData.sel[item.prop]"
+            <el-table-column label="序号" align="center" width="100px">
+              <template v-slot="scope">
+                {{ (pageNum - 1) * pageSize + scope.$index + 1 }}
+              </template>
+            </el-table-column>
+            <el-table-column
+              v-for="(item, index) in formData.columns"
+              :key="index"
+              :label="item.label"
+              :prop="item.prop"
+              :width="item.width"
+              :align="item.align"
+            >
+              <template v-slot="scope">
+                <el-form-item
+                  v-if="scope.row.editFlag && item.prop !== 'status'"
+                  :prop="'data.' + scope.$index + '.' + item.prop"
+                  :rules="{
+                    required: true,
+                    message: ' ',
+                    trigger: 'blur',
+                  }"
                 >
-                </el-input>
-              </el-form-item>
-              <div v-else :class="[item.prop == 'status' ? 'status' : '']">
-                {{ scope.row[item.prop] }}
-              </div>
-            </template>
-          </el-table-column>
-          <el-table-column label="操作" align="center">
-            <template v-slot="scope">
-              <el-button
-                v-if="scope.row.editFlag"
-                type="text"
-                @click.stop="saveRow(scope.row, scope.$index)"
-                size="small"
-              >
-                保存
-              </el-button>
-              <el-button
-                type="text"
-                v-if="!scope.row.editFlag"
-                @click="editRow(scope.row, scope.$index)"
-                size="small"
-              >
-                编辑
-              </el-button>
-              <el-button type="text" @click="deleteRow(scope.row, scope.$index)" size="small">
-                删除
-              </el-button>
-            </template>
-          </el-table-column>
-        </el-table>
-      </el-form>
-      <!-- 分页 -->
-      <pagination
-        v-show="total > 0"
-        :total="total"
-        :page.sync="pageNum"
-        :limit.sync="pageSize"
-        @pagination="getList"
-      />
-    </el-row>
-    <!-- 添加或修改参数配置对话框 -->
-    <el-dialog title="染整损耗维护" :visible.sync="open" width="600px" append-to-body>
-      <el-form ref="form" :model="form" :rules="rules" label-width="120px" class="from-pop">
-        <el-form-item label="成份(中文)" prop="component">
-          <el-input class="numrule" v-model="form.component" placeholder="请输入成份(中文)" />
-        </el-form-item>
-        <el-form-item label="成份(英文)" prop="componentEnglish">
-          <el-input
-            class="numrule"
-            v-model="form.componentEnglish"
-            placeholder="请输入成份(英文)"
-          />
-        </el-form-item>
-        <el-form-item label="成份(简称)" prop="componentAbbreviation">
-          <el-input
-            class="numrule"
-            v-model="form.componentAbbreviation"
-            placeholder="请输入成份(简称)"
-          />
-        </el-form-item>
-        <el-form-item label="白色(%)" prop="whiteColor">
-          <el-input
-            class="numrule"
-            type="number"
-            v-model="form.whiteColor"
-            placeholder="请输入白色"
-          />
-        </el-form-item>
-        <el-form-item label="浅色(%)" prop="lightColor">
-          <el-input
-            class="numrule"
-            type="number"
-            v-model="form.lightColor"
-            placeholder="请输入浅色"
-          />
-        </el-form-item>
-        <el-form-item label="中色(%)" prop="mediumColor">
-          <el-input
-            class="numrule"
-            type="number"
-            v-model="form.mediumColor"
-            placeholder="请输入中色"
-          />
-        </el-form-item>
-        <el-form-item label="深色(%)" prop="darkColor">
-          <el-input
-            class="numrule"
-            type="number"
-            v-model="form.darkColor"
-            placeholder="请输入深色"
-          />
-        </el-form-item>
-        <el-form-item label="特深(%)" prop="extraDarkColor">
-          <el-input
-            class="numrule"
-            type="number"
-            v-model="form.extraDarkColor"
-            placeholder="请输入特深"
-          />
-        </el-form-item>
-        <el-form-item label="色纺(%)" prop="colorSpinning">
-          <el-input
-            class="numrule"
-            type="number"
-            v-model="form.colorSpinning"
-            placeholder="请输入色纺"
-          />
-        </el-form-item>
-        <el-form-item label="色织(%)" prop="yarnDyedFabric">
-          <el-input
-            class="numrule"
-            type="number"
-            v-model="form.yarnDyedFabric"
-            placeholder="请输入色织"
-          />
-        </el-form-item>
-      </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button @click="cancel">取 消</el-button>
-        <el-button type="primary" @click="submitForm">确 定</el-button>
-      </div>
-    </el-dialog>
+                  <el-input
+                    class="numrule"
+                    :type="item.type"
+                    size="small"
+                    placeholder="请输入内容"
+                    v-model="formData.sel[item.prop]"
+                  >
+                  </el-input>
+                </el-form-item>
+                <div v-else :class="[item.prop == 'status' ? 'status' : '']">
+                  {{ scope.row[item.prop] }}
+                </div>
+              </template>
+            </el-table-column>
+            <el-table-column label="操作" align="center">
+              <template v-slot="scope">
+                <el-button
+                  v-if="scope.row.editFlag"
+                  type="text"
+                  @click.stop="saveRow(scope.row, scope.$index)"
+                  size="small"
+                >
+                  保存
+                </el-button>
+                <el-button
+                  type="text"
+                  v-if="!scope.row.editFlag"
+                  @click="editRow(scope.row, scope.$index)"
+                  size="small"
+                >
+                  编辑
+                </el-button>
+                <el-button type="text" @click="deleteRow(scope.row, scope.$index)" size="small">
+                  删除
+                </el-button>
+              </template>
+            </el-table-column>
+          </el-table>
+        </el-form>
+        <!-- 分页 -->
+        <pagination
+          v-show="total > 0"
+          :total="total"
+          :page.sync="pageNum"
+          :limit.sync="pageSize"
+          @pagination="getList"
+        />
+      </el-row>
+      <!-- 添加或修改参数配置对话框 -->
+      <el-dialog title="染整损耗维护" :visible.sync="open" width="600px" append-to-body>
+        <el-form ref="form" :model="form" :rules="rules" label-width="120px" class="from-pop">
+          <el-form-item label="成份(中文)" prop="component">
+            <el-input class="numrule" v-model="form.component" placeholder="请输入成份(中文)" />
+          </el-form-item>
+          <el-form-item label="成份(英文)" prop="componentEnglish">
+            <el-input
+              class="numrule"
+              v-model="form.componentEnglish"
+              placeholder="请输入成份(英文)"
+            />
+          </el-form-item>
+          <el-form-item label="成份(简称)" prop="componentAbbreviation">
+            <el-input
+              class="numrule"
+              v-model="form.componentAbbreviation"
+              placeholder="请输入成份(简称)"
+            />
+          </el-form-item>
+          <el-form-item label="白色(%)" prop="whiteColor">
+            <el-input
+              class="numrule"
+              type="number"
+              v-model="form.whiteColor"
+              placeholder="请输入白色"
+            />
+          </el-form-item>
+          <el-form-item label="浅色(%)" prop="lightColor">
+            <el-input
+              class="numrule"
+              type="number"
+              v-model="form.lightColor"
+              placeholder="请输入浅色"
+            />
+          </el-form-item>
+          <el-form-item label="中色(%)" prop="mediumColor">
+            <el-input
+              class="numrule"
+              type="number"
+              v-model="form.mediumColor"
+              placeholder="请输入中色"
+            />
+          </el-form-item>
+          <el-form-item label="深色(%)" prop="darkColor">
+            <el-input
+              class="numrule"
+              type="number"
+              v-model="form.darkColor"
+              placeholder="请输入深色"
+            />
+          </el-form-item>
+          <el-form-item label="特深(%)" prop="extraDarkColor">
+            <el-input
+              class="numrule"
+              type="number"
+              v-model="form.extraDarkColor"
+              placeholder="请输入特深"
+            />
+          </el-form-item>
+          <el-form-item label="色纺(%)" prop="colorSpinning">
+            <el-input
+              class="numrule"
+              type="number"
+              v-model="form.colorSpinning"
+              placeholder="请输入色纺"
+            />
+          </el-form-item>
+          <el-form-item label="色织(%)" prop="yarnDyedFabric">
+            <el-input
+              class="numrule"
+              type="number"
+              v-model="form.yarnDyedFabric"
+              placeholder="请输入色织"
+            />
+          </el-form-item>
+        </el-form>
+        <div slot="footer" class="dialog-footer">
+          <el-button @click="cancel">取 消</el-button>
+          <el-button type="primary" @click="submitForm">确 定</el-button>
+        </div>
+      </el-dialog>
+    </div>
   </div>
 </template>
 
@@ -460,10 +462,18 @@ export default {
 ::v-deep.numrule input[type='number'] {
   -moz-appearance: textfield;
 }
+.app-main {
+  background: rgba(245, 247, 250, 1);
+}
 .container {
+  margin: 24px;
+  background-color: #fff;
+  border-radius: 8px;
+  padding: 0 16px 36px !important;
   .add-btn {
     margin: 16px 0;
     background-color: #00a870;
+    border-color: #00a870;
     padding: 8px 15px;
   }
   .right-btn {

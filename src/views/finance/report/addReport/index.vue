@@ -16,14 +16,14 @@
             <!-- 搜索框 -->
             <el-autocomplete
               v-model="baseInfo.customerName"
-              :fetch-suggestions="queryClothType"
+              :fetch-suggestions="queryName"
               placeholder="请输入客户名称"
               :trigger-on-focus="false"
-              @select="handleSelectClothType"
+              @select="handleSelect"
               style="width: 100%"
             >
               <template slot-scope="{ item }">
-                <div>{{ item.dictLabel }}</div>
+                <div>{{ item.customerName }}</div>
               </template>
             </el-autocomplete>
           </el-form-item>
@@ -74,8 +74,9 @@
               :action="uploadUrl"
               list-type="picture-card"
               :on-preview="handlePictureCardPreview"
-              :on-remove="handleRemove"
+              :before-remove="handleRemove"
               :before-upload="beforeUpload"
+              :on-success="handleSuccess"
               :auto-upload="true"
               :headers="headers"
             >
@@ -100,7 +101,13 @@
           <el-table-column label="序号" type="index" align="center" width="100"></el-table-column>
           <el-table-column label="布号" prop="clothNo" width="100"></el-table-column>
           <el-table-column label="布类" prop="clothType" width="100"></el-table-column>
-          <el-table-column label="品名" prop="pm" width="260"></el-table-column>
+          <el-table-column label="品名" prop="pm" width="260" :show-overflow-tooltip="true">
+            <template v-slot="scope">
+              <div class="content-colum">
+                {{ scope.row.pm }}
+              </div>
+            </template>
+          </el-table-column>
           <el-table-column label="纱线编号" width="150">
             <template v-slot="scope">
               <div
@@ -348,6 +355,7 @@ import {
   addQuotedOrder,
   getQuotedPriceByNo,
 } from '@/api/finance/report'
+import { getCustomerInfoByName } from '@/api/customer/visit'
 import { formRules, formProductRules, brandInfoTemp, dictMap } from './utils.js'
 export default {
   dicts: dictMap,
@@ -372,6 +380,8 @@ export default {
       colorList: [],
       // 下单重量选择
       weightList: [],
+      // 图片上传地址
+      imgUrl: [],
       //基础信息
       baseInfo: {
         orderStatus: '',
@@ -516,6 +526,32 @@ export default {
         this.weightList = res.data
       })
     },
+    /**
+     * 输入客户名搜索
+     * @param {string} queryString
+     * @param {*} cb
+     */
+    queryName(queryString, cb) {
+      console.log(queryString === '')
+      if (queryString === '') {
+        cb([])
+        return
+      }
+
+      clearTimeout(this.timeout)
+      this.timeout = setTimeout(() => {
+        getCustomerInfoByName(queryString).then((res) => {
+          cb(res.data)
+        })
+      }, 700)
+    },
+    /**
+     * 点选客户名称事件
+     * @param {*} item 选择的客户名称
+     */
+    handleSelect(item) {
+      this.baseInfo.customerName = item.customerName
+    },
     //选择布号
     handleSelectReferenceClothNo(item) {
       //基本信息
@@ -563,7 +599,7 @@ export default {
         getFabricQuotationByBh(data).then((res) => {
           cb(res.data)
         })
-      }, 700)
+      }, 500)
     },
     //选择布类
     handleSelectClothType(item) {
@@ -588,7 +624,13 @@ export default {
       }, 700)
     },
     handleRemove(file, fileList) {
-      console.log(file, fileList)
+      debugger
+      fileList.forEach((item, index) => {
+        if (item.uid === file.uid) {
+          this.imgUrl.splice(index, 1)
+          return false
+        }
+      })
     },
     handlePictureCardPreview(file) {
       this.dialogImageUrl = file.url
@@ -608,6 +650,9 @@ export default {
         this.$message.error('上传头像图片大小不能超过 10MB!')
       }
       return isImg && isLt10M
+    },
+    handleSuccess(file) {
+      this.imgUrl.push(file.data.url)
     },
     add() {
       this.productDialogVisible = true
@@ -673,6 +718,8 @@ export default {
         this.$message.error('请添加产品')
         return
       }
+      this.baseInfo.enclosureAddress = this.imgUrl.toString()
+      this.baseInfo.enclosureAddress = this.baseInfo.enclosureAddress.replaceAll(',', ';')
       this.baseInfo.orderStatus = type
       addQuotedOrder(this.baseInfo).then((res) => {
         // let url = '/finance/reportList'

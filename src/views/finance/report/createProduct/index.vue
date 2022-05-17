@@ -377,6 +377,7 @@ export default {
   .add-btn {
     margin: 16px 0;
     background-color: #00a870;
+    border-color: #00a870;
     padding: 8px 15px;
   }
   .right-btn {

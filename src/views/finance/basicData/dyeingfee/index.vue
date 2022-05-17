@@ -1,74 +1,77 @@
 <template>
-  <div class="container">
-    <el-row>
-      <el-form :model="formData" :rules="formData.rules" ref="formRef">
-        <el-table
-          size="small"
-          :data="formData.data"
-          style="width: 100%; font-size: 14px; color: #242424; bordercolor: #000"
-          highlight-current-row
-          header-row-class-name="tableHeader"
-        >
-          <el-table-column label="序号" align="center" width="100px">
-            <template v-slot="scope">
-              {{ scope.$index + 1 }}
-            </template>
-          </el-table-column>
-          <el-table-column
-            v-for="(item, index) in formData.columns"
-            :key="index"
-            :label="item.label"
-            :prop="item.prop"
-            :width="item.width"
-            :align="item.align"
+  <div class="app-main">
+    <div class="container">
+      <div style="height: 24px"></div>
+      <el-row>
+        <el-form :model="formData" :rules="formData.rules" ref="formRef">
+          <el-table
+            size="small"
+            :data="formData.data"
+            style="width: 100%; font-size: 14px; color: #242424; bordercolor: #000"
+            highlight-current-row
+            header-row-class-name="tableHeader"
           >
-            <template v-slot="scope">
-              <el-form-item
-                v-if="scope.row.editFlag && item.prop !== 'category'"
-                :prop="'data.' + scope.$index + '.' + item.prop"
-                :rules="{
-                  required: true,
-                  message: ' ',
-                  trigger: 'blur',
-                }"
-              >
-                <el-input
-                  class="numrule"
-                  :type="item.type"
-                  size="small"
-                  placeholder="请输入内容"
-                  v-model="formData.sel[item.prop]"
+            <el-table-column label="序号" align="center" width="100px">
+              <template v-slot="scope">
+                {{ scope.$index + 1 }}
+              </template>
+            </el-table-column>
+            <el-table-column
+              v-for="(item, index) in formData.columns"
+              :key="index"
+              :label="item.label"
+              :prop="item.prop"
+              :width="item.width"
+              :align="item.align"
+            >
+              <template v-slot="scope">
+                <el-form-item
+                  v-if="scope.row.editFlag && item.prop !== 'category'"
+                  :prop="'data.' + scope.$index + '.' + item.prop"
+                  :rules="{
+                    required: true,
+                    message: ' ',
+                    trigger: 'blur',
+                  }"
                 >
-                </el-input>
-              </el-form-item>
-              <div v-else>
-                {{ scope.row[item.prop] }}
-              </div>
-            </template>
-          </el-table-column>
-          <el-table-column label="操作" align="center">
-            <template v-slot="scope">
-              <el-button
-                v-if="scope.row.editFlag"
-                type="text"
-                @click.stop="saveRow(scope.row, scope.$index)"
-                size="small"
-              >
-                保存
-              </el-button>
-              <el-button
-                type="text"
-                v-if="!scope.row.editFlag"
-                @click="editRow(scope.row, scope.$index)"
-                size="small"
-              >
-                编辑
-              </el-button>
-            </template>
-          </el-table-column>
-        </el-table>
-      </el-form>
-    </el-row>
+                  <el-input
+                    class="numrule"
+                    :type="item.type"
+                    size="small"
+                    placeholder="请输入内容"
+                    v-model="formData.sel[item.prop]"
+                  >
+                  </el-input>
+                </el-form-item>
+                <div v-else>
+                  {{ scope.row[item.prop] }}
+                </div>
+              </template>
+            </el-table-column>
+            <el-table-column label="操作" align="center">
+              <template v-slot="scope">
+                <el-button
+                  v-if="scope.row.editFlag"
+                  type="text"
+                  @click.stop="saveRow(scope.row, scope.$index)"
+                  size="small"
+                >
+                  保存
+                </el-button>
+                <el-button
+                  type="text"
+                  v-if="!scope.row.editFlag"
+                  @click="editRow(scope.row, scope.$index)"
+                  size="small"
+                >
+                  编辑
+                </el-button>
+              </template>
+            </el-table-column>
+          </el-table>
+        </el-form>
+      </el-row>
+    </div>
   </div>
 </template>
 
@@ -201,12 +204,19 @@ export default {
 ::v-deep.numrule input[type='number'] {
   -moz-appearance: textfield;
 }
-
+.app-main {
+  background: rgba(245, 247, 250, 1);
+}
 .container {
+  margin: 24px;
+  background-color: #fff;
+  border-radius: 8px;
+  padding: 0 16px 36px !important;
   .add-btn {
     margin: 16px 0;
     background-color: #00a870;
     padding: 8px 15px;
+    border-color: #00a870;
   }
   .right-btn {
     margin: 16px 0 16px 16px;
