@@ -212,10 +212,10 @@
           </el-table-column>
         </el-table>
       </div>
-      <!-- <div class="footer">
+      <div class="footer" v-if="baseInfo.orderStatus == 1">
         <el-button @click="save()" class="save-btn">取消</el-button>
         <el-button @click="submit()" class="sub-btn">提交</el-button>
-      </div> -->
+      </div>
     </div>
   </div>
 </template>
@@ -353,8 +353,8 @@ export default {
         if (res.data.enclosureAddress) {
           this.imgList = res.data.enclosureAddress.split(';')
         }
+        console.log(this.baseInfo)
         console.log(res.data.enclosureAddress.split(';'))
-        // console.log(this.baseInfo)
       })
     },
     toCostOffer(val) {
