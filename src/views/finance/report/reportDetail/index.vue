@@ -198,12 +198,8 @@
               </div>
             </template>
           </el-table-column>
-          <el-table-column
-            label="成本价格"
-            v-if="
-              baseInfo.orderStatus == 2 || baseInfo.orderStatus == 3 || baseInfo.orderStatus == 5
-            "
-          >
+          <el-table-column label="成本价格">
+            <!-- v-if="baseInfo.costPrice == 2 || baseInfo.orderStatus == 3 || baseInfo.orderStatus == 5" -->
             <template v-slot="scope">
               <div v-for="(item, index) in scope.row.costPrice" :key="index">
                 {{ item }}
@@ -211,7 +207,7 @@
             </template>
           </el-table-column>
           <template v-if="baseInfo.orderStatus == 3 || baseInfo.orderStatus == 5">
-            <el-table-column label="最终报价1" width="120">
+            <el-table-column label="销售报价1" width="120">
               <template v-slot="scope">
                 <div v-for="(item, index) in scope.row.finalQuotedPrice1" :key="index">
                   {{ item }}
@@ -225,7 +221,7 @@
                 </div>
               </template>
             </el-table-column>
-            <el-table-column label="最终报价2" width="120">
+            <el-table-column label="销售报价2" width="120">
               <template v-slot="scope">
                 <div v-for="(item, index) in scope.row.finalQuotedPrice1" :key="index">
                   {{ item }}
@@ -239,7 +235,7 @@
                 </div>
               </template>
             </el-table-column>
-            <el-table-column label="最终报价3" width="120">
+            <el-table-column label="销售报价3" width="120">
               <template v-slot="scope">
                 <div v-for="(item, index) in scope.row.finalQuotedPrice1" :key="index">
                   {{ item }}
@@ -302,7 +298,7 @@
         </el-table>
       </div>
       <div class="footer" v-if="baseInfo.orderStatus == 1 || baseInfo.orderStatus == 2">
-        <el-button @click="save()" class="save-btn">取消</el-button>
+        <el-button @click="cancel()" class="save-btn">取消</el-button>
         <el-button
           @click="submit()"
           :disabled="
@@ -675,8 +671,9 @@ export default {
     handleClose(done) {
       this.productDialogVisible = false
     },
-    save() {
-      console.log(this.baseInfo)
+    cancel() {
+      const obj = { path: `/finance/reportList` }
+      this.$tab.closeOpenPage(obj)
     },
     submit() {
       let data = {
