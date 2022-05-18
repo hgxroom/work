@@ -24,7 +24,7 @@
               style="width: 100%"
             >
               <template slot-scope="{ item }">
-                <div>{{ item.customerName }}</div>
+                <div>{{ item.khmch }}</div>
               </template>
             </el-autocomplete>
           </el-form-item>
@@ -361,6 +361,7 @@ import {
   getQuotedPriceByNo,
   deleteQuotedOrderProduct,
   deleteQuotedOrderNo,
+  getProductCustomerInfoByName,
 } from '@/api/finance/report'
 import { getCustomerInfoByName } from '@/api/customer/visit'
 import { formRules, formProductRules, brandInfoTemp, dictMap } from './utils.js'
@@ -550,8 +551,8 @@ export default {
 
       clearTimeout(this.timeout)
       this.timeout = setTimeout(() => {
-        getCustomerInfoByName(queryString).then((res) => {
-          cb(res.data)
+        getProductCustomerInfoByName(queryString).then((res) => {
+          cb(res.data.data)
         })
       }, 700)
     },
@@ -560,7 +561,7 @@ export default {
      * @param {*} item 选择的客户名称
      */
     handleSelect(item) {
-      this.baseInfo.customerName = item.customerName
+      this.baseInfo.customerName = item.khmch
     },
     //选择布号
     handleSelectReferenceClothNo(item) {

@@ -17,7 +17,7 @@
             <span v-if="this.baseInfo.offerTime">报价时间：{{ this.baseInfo.offerTime }}</span>
             <span v-if="this.baseInfo.updateBy">审核人：{{ this.baseInfo.updateBy }}</span>
             <span v-if="this.baseInfo.updateTime">审核时间：{{ this.baseInfo.updateTime }}</span>
-            <span style="color: rgba(0, 0, 0, 0.85)">
+            <span style="color: #00a870; font-weight: bold">
               状态：{{ statusFilter(this.baseInfo.orderStatus) }}
             </span>
           </el-col>
@@ -206,7 +206,7 @@
               </div>
             </template>
           </el-table-column>
-          <template v-if="baseInfo.orderStatus == 3 || baseInfo.orderStatus == 5">
+          <template>
             <el-table-column label="销售报价1" width="120">
               <template v-slot="scope">
                 <div v-for="(item, index) in scope.row.finalQuotedPrice1" :key="index">
@@ -506,7 +506,7 @@ export default {
         this.$router.push({
           path: url,
           query: {
-            type: 'detail',
+            type: 'edit',
             quotedOrderNo: this.$route.query.quotedOrderNo,
             clothNo: val.clothNo,
             component: val.component,
@@ -528,7 +528,7 @@ export default {
         this.baseInfo.orderStatus == 4 ||
         this.baseInfo.orderStatus == 5
       ) {
-        let url = '/finance/finalReport'
+        let url = '/finance/reportCalculator'
         this.$router.push({
           path: url,
           query: {

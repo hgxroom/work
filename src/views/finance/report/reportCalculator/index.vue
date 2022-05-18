@@ -54,6 +54,8 @@
             <template v-slot="scope">
               <el-input
                 size="small"
+                :disabled="type == 'detail' ? true : false"
+                :class="[type == 'detail' ? 'input-detail' : '']"
                 type="number"
                 class="numrule"
                 placeholder="请输入内容"
@@ -92,6 +94,8 @@
           >
             <template v-slot="scope">
               <el-input
+                :disabled="type == 'detail' ? true : false"
+                :class="[type == 'detail' ? 'input-detail' : '']"
                 size="small"
                 type="number"
                 class="numrule"
@@ -148,6 +152,8 @@
                   v-model="dyeingCostList[scope.$index].jobType"
                   placeholder="请选择"
                   style="width: 100%"
+                  :disabled="type == 'detail' ? true : false"
+                  :class="[type == 'detail' ? 'select-detail' : '']"
                   @change="handleJob(scope)"
                 >
                   <el-option
@@ -191,7 +197,7 @@
           style="width: 100%; font-size: 14px; color: #242424; border-color: #000"
           header-row-class-name="tableHeader"
         >
-          <el-table-column label="操作" width="112px" align="center">
+          <el-table-column label="操作" width="112px" align="center" v-if="type == 'edit'">
             <template v-slot="scope">
               <el-button
                 type="text"
@@ -211,6 +217,8 @@
             <template v-slot="scope">
               <el-select
                 v-model="specialFinishingList[scope.$index].processName"
+                :disabled="type == 'detail' ? true : false"
+                :class="[type == 'detail' ? 'select-detail' : '']"
                 placeholder="请选择"
                 style="width: 100%"
                 @change="handleType(scope, scope.$index, $event)"
@@ -257,7 +265,7 @@
             </template>
           </el-table-column>
         </el-table>
-        <div class="add_info">
+        <div class="add_info" v-if="type == 'edit'">
           <el-button @click="addSpecial">添加工艺</el-button>
         </div>
       </div>
@@ -271,7 +279,7 @@
           style="width: 100%; font-size: 14px; color: #242424; border-color: #000"
           header-row-class-name="tableHeader"
         >
-          <el-table-column label="操作" width="112px" align="center">
+          <el-table-column label="操作" width="112px" align="center" v-if="type == 'edit'">
             <template v-slot="scope">
               <el-button
                 type="text"
@@ -291,6 +299,8 @@
             <template v-slot="scope">
               <el-select
                 v-model="functionCostList[scope.$index].functionalCommitmentName"
+                :disabled="type == 'detail' ? true : false"
+                :class="[type == 'detail' ? 'select-detail' : '']"
                 placeholder="请选择"
                 style="width: 100%"
                 @change="handleFunc(scope, scope.$index, $event)"
@@ -322,7 +332,7 @@
             </template>
           </el-table-column>
         </el-table>
-        <div class="add_info">
+        <div class="add_info" v-if="type == 'edit'">
           <el-button @click="addFunction">添加功能性承诺</el-button>
         </div>
       </div>
@@ -334,11 +344,11 @@
             <span>{{ item.colorName }}：</span>{{ item.costPrice }}
           </p>
         </div>
-        <div class="btn-box btn-box-left">
+        <div class="btn-box btn-box-left" v-if="type == 'edit'">
           <el-button @click="reportCalculator" class="computed-btn">计算报价</el-button>
         </div>
       </div>
-      <div class="footer">
+      <div class="footer" v-if="type == 'edit'">
         <el-button @click="cancel" class="save-btn">取消</el-button>
         <el-button @click="submit" :disabled="reportBtn" class="sub-btn">确认报价</el-button>
       </div>

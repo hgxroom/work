@@ -59,7 +59,7 @@
       <el-col :span="12" style="text-align: right"></el-col>
     </el-row>
     <!-- 列表 -->
-    <el-table :data="listData" ref="customerList" border style="width: 100%" :row-style="rowstyle">
+    <el-table :data="listData" ref="customerList" style="width: 100%" :row-style="rowstyle">
       <el-table-column label="序号" align="center" width="60px">
         <template v-slot="scope">
           {{ (pageNum - 1) * pageSize + scope.$index + 1 }}
@@ -401,6 +401,9 @@ export default {
   border-bottom: 1px solid #dfe6ec;
   margin: 0 -10px;
   padding: 8px 10px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 .tab-divline {
   padding-left: 0;
