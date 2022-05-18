@@ -194,6 +194,9 @@
         <div class="btn-box"><el-button @click="add" class="add-btn">添加产品</el-button></div>
       </div>
       <div class="footer">
+        <el-button v-if="this.quotedOrderNo" @click="deleteQuoted()" class="save-btn">
+          删除
+        </el-button>
         <el-button @click="submit(0)" class="save-btn">保存</el-button>
         <el-button @click="submit(1)" class="sub-btn">提交</el-button>
       </div>
@@ -354,6 +357,7 @@ import {
   getWeightStepDtoToAble,
   addQuotedOrder,
   getQuotedPriceByNo,
+  deleteQuotedOrderProduct,
 } from '@/api/finance/report'
 import { getCustomerInfoByName } from '@/api/customer/visit'
 import { formRules, formProductRules, brandInfoTemp, dictMap } from './utils.js'
@@ -497,8 +501,8 @@ export default {
       getQuotedPriceByNo(this.quotedOrderNo).then((res) => {
         res.data.productList.forEach((item) => {
           let colorArray = []
-          if (item.dyeingCostList) {
-            item.dyeingCostList.forEach((j) => {
+          if (item.quotedOrderPriceVoList) {
+            item.quotedOrderPriceVoList.forEach((j) => {
               colorArray.push(j.colorName)
             })
           }
@@ -506,7 +510,7 @@ export default {
           item.colorName = colorArray
           item.functionName = item.functionName.split(',')
           item.specialProcessName = item.specialProcessName.split(',')
-          console.log(item, colorArray)
+          // console.log(item, colorArray)
         })
         this.baseInfo = res.data
         this.formData.data = this.baseInfo.productList
@@ -676,11 +680,21 @@ export default {
       }, 0)
     },
     deleteRow(row, index) {
-      this.formData.data.splice(index, 1)
+      if (row.orderProductId) {
+        let data = {
+          clothNo: row.clothNo,
+          quotedOrderNo: this.quotedOrderNo,
+        }
+        deleteQuotedOrderProduct(data).then((res) => {
+          this.formData.data.splice(index, 1)
+        })
+      } else {
+        this.formData.data.splice(index, 1)
+      }
     },
     // 弹框--确定按钮
     confirm(done) {
-      console.log(this.productInfo)
+      // console.log(this.productInfo)
       let flag = this.validateForm('productInfoForm')
       //如果验证未通过
       if (!flag) {
@@ -693,7 +707,7 @@ export default {
       }
       this.baseInfo.productList.push(JSON.parse(JSON.stringify(this.productInfo)))
       this.formData.data = this.baseInfo.productList
-      console.log('this.formData.data', this.baseInfo.productList)
+      // console.log('this.formData.data', this.baseInfo.productList)
       this.productDialogVisible = false
     },
     //取消
@@ -701,7 +715,7 @@ export default {
       this.productDialogVisible = false
     },
     save() {
-      console.log(this.baseInfo)
+      // console.log(this.baseInfo)
     },
     submit(type) {
       let flag = this.validateForm('baseInfoForm')
@@ -730,6 +744,9 @@ export default {
       })
       console.log('this.productInfo', this.productInfo)
       console.log('this.baseInfo', this.baseInfo)
+    },
+    deleteQuoted() {
+      console.log('删除')
     },
     /**
      * 验证表单

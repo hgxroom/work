@@ -281,3 +281,15 @@ export function commitStatus(data) {
     data: data,
   })
 }
+/**
+ * 删除报价产品
+ * @param {*}
+ * @returns
+ */
+export function deleteQuotedOrderProduct(data) {
+  return request({
+    url: `/system/quotedOrder/deleteQuotedOrderProduct`,
+    method: 'POST',
+    data: data,
+  })
+}
