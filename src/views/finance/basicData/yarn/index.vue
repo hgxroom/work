@@ -93,14 +93,14 @@
                 >
                   编辑
                 </el-button>
-                <!-- <el-button
-                v-if="scope.row.status == 1"
-                type="text"
-                @click="deleteRow(scope.row, scope.$index)"
-                size="small"
-              >
-                删除
-              </el-button> -->
+                <el-button
+                  v-if="scope.row.status == 1"
+                  type="text"
+                  @click="deleteRow(scope.row, scope.$index)"
+                  size="small"
+                >
+                  删除
+                </el-button>
                 <el-button type="text" @click="statusRow(scope.row, scope.$index)" size="small">
                   {{ scope.row.status == 0 ? '禁用' : '启用' }}
                 </el-button>
@@ -120,8 +120,8 @@
       <!-- 添加或修改参数配置对话框 -->
       <el-dialog title="纱线价格维护" :visible.sync="open" width="600px" append-to-body>
         <el-form ref="form" :model="form" :rules="rules" label-width="80px" class="from-pop">
-          <el-form-item label="物料编号" prop="itemNo">
-            <el-input v-model="form.itemNo" placeholder="请输入物料编号" />
+          <el-form-item label="纱线编号" prop="itemNo">
+            <el-input v-model="form.itemNo" placeholder="请输入纱线编号" />
           </el-form-item>
           <el-form-item label="纱线品名" prop="yarnName">
             <el-input v-model="form.yarnName" placeholder="请输入纱线品名" />
@@ -273,7 +273,7 @@ export default {
       disabled: false,
       // 表单校验
       rules: {
-        itemNo: [{ required: true, message: '物料编号不能为空', trigger: 'blur' }],
+        itemNo: [{ required: true, message: '纱线编号不能为空', trigger: 'blur' }],
         yarnName: [{ required: true, message: '纱线品名不能为空', trigger: 'blur' }],
         supplier: [{ required: true, message: '供应商不能为空', trigger: 'blur' }],
         price: [{ required: true, message: '现价不能为空', trigger: 'blur' }],
