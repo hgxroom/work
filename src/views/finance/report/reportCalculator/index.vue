@@ -786,11 +786,16 @@ export default {
         if (res.data.weavingCostList) {
           this.weavingCostList = res.data.weavingCostList
         }
+        if (res.data.specialVo.specialFinishingList) {
+          this.specialFinishingList = res.data.specialVo.specialFinishingList
+        }
 
-        this.specialFinishingList = res.data.specialVo.specialFinishingList
         this.extraWholeCost = res.data.specialVo.extraWholeCost
         this.extraWholeLoss = res.data.specialVo.extraWholeLoss
-        this.functionCostList = res.data.functionCostVo.functionCostList
+        if (res.data.functionCostVo.functionCostList) {
+          this.functionCostList = res.data.functionCostVo.functionCostList
+        }
+
         this.functionCostTotal = res.data.functionCostVo.functionCostTotal
         this.finalQuotedList = res.data.finalQuotedList
       })

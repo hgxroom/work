@@ -269,3 +269,15 @@ export function getDyeingFeeDataByJobStatus(data) {
     params: data,
   })
 }
+/**
+ * 提交报价
+ * @param {*}
+ * @returns
+ */
+export function commitStatus(data) {
+  return request({
+    url: `/system/quotedOrder/commitStatus`,
+    method: 'POST',
+    data: data,
+  })
+}

@@ -254,11 +254,18 @@
               </template>
             </el-table-column>
           </template>
+          <!-- <el-table-column label="颜色11111" width="120">
+            <template>
+              <div>
+                {{ baseInfo.orderStatus }}
+              </div>
+            </template>
+          </el-table-column> -->
           <el-table-column
             label="操作"
             width="100"
             align="center"
-            v-if="baseInfo.orderStatus"
+            v-show="baseInfo.orderStatus"
             fixed="right"
           >
             <template v-slot="scope">
@@ -294,9 +301,17 @@
           </el-table-column>
         </el-table>
       </div>
-      <div class="footer" v-if="baseInfo.orderStatus == 1">
+      <div class="footer" v-if="baseInfo.orderStatus == 1 || baseInfo.orderStatus == 2">
         <el-button @click="save()" class="save-btn">取消</el-button>
-        <el-button @click="submit()" class="sub-btn">提交</el-button>
+        <el-button
+          @click="submit()"
+          :disabled="
+            (baseInfo.offerFlag == '1' && baseInfo.orderStatus == 1) ||
+            (baseInfo.auditFlag == '1' && baseInfo.orderStatus == 2)
+          "
+          class="sub-btn"
+          >提交</el-button
+        >
       </div>
     </div>
   </div>
@@ -312,6 +327,7 @@ import {
   getWeightStepDtoToAble,
   addQuotedOrder,
   getQuotedPriceByNo,
+  commitStatus,
 } from '@/api/finance/report'
 import { formRules, brandInfoTemp, dictMap } from './utils.js'
 export default {
@@ -468,8 +484,13 @@ export default {
           item.interestRate1 = interestRate1Array
           item.interestRate2 = interestRate2Array
           item.interestRate3 = interestRate3Array
-          item.functionName = item.functionName.split(',')
-          item.specialProcessName = item.specialProcessName.split(',')
+          if (item.functionName) {
+            item.functionName = item.functionName.split(',')
+          }
+          if (item.specialProcessName) {
+            item.specialProcessName = item.specialProcessName.split(',')
+          }
+
           item.jobType = jobType
         })
         this.baseInfo = res.data
@@ -658,12 +679,15 @@ export default {
       console.log(this.baseInfo)
     },
     submit() {
-      // let
-      addQuotedOrder(this.baseInfo).then((res) => {
-        console.log(res)
+      let data = {
+        orderStatus: Number(this.baseInfo.orderStatus) + 1,
+        quotedOrderNo: this.$route.query.quotedOrderNo,
+      }
+      console.log(data)
+      commitStatus(data).then((res) => {
+        const obj = { path: `/finance/reportList` }
+        this.$tab.closeOpenPage(obj)
       })
-      console.log('this.productInfo', this.productInfo)
-      console.log('this.baseInfo', this.baseInfo)
     },
     /**
      * 验证表单

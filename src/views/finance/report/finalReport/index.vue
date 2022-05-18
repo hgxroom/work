@@ -49,7 +49,10 @@
           </el-table-column>
           <el-table-column label="操作" align="center" prop="lrl">
             <template v-slot="scope">
-              <div class="info-list checkbox">
+              <div class="info-list checkbox" v-if="scope.$index === 0">
+                <div>-</div>
+              </div>
+              <div class="info-list checkbox" v-else>
                 <el-checkbox v-model="scope.row.choiceflag"></el-checkbox>
               </div>
             </template>
