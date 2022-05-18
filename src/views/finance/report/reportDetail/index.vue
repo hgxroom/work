@@ -676,6 +676,8 @@ export default {
       this.productDialogVisible = false
     },
     save() {
+      const obj = { path: `/finance/reportList` }
+      this.$tab.closeOpenPage(obj)
       console.log(this.baseInfo)
     },
     submit() {

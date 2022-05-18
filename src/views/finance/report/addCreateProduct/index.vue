@@ -7,7 +7,9 @@
       </el-row>
     </div>
     <el-row v-if="type == 'detail'" type="flex" class="head_box2">
-      <el-col :span="4" class="font">布号：{{ baseInfo.newClothNo }}</el-col>
+      <el-col :span="4" :title="baseInfo.newClothNo" class="font"
+        >布号：{{ baseInfo.newClothNo }}</el-col
+      >
       <el-col v-if="type == 'detail'" class="created-font"
         >提交人：{{ baseInfo.createBy }} 创建时间：{{ baseInfo.createTime }}</el-col
       >
@@ -19,7 +21,6 @@
           :model="baseInfo"
           :rules="baserules"
           ref="baseInfoForm"
-          :inline="true"
           label-width="90px"
           :label-position="labelPosition"
         >
@@ -196,6 +197,7 @@
               ></el-table-column>
               <el-table-column
                 v-for="(val, index) in formData.columns"
+                :min-width="val.width"
                 :key="index"
                 :label="val.label"
                 :prop="val.prop"

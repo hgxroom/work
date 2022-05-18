@@ -17,7 +17,7 @@
           style="width: 100%; font-size: 14px; color: #242424; border-color: #000"
           header-row-class-name="tableHeader"
         >
-          <el-table-column label="利润率" align="center" prop="interestRate">
+          <el-table-column label="利润率(%)" align="center" prop="interestRate">
             <template v-slot="scope">
               <el-input
                 v-if="!(scope.$index === 0)"
@@ -31,7 +31,7 @@
               <div v-else>{{ scope.row.interestRate }}(成本价)</div>
             </template>
           </el-table-column>
-          <!-- <el-table-column label="利润率" align="center" prop="lrl" :show-overflow-tooltip="true"> -->
+          <!-- <el-table-column label="利润率(%)" align="center" prop="lrl" :show-overflow-tooltip="true"> -->
           <!-- </el-table-column> -->
 
           <el-table-column
@@ -124,49 +124,49 @@
               </div>
             </template>
           </el-table-column>
-          <el-table-column label="成本价(元/kg)">
+          <el-table-column label="成本价(元/kg)" width="110px">
             <template v-slot="scope">
               <div v-for="(item, index) in scope.row.quotedOrderPriceVoList" :key="index">
                 {{ item.costPrice }}
               </div>
             </template>
           </el-table-column>
-          <el-table-column label="销售报价1(元/kg)">
+          <el-table-column label="销售报价1(元/kg)" width="130px">
             <template v-slot="scope">
               <div v-for="(item, index) in scope.row.quotedOrderPriceVoList" :key="index">
                 {{ item.finalQuotedPrice1 }}
               </div>
             </template>
           </el-table-column>
-          <el-table-column label="利润率">
+          <el-table-column label="利润率(%)">
             <template v-slot="scope">
               <div v-for="(item, index) in scope.row.quotedOrderPriceVoList" :key="index">
                 {{ item.interestRate1 }}
               </div>
             </template>
           </el-table-column>
-          <el-table-column label="销售报价2(元/kg)">
+          <el-table-column label="销售报价2(元/kg)" width="130px">
             <template v-slot="scope">
               <div v-for="(item, index) in scope.row.quotedOrderPriceVoList" :key="index">
                 {{ item.finalQuotedPrice2 }}
               </div>
             </template>
           </el-table-column>
-          <el-table-column label="利润率">
+          <el-table-column label="利润率(%)">
             <template v-slot="scope">
               <div v-for="(item, index) in scope.row.quotedOrderPriceVoList" :key="index">
                 {{ item.interestRate2 }}
               </div>
             </template>
           </el-table-column>
-          <el-table-column label="销售报价3(元/kg)">
+          <el-table-column label="销售报价3(元/kg)" width="130px">
             <template v-slot="scope">
               <div v-for="(item, index) in scope.row.quotedOrderPriceVoList" :key="index">
                 {{ item.finalQuotedPrice3 }}
               </div>
             </template>
           </el-table-column>
-          <el-table-column label="利润率">
+          <el-table-column label="利润率(%)">
             <template v-slot="scope">
               <div v-for="(item, index) in scope.row.quotedOrderPriceVoList" :key="index">
                 {{ item.interestRate3 }}
@@ -362,20 +362,15 @@ export default {
       this.reportData.quotedOrderNo = this.quotedOrderNo || ''
       this.reportData.newClothNo = this.newClothNo || ''
       buildProductFinalSale(this.reportData).then((res) => {
-        let url = '/finance/reportList'
-        this.$router.push({
-          path: url,
-          query: { type: 'detail', quotedOrderNo: this.$route.query.quotedOrderNo },
-        })
+        let quotedOrderNo = this.$route.query.quotedOrderNo
+        const obj = { path: `/finance/reportDetail?type=detail&quotedOrderNo=${quotedOrderNo}` }
+        this.$tab.closeOpenPage(obj)
       })
-      console.log(this.datalist, this.reportData, this.labelList)
     },
     cancel(val) {
-      let url = '/finance/reportDetail'
-      this.$router.push({
-        path: url,
-        query: { type: 'detail', quotedOrderNo: this.$route.query.quotedOrderNo },
-      })
+      let quotedOrderNo = this.$route.query.quotedOrderNo
+      const obj = { path: `/finance/reportDetail?type=detail&quotedOrderNo=${quotedOrderNo}` }
+      this.$tab.closeOpenPage(obj)
     },
     // 历史报价
     getHistory() {
