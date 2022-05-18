@@ -1,5 +1,29 @@
 <template>
   <div class="app-main">
+    <div class="title-box">
+      <div class="tit">报价详情</div>
+      <div class="tit-info">
+        <el-row>
+          <el-col :span="12">
+            <span>单号：{{ this.baseInfo.quotedOrderNo }}</span>
+          </el-col>
+          <el-col
+            :span="12"
+            style="text-align: right; color: rgba(0, 0, 0, 0.4); font-weight: normal"
+          >
+            <span v-if="this.baseInfo.salesman">提交人：{{ this.baseInfo.salesman || '-' }}</span>
+            <span v-if="this.baseInfo.createTime">提交时间：{{ this.baseInfo.createTime }}</span>
+            <span v-if="this.baseInfo.offerMan">报价人：{{ this.baseInfo.offerMan }}</span>
+            <span v-if="this.baseInfo.offerTime">报价时间：{{ this.baseInfo.offerTime }}</span>
+            <span v-if="this.baseInfo.updateBy">审核人：{{ this.baseInfo.updateBy }}</span>
+            <span v-if="this.baseInfo.updateTime">审核时间：{{ this.baseInfo.updateTime }}</span>
+            <span style="color: rgba(0, 0, 0, 0.85)">
+              状态：{{ statusFilter(this.baseInfo.orderStatus) }}
+            </span>
+          </el-col>
+        </el-row>
+      </div>
+    </div>
     <div class="container">
       <div class="card-box">
         <p class="title">基本信息</p>
@@ -22,7 +46,11 @@
             ></el-input>
           </el-form-item>
           <el-form-item label="最终客户">
+            <span v-if="!baseInfo.finalCustomerName" style="color: #999; padding-left: 25px">
+              -
+            </span>
             <el-input
+              v-if="baseInfo.finalCustomerName"
               v-model="baseInfo.finalCustomerName"
               placeholder="请输入最终客户"
               disabled
@@ -40,7 +68,11 @@
             ></el-input>
           </el-form-item>
           <el-form-item label="成品用途">
+            <span v-if="!baseInfo.productApplication" style="color: #999; padding-left: 25px">
+              -
+            </span>
             <el-input
+              v-if="baseInfo.productApplication"
               v-model="baseInfo.productApplication"
               placeholder="请输入成品用途"
               disabled
@@ -52,7 +84,7 @@
             label="备注"
             :class="['mark-textarea', type == 'detail' ? 'textarea-detail' : '']"
           >
-            <span>{{ baseInfo.remark }}</span>
+            <span>{{ baseInfo.remark || '-' }}</span>
           </el-form-item>
         </el-form>
         <div class="upload-img">
@@ -108,7 +140,6 @@
                     {{ item.yarnName }}
                   </div>
                 </el-popover>
-                <!-- {{ item.yarnName }} -->
               </div>
             </template>
           </el-table-column>
@@ -151,27 +182,78 @@
               </div>
             </template>
           </el-table-column>
-          <el-table-column label="颜色">
+          <el-table-column
+            label="作业类型"
+            width="120"
+            v-if="baseInfo.orderStatus !== 1 && baseInfo.orderStatus !== 0"
+          >
             <template v-slot="scope">
-              <div v-for="(item, index) in scope.row.dyeingCostList" :key="index">
-                {{ item.colorName }}
+              {{ scope.row.jobType || '-' }}
+            </template>
+          </el-table-column>
+          <el-table-column label="颜色" width="120">
+            <template v-slot="scope">
+              <div v-for="(item, index) in scope.row.colorName" :key="index">
+                {{ item }}
               </div>
             </template>
           </el-table-column>
-          <el-table-column label="染费">
+          <el-table-column
+            label="成本价格"
+            v-if="
+              baseInfo.orderStatus == 2 || baseInfo.orderStatus == 3 || baseInfo.orderStatus == 5
+            "
+          >
             <template v-slot="scope">
-              <div v-for="(item, index) in scope.row.dyeingCostList" :key="index">
-                {{ item.dyeingFee }}
+              <div v-for="(item, index) in scope.row.costPrice" :key="index">
+                {{ item }}
               </div>
             </template>
           </el-table-column>
-          <el-table-column label="作业类型">
-            <template v-slot="scope">
-              <div v-for="(item, index) in scope.row.dyeingCostList" :key="index">
-                {{ item.jobType }}
-              </div>
-            </template>
-          </el-table-column>
+          <template v-if="baseInfo.orderStatus == 3 || baseInfo.orderStatus == 5">
+            <el-table-column label="最终报价1" width="120">
+              <template v-slot="scope">
+                <div v-for="(item, index) in scope.row.finalQuotedPrice1" :key="index">
+                  {{ item }}
+                </div>
+              </template>
+            </el-table-column>
+            <el-table-column label="利润率1" width="120">
+              <template v-slot="scope">
+                <div v-for="(item, index) in scope.row.interestRate1" :key="index">
+                  {{ item }}
+                </div>
+              </template>
+            </el-table-column>
+            <el-table-column label="最终报价2" width="120">
+              <template v-slot="scope">
+                <div v-for="(item, index) in scope.row.finalQuotedPrice1" :key="index">
+                  {{ item }}
+                </div>
+              </template>
+            </el-table-column>
+            <el-table-column label="利润率2" width="120">
+              <template v-slot="scope">
+                <div v-for="(item, index) in scope.row.interestRate2" :key="index">
+                  {{ item }}
+                </div>
+              </template>
+            </el-table-column>
+            <el-table-column label="最终报价3" width="120">
+              <template v-slot="scope">
+                <div v-for="(item, index) in scope.row.finalQuotedPrice1" :key="index">
+                  {{ item }}
+                </div>
+              </template>
+            </el-table-column>
+            <el-table-column label="利润率3" width="120">
+              <template v-slot="scope">
+                <div v-for="(item, index) in scope.row.interestRate3" :key="index">
+                  {{ item }}
+                </div>
+              </template>
+            </el-table-column>
+          </template>
           <el-table-column
             label="操作"
             width="100"
@@ -334,21 +416,64 @@ export default {
   mounted() {},
 
   methods: {
+    statusFilter(type) {
+      let obj = {
+        0: '草稿',
+        1: '待报价',
+        2: '待审核',
+        3: '已审核',
+        4: '已驳回',
+        5: '已完成',
+      }
+      return obj[type]
+    },
     getQuotedPriceByNo() {
       getQuotedPriceByNo(this.quotedOrderNo).then((res) => {
         res.data.productList.forEach((item) => {
           let colorArray = []
-          if (item.dyeingCostList) {
-            item.dyeingCostList.forEach((j) => {
+          let costPriceArray = []
+          let finalQuotedPrice1Array = []
+          let interestRate1Array = []
+          let finalQuotedPrice2Array = []
+          let interestRate2Array = []
+          let finalQuotedPrice3Array = []
+          let interestRate3Array = []
+          let jobType = ''
+          if (item.quotedOrderPriceVoList) {
+            item.quotedOrderPriceVoList.forEach((j) => {
               colorArray.push(j.colorName)
+              costPriceArray.push(j.costPrice)
+              finalQuotedPrice1Array.push(j.finalQuotedPrice1)
+              interestRate1Array.push(j.interestRate1)
+              finalQuotedPrice2Array.push(j.finalQuotedPrice2)
+              interestRate2Array.push(j.interestRate2)
+              finalQuotedPrice3Array.push(j.finalQuotedPrice3)
+              interestRate3Array.push(j.interestRate3)
+              jobType = j.jobType
             })
           }
           item.colorName = []
+          item.costPrice = []
+          item.finalQuotedPrice1 = []
+          item.finalQuotedPrice2 = []
+          item.finalQuotedPrice3 = []
+          item.interestRate1 = []
+          item.interestRate2 = []
+          item.interestRate3 = []
           item.colorName = colorArray
+          item.costPrice = costPriceArray
+          item.finalQuotedPrice1 = finalQuotedPrice1Array
+          item.finalQuotedPrice2 = finalQuotedPrice2Array
+          item.finalQuotedPrice3 = finalQuotedPrice3Array
+          item.interestRate1 = interestRate1Array
+          item.interestRate2 = interestRate2Array
+          item.interestRate3 = interestRate3Array
           item.functionName = item.functionName.split(',')
           item.specialProcessName = item.specialProcessName.split(',')
+          item.jobType = jobType
         })
         this.baseInfo = res.data
+        console.log('this.baseInfo', this.baseInfo)
         this.formData.data = this.baseInfo.productList
         if (res.data.enclosureAddress) {
           this.imgList = res.data.enclosureAddress.split(';')
@@ -577,6 +702,26 @@ export default {
 .app-main {
   background: rgba(245, 247, 250, 1);
   padding-bottom: 80px;
+  .title-box {
+    position: relative;
+    background-color: #fff;
+    color: rgba(0, 0, 0, 0.85);
+    font-size: 14px;
+    padding: 0 24px;
+    .tit {
+      padding: 20px 0;
+      font-size: 20px;
+      font-weight: bold;
+      border-bottom: 1px solid #f3f3f3;
+    }
+    .tit-info {
+      padding: 20px 0;
+      font-weight: bold;
+      span {
+        margin-right: 80px;
+      }
+    }
+  }
 }
 .container {
   margin: 24px;
