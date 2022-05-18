@@ -269,3 +269,16 @@ export function getDyeingFeeDataByJobStatus(data) {
     params: data,
   })
 }
+
+/**
+ * 删除报价产品
+ * @param {*}
+ * @returns
+ */
+export function deleteQuotedOrderProduct(data) {
+  return request({
+    url: `/system/quotedOrder/deleteQuotedOrderProduct`,
+    method: 'POST',
+    data: data,
+  })
+}

@@ -258,7 +258,7 @@
             label="操作"
             width="100"
             align="center"
-            v-if="baseInfo.orderStatus"
+            v-show="baseInfo.orderStatus"
             fixed="right"
           >
             <template v-slot="scope">
@@ -472,18 +472,18 @@ export default {
           item.specialProcessName = item.specialProcessName.split(',')
           item.jobType = jobType
         })
-        this.baseInfo = res.data
-        console.log('this.baseInfo', this.baseInfo)
-        this.formData.data = this.baseInfo.productList
-        if (res.data.enclosureAddress) {
-          this.imgList = res.data.enclosureAddress.split(';')
-        }
-        console.log(res.data.enclosureAddress.split(';'))
-        // console.log(this.baseInfo)
+        setTimeout(() => {
+          this.baseInfo = res.data
+          console.log('this.baseInfo', this.baseInfo)
+          this.formData.data = this.baseInfo.productList
+          if (res.data.enclosureAddress) {
+            this.imgList = res.data.enclosureAddress.split(';')
+          }
+        })
       })
     },
     toCostOffer(val) {
-      console.log(this.baseInfo)
+      // console.log(this.baseInfo)
       if (this.baseInfo.orderStatus == 1) {
         let url = '/finance/reportCalculator'
         this.$router.push({
