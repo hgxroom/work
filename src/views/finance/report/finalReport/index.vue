@@ -1,7 +1,7 @@
 <template>
   <div class="app-main">
     <div class="title-box">
-      <div class="tit">成本报价计算</div>
+      <div class="tit">销售报价</div>
       <div class="tit-info">
         <span>布号：{{ newClothNo }}</span>
         <span> 品名：{{ pm }} </span>
@@ -456,7 +456,7 @@ export default {
           })
           break
 
-        case '美金/kg':
+        case '美元/kg':
           this.labelList.forEach((element) => {
             this.datalist[index][element.key] = (
               (this.datalist[0][element.key] /
@@ -467,7 +467,7 @@ export default {
             ).toFixed(2)
           })
           break
-        case '美金/磅':
+        case '美元/磅':
           this.labelList.forEach((element) => {
             this.datalist[index][element.key] = (
               (this.datalist[0][element.key] /
@@ -479,7 +479,7 @@ export default {
             ).toFixed(2)
           })
           break
-        case '美金/码':
+        case '美元/码':
           this.labelList.forEach((element) => {
             this.datalist[index][element.key] = (
               (this.datalist[0][element.key] /

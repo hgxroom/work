@@ -403,7 +403,7 @@ export default {
     return {
       yarnName: '', //品名
       component: '', //成分
-      reportBtn: false, //是否能点击确认报价按钮
+      reportBtn: true, //是否能点击确认报价按钮
       clothNo: '', //布号
       quotedOrderNo: '', //报价单号
       type: '', // 表单类型
@@ -511,6 +511,7 @@ export default {
     //计算报价
     reportCalculator() {
       //（毛胚成本+染费+特整总成本+功能性总成本）*（1+染整损耗+特整总损耗）
+      this.reportBtn = false
       this.dyeingCostList.forEach((item, index) => {
         this.finalQuotedList.forEach((val) => {
           if (item.colorName == val.colorName) {
@@ -525,8 +526,46 @@ export default {
         })
       })
     },
+    //校验
+    validate() {
+      let nextBtn = false
+      this.yarnCostList.forEach((val) => {
+        if (!val.yarnCost && !nextBtn) {
+          nextBtn = true
+          return this.$message.error(`请将纱线价格填写完整`)
+        }
+      })
+      if (!this.weavingCostList[0].weavingFee && !nextBtn) {
+        nextBtn = true
+        return this.$message.error(`请填写织费`)
+      }
+      if (!this.dyeingCostList[0].jobType && !nextBtn) {
+        nextBtn = true
+        return this.$message.error(`请选择作业类型`)
+      }
+      if (this.specialFinishingList.length > 0 && !nextBtn) {
+        this.specialFinishingList.forEach((val) => {
+          if (!val.processName) {
+            nextBtn = true
+            return this.$message.error(`工艺选择不能为空`)
+          }
+        })
+      }
+      if (this.functionCostList.length > 0 && !nextBtn) {
+        this.functionCostList.forEach((val) => {
+          if (!val.functionalCommitmentName) {
+            nextBtn = true
+            return this.$message.error(`功能性承诺选择不能为空`)
+          }
+        })
+      }
+      return nextBtn
+    },
     //确认报价
     submit() {
+      if (this.validate()) {
+        return
+      }
       let data = {}
       data.clothNo = this.clothNo
       data.dyeingCostDtoList = this.dyeingCostList
@@ -542,19 +581,25 @@ export default {
       data.yarnCostTotal = this.yarnCostTotal
       console.log(data)
       calcQuotedPrice(data).then((res) => {
-        let url = '/finance/reportDetail'
-        this.$router.push({
-          path: url,
-          query: { type: 'detail', quotedOrderNo: this.$route.query.quotedOrderNo },
-        })
+        let quotedOrderNo = this.$route.query.quotedOrderNo
+        const obj = { path: `/finance/reportDetail?type=detail&quotedOrderNo=${quotedOrderNo}` }
+        this.$tab.closeOpenPage(obj)
+        // let url = '/finance/reportDetail'
+        // this.$router.push({
+        //   path: url,
+        //   query: { type: 'detail', quotedOrderNo: this.$route.query.quotedOrderNo },
+        // })
       })
     },
     cancel(val) {
-      let url = '/finance/reportDetail'
-      this.$router.push({
-        path: url,
-        query: { type: 'detail', quotedOrderNo: this.$route.query.quotedOrderNo },
-      })
+      // let url = '/finance/reportDetail'
+      let quotedOrderNo = this.$route.query.quotedOrderNo
+      const obj = { path: `/finance/reportDetail?type=detail&quotedOrderNo=${quotedOrderNo}` }
+      this.$tab.closeOpenPage(obj)
+      // this.$router.push({
+      //   path: url,
+      //   query: { type: 'detail', quotedOrderNo: this.$route.query.quotedOrderNo },
+      // })
     },
     //删除工艺
     deleteRow(row, index, type) {
@@ -603,7 +648,18 @@ export default {
     },
     //功能性改变
     handleFunc(scope, index, evt) {
+      this.reportBtn = true
       let cost = 0
+      //是否有重复数据
+      let Redata = this.functionCostList.find((val) => {
+        return val.functionalCommitmentName == evt && val.laborCost
+      })
+
+      if (Redata) {
+        this.functionCostList[index].functionalCommitmentName = ''
+        this.functionCostList[index].laborCost = ''
+        return this.$message.error(`请功能性承诺选项不能重复！`)
+      }
       this.functionList.forEach((val) => {
         if (val.commitmentName == evt) {
           this.functionCostList[index].laborCost = val.laborCost
@@ -618,6 +674,19 @@ export default {
     handleType(scope, index, evt) {
       let cost = 0
       let loss = 0
+      this.reportBtn = true
+      // //是否有重复数据
+      let Redata = this.specialFinishingList.find((val) => {
+        return val.processName == evt && val.laborCost
+      })
+
+      if (Redata) {
+        this.specialFinishingList[index].processName = ''
+        this.specialFinishingList[index].laborCost = ''
+        this.specialFinishingList[index].extraLoss = ''
+        return this.$message.error(`请工艺选项不能重复！`)
+      }
+
       this.specialList.forEach((val) => {
         if (val.processName == evt) {
           this.specialFinishingList[index].laborCost = val.laborCost
@@ -647,6 +716,7 @@ export default {
       if (!this.yarnCostTotal) {
         return this.$message.error(`请将纱线价格填写完整`)
       }
+      this.reportBtn = true
       this.weavingCostList[scope.$index].blankCost =
         Number(this.weavingCostList[scope.$index].weavingFee) +
         this.yarnCostTotal +
@@ -656,6 +726,7 @@ export default {
     //纱线价格变化
     handleCount(scope) {
       let count = 0
+      this.reportBtn = true
       this.yarnCostList.forEach((val) => {
         count = count + Number(val.yarnCost)
       })
@@ -688,6 +759,7 @@ export default {
       this.dyeingCostList.forEach((val) => {
         val.jobType = scope.row.jobType
       })
+      this.reportBtn = true
       //遍历获取对应颜色染费
       this.dyeingCostList.forEach((val) => {
         let data = {
@@ -1094,9 +1166,11 @@ export default {
 .hostory-box {
   display: flex;
   justify-content: space-between;
+
   .font {
     color: #0052d9;
     cursor: pointer;
+    line-height: 23px;
   }
 }
 </style>
