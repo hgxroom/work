@@ -233,8 +233,8 @@ export default {
           customerName,
           departmentId,
           clothNo,
-          startTime: dateTimePicker[0],
-          endTime: dateTimePicker[1],
+          startTime: dateTimePicker[0] + ' 00:00:00',
+          endTime: dateTimePicker[1] + ' 23:59:59',
           pageNum: this.pageNum,
           pageSize: this.pageSize,
         }
@@ -353,8 +353,8 @@ export default {
           customerName,
           departmentId,
           clothNo,
-          startTime: dateTimePicker[0],
-          endTime: dateTimePicker[1],
+          startTime: dateTimePicker[0] + ' 00:00:00',
+          endTime: dateTimePicker[1] + ' 23:59:59',
           pageNum: this.pageNum,
           pageSize: this.pageSize,
         }

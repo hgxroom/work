@@ -88,7 +88,7 @@
           </el-form-item>
         </el-form>
         <div class="upload-img" v-if="baseInfo.enclosureAddress">
-          <div style="width: 90px; text-align: right; padding-right: 12px">上传图片</div>
+          <div style="width: 90px; text-align: right; padding-right: 12px">附件</div>
           <div class="flex">
             <span v-for="item in this.imgList" :key="item" style="padding-right: 15px">
               <el-image style="width: 100px; height: 100px" :src="item" fit="fill"></el-image>
