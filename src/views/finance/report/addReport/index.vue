@@ -358,6 +358,7 @@ import {
   addQuotedOrder,
   getQuotedPriceByNo,
   deleteQuotedOrderProduct,
+  deleteQuotedOrderNo,
 } from '@/api/finance/report'
 import { getCustomerInfoByName } from '@/api/customer/visit'
 import { formRules, formProductRules, brandInfoTemp, dictMap } from './utils.js'
@@ -746,7 +747,10 @@ export default {
       console.log('this.baseInfo', this.baseInfo)
     },
     deleteQuoted() {
-      console.log('删除')
+      deleteQuotedOrderNo(this.quotedOrderNo).then((res) => {
+        const obj = { path: '/finance/reportList' }
+        this.$tab.closeOpenPage(obj)
+      })
     },
     /**
      * 验证表单

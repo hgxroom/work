@@ -293,3 +293,10 @@ export function deleteQuotedOrderProduct(data) {
     data: data,
   })
 }
+// 根据报价单号删除报价单
+export function deleteQuotedOrderNo(quotedOrderNo) {
+  return request({
+    url: '/system/quotedOrder/deleteQuotedOrderNo/' + quotedOrderNo,
+    method: 'delete',
+  })
+}

@@ -4,11 +4,11 @@
       <div class="tit">报价详情</div>
       <div class="tit-info">
         <el-row>
-          <el-col :span="12">
+          <el-col :span="6">
             <span>单号：{{ this.baseInfo.quotedOrderNo }}</span>
           </el-col>
           <el-col
-            :span="12"
+            :span="18"
             style="text-align: right; color: rgba(0, 0, 0, 0.4); font-weight: normal"
           >
             <span v-if="this.baseInfo.salesman">提交人：{{ this.baseInfo.salesman || '-' }}</span>
@@ -87,7 +87,7 @@
             <span>{{ baseInfo.remark || '-' }}</span>
           </el-form-item>
         </el-form>
-        <div class="upload-img">
+        <div class="upload-img" v-if="baseInfo.enclosureAddress">
           <div style="width: 90px; text-align: right; padding-right: 12px">上传图片</div>
           <div class="flex">
             <span v-for="item in this.imgList" :key="item" style="padding-right: 15px">
