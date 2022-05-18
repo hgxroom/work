@@ -53,7 +53,10 @@
                 <div>-</div>
               </div>
               <div class="info-list checkbox" v-else>
-                <el-checkbox v-model="scope.row.choiceflag"></el-checkbox>
+                <el-checkbox
+                  v-model="scope.row.choiceflag"
+                  @change="handlecheck(scope)"
+                ></el-checkbox>
               </div>
             </template>
           </el-table-column>
@@ -345,6 +348,11 @@ export default {
     this.getHistoryOrder()
   },
   methods: {
+    //选中
+    handlecheck(scope) {
+      console.log(scope)
+    },
+    //提交
     submit() {
       this.datalist.forEach((val, index) => {
         this.reportData.buildProductFinalSaleVos[index].choiceflag = val.choiceflag

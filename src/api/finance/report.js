@@ -300,3 +300,10 @@ export function deleteQuotedOrderNo(quotedOrderNo) {
     method: 'delete',
   })
 }
+// 模糊查询客户信息列表
+export function getProductCustomerInfoByName(quotedOrderNo) {
+  return request({
+    url: `/system/customerInfo/getProductCustomerInfoByName/${quotedOrderNo}`,
+    method: 'get',
+  })
+}
