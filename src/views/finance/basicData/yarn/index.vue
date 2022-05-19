@@ -60,6 +60,7 @@
                 <div
                   v-else
                   :class="[
+                    'content-colum',
                     item.prop == 'status'
                       ? scope.row[item.prop] == 0
                         ? 'launch-status'
@@ -454,7 +455,11 @@ export default {
     },
     /** 下载模板操作 */
     importTemplate() {
-      this.download('/system/yarnPrice/importTemplate', {}, `template_${new Date().getTime()}.xlsx`)
+      this.download(
+        '/system/yarnPrice/importTemplate',
+        {},
+        `纱线价格模板_${new Date().getTime()}.xlsx`,
+      )
     },
     // 文件上传中处理
     handleFileUploadProgress(event, file, fileList) {
