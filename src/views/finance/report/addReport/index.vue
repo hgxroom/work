@@ -544,7 +544,7 @@ export default {
      */
     queryName(queryString, cb) {
       console.log(queryString === '')
-      if (queryString === '') {
+      if (queryString === '' || queryString === ' ') {
         cb([])
         return
       }
@@ -606,12 +606,12 @@ export default {
         referenceClothNo: queryString,
       }
       clearTimeout(this.timeout)
-      if (queryString.length >= 6) {
+      if (queryString.length >= 2) {
         this.timeout = setTimeout(() => {
           getFabricQuotationByBh(data).then((res) => {
             cb(res.data)
           })
-        }, 700)
+        }, 900)
       }
     },
     //选择布类
@@ -1062,13 +1062,13 @@ export default {
 .auto-prop {
   ::v-deep .el-input {
     .el-input__inner {
-      width: 280px;
+      width: 250px;
     }
   }
 }
 .auto-prop {
   ::v-deep .el-input__inner {
-    width: 280px;
+    width: 250px;
   }
 }
 </style>
