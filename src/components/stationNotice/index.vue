@@ -37,25 +37,26 @@ export default {
       stationNotice().then((res) => {
         let list = res.rows
         list = list.filter((item) => {
-          return item.status == 1 || item.status == 2
+          return item.status !== 1
         })
-        if (auth.hasRole('admin')) {
-          this.list = list
-          return
-        }
-        if (auth.hasRole('salesman')) {
-          list = list.filter((info) => {
-            return info.receiverDept === '0'
-          })
-        } else if (auth.hasRole('dev')) {
-          list = list.filter((info) => {
-            return info.receiverDept === '1'
-          })
-        } else if (auth.hasRole('quotedPrice')) {
-          list = list.filter((info) => {
-            return info.receiverDept === '2'
-          })
-        }
+        console.log(list)
+        // if (auth.hasRole('admin')) {
+        //   this.list = list
+        //   return
+        // }
+        // if (auth.hasRole('salesman')) {
+        //   list = list.filter((info) => {
+        //     return info.receiverDept === '0'
+        //   })
+        // } else if (auth.hasRole('dev')) {
+        //   list = list.filter((info) => {
+        //     return info.receiverDept === '1'
+        //   })
+        // } else if (auth.hasRole('quotedPrice')) {
+        //   list = list.filter((info) => {
+        //     return info.receiverDept === '2'
+        //   })
+        // }
         this.list = list
       })
     },

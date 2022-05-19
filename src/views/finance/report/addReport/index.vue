@@ -575,8 +575,8 @@ export default {
       this.productInfo.specialProcessName = item.specialProcessName
       this.productInfo.functionName = item.functionName
       this.productInfo.loomSpecification = item.loomType
-      this.productInfo.meterWeight = ((+item.fk + 5) / 100) * +item.kz || 0
-      //纱支信息
+      this.productInfo.meterWeight = (((+item.fk + 5) / 100) * +item.kz).toFixed(4) || 0
+      //纱织信息
       if (item.quotationYarnVoList) {
         let list = []
         item.quotationYarnVoList.forEach((val) => {
