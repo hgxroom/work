@@ -4,12 +4,17 @@
       <div class="tit">报价详情</div>
       <div class="tit-info">
         <el-row>
-          <el-col :span="6">
+          <div style="display: inline-block">
             <span>单号：{{ this.baseInfo.quotedOrderNo }}</span>
-          </el-col>
-          <el-col
-            :span="18"
-            style="text-align: right; color: rgba(0, 0, 0, 0.4); font-weight: normal"
+          </div>
+          <div
+            style="
+              display: inline-block;
+              float: right;
+              text-align: right;
+              color: rgba(0, 0, 0, 0.4);
+              font-weight: normal;
+            "
           >
             <span>提交人：{{ this.baseInfo.salesman || '-' }}</span>
             <span>提交时间：{{ this.baseInfo.createTime || '-' }}</span>
@@ -28,7 +33,7 @@
             <span style="color: #00a870; font-weight: bold">
               状态：{{ statusFilter(this.baseInfo.orderStatus) }}
             </span>
-          </el-col>
+          </div>
         </el-row>
       </div>
     </div>
@@ -216,9 +221,7 @@
               <div v-for="(item, index) in scope.row.costPrice" :key="index">{{ item }}</div>
             </template>
           </el-table-column>
-          <template
-            v-if="baseInfo.orderStatus !== 1 && (baseInfo.roleType == 1 || baseInfo.roleType == 2)"
-          >
+          <template v-if="baseInfo.orderStatus !== 1">
             <el-table-column
               :label="`销售报价1(${baseInfo.settlementMethod})`"
               width="150"
@@ -323,7 +326,10 @@
           </el-table-column>
           <el-table-column
             v-if="
-              baseInfo.orderStatus == 3 || baseInfo.orderStatus == 4 || baseInfo.orderStatus == 5
+              (baseInfo.orderStatus == 3 ||
+                baseInfo.orderStatus == 4 ||
+                baseInfo.orderStatus == 5) &&
+              baseInfo.roleType !== 0
             "
             label="操作"
             width="100"
@@ -355,7 +361,7 @@
         <el-button @click="cancel()" class="save-btn" v-if="baseInfo.roleType == 2">取消</el-button>
         <el-button
           @click="submit()"
-          v-if="baseInfo.roleType == 1 || baseInfo.roleType == 2"
+          v-if="baseInfo.roleType == 2"
           :disabled="
             (baseInfo.offerFlag == '1' && baseInfo.orderStatus == 1) ||
             (baseInfo.auditFlag == '1' && baseInfo.orderStatus == 2)
@@ -799,7 +805,7 @@ export default {
       padding: 20px 0;
       font-weight: bold;
       span {
-        margin-right: 80px;
+        margin-right: 20px;
       }
     }
   }
