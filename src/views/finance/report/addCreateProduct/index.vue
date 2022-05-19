@@ -861,7 +861,7 @@ export default {
           item.input = ''
         }
         if (item.input) {
-          text += `${item.componentEnglish}(${item.input}%) `
+          text += `${item.componentEnglish}${item.input}% `
           console.log(Number(item.input), 'input')
           ac = ac + Number(item.input)
         }

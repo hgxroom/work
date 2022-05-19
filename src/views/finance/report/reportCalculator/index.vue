@@ -108,7 +108,7 @@
           </el-table-column>
           <el-table-column
             label="纱线总成本"
-            align="left"
+            align="center"
             prop="yarnCost"
             :show-overflow-tooltip="true"
           >
