@@ -576,7 +576,7 @@ export default {
       this.productInfo.functionName = item.functionName
       this.productInfo.loomSpecification = item.loomType
       this.productInfo.meterWeight = ((+item.fk + 5) / 100) * +item.kz || 0
-      //纱织信息
+      //纱支信息
       if (item.quotationYarnVoList) {
         let list = []
         item.quotationYarnVoList.forEach((val) => {
@@ -681,7 +681,7 @@ export default {
         orderNum: '', // 重量
         yarnName: '', // 品名
         meterWeight: 0, // 米重
-        rawYarnVoList: [], // 纱织信息
+        rawYarnVoList: [], // 纱支信息
       }
       this.formProductData.data = []
       setTimeout(() => {

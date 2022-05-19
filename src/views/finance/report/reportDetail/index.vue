@@ -581,7 +581,7 @@ export default {
       this.productInfo.gramWeight = item.kz
       this.productInfo.yarnName = item.yarnName
       this.productInfo.loomSpecification = item.loomType
-      //纱织信息
+      //纱支信息
       if (item.quotationYarnVoList) {
         let list = []
         item.quotationYarnVoList.forEach((val) => {

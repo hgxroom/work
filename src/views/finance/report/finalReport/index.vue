@@ -259,7 +259,7 @@ export default {
             label: '毛坯成本',
             align: 'left',
             type: 'text',
-            prop: 'list',
+            prop: 'blankCost',
           },
         ],
         data: [],
@@ -272,7 +272,7 @@ export default {
             label: '订单时间',
             align: 'left',
             type: 'text',
-            prop: 'createTime',
+            prop: 'bzrq',
           },
           {
             label: '订单号',
@@ -351,21 +351,31 @@ export default {
   },
   methods: {
     //选中
-    handlecheck(scope) {
+    handlecheck(scope, submit) {
       let num = 0
       this.datalist.forEach((val) => {
         if (val.choiceflag) {
           num = num + 1
         }
       })
+      if (submit) {
+        if (num === 0) {
+          return false
+        } else {
+          return true
+        }
+      }
       if (num > 3) {
         this.$message.error('最终报价最多只能选择三个！')
         this.datalist[scope.$index].choiceflag = false
       }
-      console.log(scope)
     },
+
     //提交
     submit() {
+      if (!this.handlecheck('scope', 'submit')) {
+        return this.$message.error('最终报价最少要选择一个！')
+      }
       this.datalist.forEach((val, index) => {
         this.reportData.buildProductFinalSaleVos[index].choiceflag = val.choiceflag
         this.reportData.buildProductFinalSaleVos[index].interestRate = val.interestRate
