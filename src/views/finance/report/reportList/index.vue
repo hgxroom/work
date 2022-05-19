@@ -11,11 +11,6 @@
           label-width="90px"
           :inline="true"
         >
-          <el-table-column label="序号" type="index" align="center">
-            <!-- <template slot-scope="scope">
-              <span>{{ (pageNum - 1) * pageSize + scope.$index + 1 }}</span>
-            </template> -->
-          </el-table-column>
           <el-form-item label="报价单号">
             <el-input v-model="queryParams.quotedOrderNo" placeholder="请输入报价单号"></el-input>
           </el-form-item>
@@ -80,6 +75,11 @@
     <el-row>
       <el-col>
         <el-table :data="listData" ref="list" :max-height="500" style="width: 100%">
+          <el-table-column label="序号" type="index" align="center">
+            <template slot-scope="scope">
+              <span>{{ (pageNum - 1) * pageSize + scope.$index + 1 }}</span>
+            </template>
+          </el-table-column>
           <el-table-column
             label="报价单号"
             align="center"

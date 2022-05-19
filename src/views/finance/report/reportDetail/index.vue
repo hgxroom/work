@@ -521,6 +521,7 @@ export default {
             type: 'add',
             quotedOrderNo: this.$route.query.quotedOrderNo,
             clothNo: val.clothNo,
+            pm: val.pm,
           },
         })
       } else if (

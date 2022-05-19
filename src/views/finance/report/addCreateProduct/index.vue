@@ -3,7 +3,7 @@
   <div class="app-main">
     <div class="head_box">
       <el-row type="flex">
-        <el-col :span="4">新增产品</el-col>
+        <el-col :span="4">{{ type == 'edit' ? '新增产品' : '产品详情' }}</el-col>
       </el-row>
     </div>
     <el-row v-if="type == 'detail'" type="flex" class="head_box2">
@@ -30,7 +30,7 @@
             <el-autocomplete
               v-model="baseInfo.referenceClothNo"
               :fetch-suggestions="queryReferenceClothNo"
-              :placeholder="[type == 'detail' ? '' : '请输入参考布号']"
+              :placeholder="type == 'detail' ? '' : '请输入参考布号'"
               :disabled="type == 'detail' ? true : false"
               :class="[type == 'detail' ? 'input-detail' : '']"
               @select="handleSelectReferenceClothNo"
@@ -129,6 +129,7 @@
                 v-model="baseInfo.component"
                 placeholder="请输入成分"
                 style="width: 100%"
+                :title="type == 'detail' ? baseInfo.component : ''"
               ></el-input>
             </div>
             <div v-else @click="componentDialogVisible = true">
@@ -471,10 +472,11 @@ export default {
     }
     this.type = this.$route.query.type
     const obj = Object.assign({}, this.$route, {
-      title: `自建产品(新增)`,
+      title: `自建产品`,
     })
+    console.log(obj)
     if (this.type == 'detail') {
-      obj.meta.title = '自建产品(详情)'
+      obj.meta.title = '产品详情'
     }
     this.$tab.updatePage(obj)
   },
