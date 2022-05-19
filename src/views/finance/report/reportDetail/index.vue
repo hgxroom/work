@@ -11,12 +11,20 @@
             :span="18"
             style="text-align: right; color: rgba(0, 0, 0, 0.4); font-weight: normal"
           >
-            <span v-if="this.baseInfo.salesman">提交人：{{ this.baseInfo.salesman || '-' }}</span>
-            <span v-if="this.baseInfo.createTime">提交时间：{{ this.baseInfo.createTime }}</span>
-            <span v-if="this.baseInfo.offerMan">报价人：{{ this.baseInfo.offerMan }}</span>
-            <span v-if="this.baseInfo.offerTime">报价时间：{{ this.baseInfo.offerTime }}</span>
-            <span v-if="this.baseInfo.updateBy">审核人：{{ this.baseInfo.updateBy }}</span>
-            <span v-if="this.baseInfo.updateTime">审核时间：{{ this.baseInfo.updateTime }}</span>
+            <span>提交人：{{ this.baseInfo.salesman || '-' }}</span>
+            <span>提交时间：{{ this.baseInfo.createTime || '-' }}</span>
+            <span v-if="this.baseInfo.orderStatus == 2">
+              报价人：{{ this.baseInfo.offerMan || '-' }}
+            </span>
+            <span v-if="this.baseInfo.orderStatus == 2">
+              报价时间：{{ this.baseInfo.offerTime || '-' }}
+            </span>
+            <span v-if="this.baseInfo.orderStatus == 3">
+              审核人：{{ this.baseInfo.updateBy || '-' }}
+            </span>
+            <span v-if="this.baseInfo.orderStatus == 3">
+              审核时间：{{ this.baseInfo.updateTime || '-' }}
+            </span>
             <span style="color: #00a870; font-weight: bold">
               状态：{{ statusFilter(this.baseInfo.orderStatus) }}
             </span>
@@ -198,65 +206,72 @@
               </div>
             </template>
           </el-table-column>
-          <el-table-column label="成本价格">
+          <el-table-column label="成本价格" width="140">
             <!-- v-if="baseInfo.costPrice == 2 || baseInfo.orderStatus == 3 || baseInfo.orderStatus == 5" -->
             <template v-slot="scope">
-              <div v-for="(item, index) in scope.row.costPrice" :key="index">
-                {{ item }}
-              </div>
+              <div v-for="(item, index) in scope.row.costPrice" :key="index">{{ item }}元/kg</div>
             </template>
           </el-table-column>
           <template>
-            <el-table-column label="销售报价1" width="120">
+            <el-table-column label="销售报价1" width="120" v-if="baseInfo.orderStatus !== 1">
               <template v-slot="scope">
                 <div v-for="(item, index) in scope.row.finalQuotedPrice1" :key="index">
-                  {{ item }}
+                  {{ item }} {{ baseInfo.settlementMethod }}
                 </div>
               </template>
             </el-table-column>
-            <el-table-column label="利润率1" width="120">
+            <el-table-column label="利润率1" width="120" v-if="baseInfo.orderStatus !== 1">
               <template v-slot="scope">
-                <div v-for="(item, index) in scope.row.interestRate1" :key="index">
-                  {{ item }}
+                <div v-for="(item, index) in scope.row.interestRate1" :key="index">{{ item }}%</div>
+              </template>
+            </el-table-column>
+            <el-table-column label="销售报价2" width="120" v-if="baseInfo.orderStatus !== 1">
+              <template v-slot="scope">
+                <div v-for="(item, index) in scope.row.finalQuotedPrice2" :key="index">
+                  {{ item }} {{ baseInfo.settlementMethod }}
                 </div>
               </template>
             </el-table-column>
-            <el-table-column label="销售报价2" width="120">
+            <el-table-column label="利润率2" width="120" v-if="baseInfo.orderStatus !== 1">
               <template v-slot="scope">
-                <div v-for="(item, index) in scope.row.finalQuotedPrice1" :key="index">
-                  {{ item }}
+                <div v-for="(item, index) in scope.row.interestRate2" :key="index">{{ item }}%</div>
+              </template>
+            </el-table-column>
+            <el-table-column label="销售报价3" width="120" v-if="baseInfo.orderStatus !== 1">
+              <template v-slot="scope">
+                <div v-for="(item, index) in scope.row.finalQuotedPrice3" :key="index">
+                  {{ item }} {{ baseInfo.settlementMethod }}
                 </div>
               </template>
             </el-table-column>
-            <el-table-column label="利润率2" width="120">
+            <el-table-column label="利润率3" width="120" v-if="baseInfo.orderStatus !== 1">
               <template v-slot="scope">
-                <div v-for="(item, index) in scope.row.interestRate2" :key="index">
-                  {{ item }}
-                </div>
-              </template>
-            </el-table-column>
-            <el-table-column label="销售报价3" width="120">
-              <template v-slot="scope">
-                <div v-for="(item, index) in scope.row.finalQuotedPrice1" :key="index">
-                  {{ item }}
-                </div>
-              </template>
-            </el-table-column>
-            <el-table-column label="利润率3" width="120">
-              <template v-slot="scope">
-                <div v-for="(item, index) in scope.row.interestRate3" :key="index">
-                  {{ item }}
-                </div>
+                <div v-for="(item, index) in scope.row.interestRate3" :key="index">{{ item }}%</div>
               </template>
             </el-table-column>
           </template>
-          <!-- <el-table-column label="颜色11111" width="120">
-            <template>
-              <div>
-                {{ baseInfo.orderStatus }}
-              </div>
+          <el-table-column
+            v-if="
+              baseInfo.orderStatus !== 1 && baseInfo.orderStatus !== 2 && baseInfo.orderStatus !== 0
+            "
+            label="报价策略"
+            prop="pm"
+            width="260"
+          >
+            <template v-slot="scope">
+              <el-popover
+                trigger="hover"
+                placement="top"
+                popper-class="popper-class"
+                :visible-arrow="false"
+              >
+                <p style="max-width: 600px; margin: 0">{{ scope.row.quotationStrategy }}</p>
+                <div slot="reference" class="content-colum">
+                  {{ scope.row.quotationStrategy }}
+                </div>
+              </el-popover>
             </template>
-          </el-table-column> -->
+          </el-table-column>
           <el-table-column
             label="操作"
             width="100"

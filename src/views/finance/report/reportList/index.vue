@@ -14,14 +14,14 @@
           <el-form-item label="报价单号">
             <el-input v-model="queryParams.quotedOrderNo" placeholder="请输入报价单号"></el-input>
           </el-form-item>
-          <el-form-item label="提交人">
+          <el-form-item label="提交人" v-hasRole="['quotedPrice', 'business']">
             <el-input v-model="queryParams.createBy" placeholder="请输入提交人"></el-input>
           </el-form-item>
 
           <el-form-item label="客户名称">
             <el-input v-model="queryParams.customerName" placeholder="请输入客户名称"></el-input>
           </el-form-item>
-          <el-form-item label="部门">
+          <el-form-item label="部门" v-hasRole="['quotedPrice']">
             <el-select v-model="queryParams.departmentId" placeholder="请选择部门">
               <el-option label="全部" value=""></el-option>
               <el-option
