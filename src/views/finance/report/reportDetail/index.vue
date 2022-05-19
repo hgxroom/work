@@ -290,7 +290,7 @@
             </template>
           </el-table-column>
           <el-table-column
-            v-if="baseInfo.orderStatus == 1"
+            v-if="baseInfo.orderStatus == 1 && baseInfo.roleType !== 0"
             label="操作"
             width="100"
             align="center"
@@ -309,19 +309,14 @@
             </template>
           </el-table-column>
           <el-table-column
-            v-if="baseInfo.orderStatus == 2"
+            v-if="baseInfo.orderStatus == 2 && baseInfo.roleType == 2"
             label="操作"
             width="100"
             align="center"
             fixed="right"
           >
             <template v-slot="scope">
-              <el-button
-                v-if="baseInfo.roleType == 2"
-                type="text"
-                @click="toCostOffer(scope.row)"
-                size="small"
-              >
+              <el-button type="text" @click="toCostOffer(scope.row)" size="small">
                 销售报价
               </el-button>
             </template>
