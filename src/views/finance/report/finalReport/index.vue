@@ -135,7 +135,7 @@
               </div>
             </template>
           </el-table-column>
-          <el-table-column label="销售报价1(元/kg)" width="130px">
+          <el-table-column :label="'销售报价1' + settlementMethod" width="130px">
             <template v-slot="scope">
               <div v-for="(item, index) in scope.row.quotedOrderPriceVoList" :key="index">
                 {{ item.finalQuotedPrice1 }}
@@ -149,7 +149,7 @@
               </div>
             </template>
           </el-table-column>
-          <el-table-column label="销售报价2(元/kg)" width="130px">
+          <el-table-column :label="'销售报价2' + settlementMethod" width="130px">
             <template v-slot="scope">
               <div v-for="(item, index) in scope.row.quotedOrderPriceVoList" :key="index">
                 {{ item.finalQuotedPrice2 }}
@@ -163,7 +163,7 @@
               </div>
             </template>
           </el-table-column>
-          <el-table-column label="销售报价3(元/kg)" width="130px">
+          <el-table-column :label="'销售报价3' + settlementMethod" width="130px">
             <template v-slot="scope">
               <div v-for="(item, index) in scope.row.quotedOrderPriceVoList" :key="index">
                 {{ item.finalQuotedPrice3 }}
@@ -227,9 +227,9 @@ export default {
       weightFactor: null, //重量系数
       exchangeRate: '', //汇率
       settlementMethod: '', //结算方式
-      newClothNo: 'ZJ2205003-YL01283-2', //布号
-      pm: '60Shgx 皮马棉 精梳 紧密纺+140D 晓星H350氨纶 89/11 弹力罗纹 15寸18针 840T 31*2CM 220G', //品名
-      quotedOrderNo: '123', //报价单号
+      newClothNo: '', //布号
+      pm: '', //品名
+      quotedOrderNo: '', //报价单号
       remark: '',
       //表格渲染数据
       datalist: [],
@@ -344,6 +344,7 @@ export default {
     this.type = this.$route.query.type
     this.newClothNo = this.$route.query.clothNo
     this.quotedOrderNo = this.$route.query.quotedOrderNo
+    this.pm = this.$route.query.pm
     this.getList()
     this.getHistory()
     this.getHistoryOrder()
@@ -400,7 +401,11 @@ export default {
       }
       getQuotedListByNewClothNo(data).then((res) => {
         this.formHistoryData.data = res.data
-        console.log(res)
+        if (res.data.settlementMethod) {
+          this.settlementMethod = res.data.settlementMethod
+        }
+
+        console.log(res, this.settlementMethod)
       })
     },
     // 历史订单信息
@@ -633,6 +638,7 @@ export default {
           top: 4%;
           left: 2%;
           height: 92%;
+          max-height: 92%;
           border: 1px solid rgba(243, 243, 243, 1);
         }
       }

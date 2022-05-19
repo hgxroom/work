@@ -2,13 +2,54 @@
 <template>
   <div class="app-main">
     <div class="title-box">
-      <div class="tit">成本报价计算</div>
+      <div class="tit">{{ type == 'edit' ? '成本报价计算' : '报价详情' }}</div>
       <div class="tit-info">
         <span>布号：{{ clothNo }}</span>
         <span> 品名：{{ yarnName }} </span>
       </div>
     </div>
     <div class="container">
+      <!-- 最终报价详情 -->
+      <div class="card-box" v-if="type == 'detail'">
+        <p class="title">最终报价</p>
+        <el-table
+          size="small"
+          :data="finalQuotedList"
+          style="width: 100%; font-size: 14px; color: #242424; border-color: #000"
+          header-row-class-name="tableHeader"
+        >
+          <el-table-column
+            label="颜色"
+            align="left"
+            prop="colorName"
+            :show-overflow-tooltip="true"
+          />
+          <el-table-column
+            label="成本价(元/kg)"
+            align="left"
+            prop="costPrice"
+            :show-overflow-tooltip="true"
+          />
+          <el-table-column
+            label="销售报价1(元/kg)"
+            align="left"
+            prop="finalQuotedPriceFirst"
+            :show-overflow-tooltip="true"
+          />
+          <el-table-column
+            label="销售报价2(元/kg)"
+            align="left"
+            prop="finalQuotedPriceSecond"
+            :show-overflow-tooltip="true"
+          />
+          <el-table-column
+            label="销售报价3(元/kg)"
+            align="left"
+            prop="finalQuotedPriceThird"
+            :show-overflow-tooltip="true"
+          />
+        </el-table>
+      </div>
       <!-- 纱线成本 -->
       <div class="card-box">
         <p class="title">纱线成本</p>
@@ -170,7 +211,7 @@
             </template>
           </el-table-column>
           <el-table-column
-            label="染整损耗(元)"
+            label="染整损耗(%)"
             align="left"
             prop="dyeingLoss"
             :show-overflow-tooltip="true"
@@ -337,18 +378,18 @@
         </div>
       </div>
       <!-- 最终成本报价 -->
-      <div class="card-box">
+      <div class="card-box" v-if="type == 'edit'">
         <p class="title">最终报价</p>
         <div class="computed">
           <p class="computed-item" v-for="(item, index) in finalQuotedList" :key="index">
             <span>{{ item.colorName }}：</span>{{ item.costPrice }}
           </p>
         </div>
-        <div class="btn-box btn-box-left" v-if="type == 'edit'">
+        <div class="btn-box btn-box-left">
           <el-button @click="reportCalculator" class="computed-btn">计算报价</el-button>
         </div>
       </div>
-      <div class="footer" v-if="type == 'edit'">
+      <div class="footer">
         <el-button @click="cancel" class="save-btn">取消</el-button>
         <el-button @click="submit" :disabled="reportBtn" class="sub-btn">确认报价</el-button>
       </div>
@@ -527,7 +568,13 @@ export default {
     this.clothNo = this.$route.query.clothNo
     this.component = this.$route.query.component
     this.yarnName = this.$route.query.yarnName
-    console.log(this.dict, this.component)
+    const obj = Object.assign({}, this.$route, {
+      title: `销售报价`,
+    })
+    if (this.type == 'detail') {
+      obj.meta.title = '报价详情'
+    }
+    this.$tab.updatePage(obj)
     this.getlist()
     this.getCheckList()
   },
