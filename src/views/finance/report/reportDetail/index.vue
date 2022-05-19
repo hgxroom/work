@@ -220,8 +220,8 @@
             v-if="baseInfo.orderStatus !== 1 && (baseInfo.roleType == 1 || baseInfo.roleType == 2)"
           >
             <el-table-column
-              :label="`销售报价1${baseInfo.settlementMethod}`"
-              width="120"
+              :label="`销售报价1(${baseInfo.settlementMethod})`"
+              width="150"
               :key="Math.random()"
             >
               <template v-slot="scope">
@@ -236,8 +236,8 @@
               </template>
             </el-table-column>
             <el-table-column
-              :label="`销售报价2${baseInfo.settlementMethod}`"
-              width="120"
+              :label="`销售报价2(${baseInfo.settlementMethod})`"
+              width="150"
               :key="Math.random()"
             >
               <template v-slot="scope">
@@ -252,8 +252,8 @@
               </template>
             </el-table-column>
             <el-table-column
-              :label="`销售报价3${baseInfo.settlementMethod}`"
-              width="120"
+              :label="`销售报价3(${baseInfo.settlementMethod})`"
+              width="150"
               :key="Math.random()"
             >
               <template v-slot="scope">
