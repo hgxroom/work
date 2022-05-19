@@ -13,10 +13,10 @@
           >
             <span>提交人：{{ this.baseInfo.salesman || '-' }}</span>
             <span>提交时间：{{ this.baseInfo.createTime || '-' }}</span>
-            <span v-if="this.baseInfo.orderStatus == 2">
+            <span v-if="this.baseInfo.orderStatus == 2 || this.baseInfo.orderStatus == 3">
               报价人：{{ this.baseInfo.offerMan || '-' }}
             </span>
-            <span v-if="this.baseInfo.orderStatus == 2">
+            <span v-if="this.baseInfo.orderStatus == 2 || this.baseInfo.orderStatus == 3">
               报价时间：{{ this.baseInfo.offerTime || '-' }}
             </span>
             <span v-if="this.baseInfo.orderStatus == 3">
@@ -108,6 +108,7 @@
       <div class="card-box">
         <p class="title">报价产品</p>
         <el-table
+          v-if="flagTable"
           size="small"
           :data="formData.data"
           style="width: 100%; font-size: 14px; color: #242424; bordercolor: #000"
@@ -206,57 +207,73 @@
               </div>
             </template>
           </el-table-column>
-          <el-table-column label="成本价格" width="140">
-            <!-- v-if="baseInfo.costPrice == 2 || baseInfo.orderStatus == 3 || baseInfo.orderStatus == 5" -->
+          <el-table-column
+            label="成本价格(元/kg)"
+            width="140"
+            v-if="baseInfo.roleType == 1 || baseInfo.roleType == 2"
+          >
             <template v-slot="scope">
-              <div v-for="(item, index) in scope.row.costPrice" :key="index">{{ item }}元/kg</div>
+              <div v-for="(item, index) in scope.row.costPrice" :key="index">{{ item }}</div>
             </template>
           </el-table-column>
-          <template>
-            <el-table-column label="销售报价1" width="120" v-if="baseInfo.orderStatus !== 1">
+          <template
+            v-if="baseInfo.orderStatus !== 1 && (baseInfo.roleType == 1 || baseInfo.roleType == 2)"
+          >
+            <el-table-column
+              :label="`销售报价1${baseInfo.settlementMethod}`"
+              width="120"
+              :key="Math.random()"
+            >
               <template v-slot="scope">
                 <div v-for="(item, index) in scope.row.finalQuotedPrice1" :key="index">
                   {{ item }} {{ baseInfo.settlementMethod }}
                 </div>
               </template>
             </el-table-column>
-            <el-table-column label="利润率1" width="120" v-if="baseInfo.orderStatus !== 1">
+            <el-table-column label="利润率1(%)" width="120" :key="Math.random()">
               <template v-slot="scope">
-                <div v-for="(item, index) in scope.row.interestRate1" :key="index">{{ item }}%</div>
+                <div v-for="(item, index) in scope.row.interestRate1" :key="index">{{ item }}</div>
               </template>
             </el-table-column>
-            <el-table-column label="销售报价2" width="120" v-if="baseInfo.orderStatus !== 1">
+            <el-table-column
+              :label="`销售报价2${baseInfo.settlementMethod}`"
+              width="120"
+              :key="Math.random()"
+            >
               <template v-slot="scope">
                 <div v-for="(item, index) in scope.row.finalQuotedPrice2" :key="index">
                   {{ item }} {{ baseInfo.settlementMethod }}
                 </div>
               </template>
             </el-table-column>
-            <el-table-column label="利润率2" width="120" v-if="baseInfo.orderStatus !== 1">
+            <el-table-column label="利润率2(%)" width="120" :key="Math.random()">
               <template v-slot="scope">
-                <div v-for="(item, index) in scope.row.interestRate2" :key="index">{{ item }}%</div>
+                <div v-for="(item, index) in scope.row.interestRate2" :key="index">{{ item }}</div>
               </template>
             </el-table-column>
-            <el-table-column label="销售报价3" width="120" v-if="baseInfo.orderStatus !== 1">
+            <el-table-column
+              :label="`销售报价3${baseInfo.settlementMethod}`"
+              width="120"
+              :key="Math.random()"
+            >
               <template v-slot="scope">
                 <div v-for="(item, index) in scope.row.finalQuotedPrice3" :key="index">
                   {{ item }} {{ baseInfo.settlementMethod }}
                 </div>
               </template>
             </el-table-column>
-            <el-table-column label="利润率3" width="120" v-if="baseInfo.orderStatus !== 1">
+            <el-table-column label="利润率3(%)" width="120" :key="Math.random()">
               <template v-slot="scope">
-                <div v-for="(item, index) in scope.row.interestRate3" :key="index">{{ item }}%</div>
+                <div v-for="(item, index) in scope.row.interestRate3" :key="index">{{ item }}</div>
               </template>
             </el-table-column>
           </template>
           <el-table-column
-            v-if="
-              baseInfo.orderStatus !== 1 && baseInfo.orderStatus !== 2 && baseInfo.orderStatus !== 0
-            "
             label="报价策略"
             prop="pm"
             width="260"
+            :key="Math.random()"
+            v-if="baseInfo.orderStatus !== 1 && baseInfo.orderStatus !== 0"
           >
             <template v-slot="scope">
               <el-popover
@@ -273,6 +290,7 @@
             </template>
           </el-table-column>
           <el-table-column
+            v-if="baseInfo.orderStatus == 1"
             label="操作"
             width="100"
             align="center"
@@ -281,41 +299,68 @@
           >
             <template v-slot="scope">
               <el-button
-                v-if="baseInfo.orderStatus == 1"
+                v-if="baseInfo.roleType == 1"
                 type="text"
                 @click="toCostOffer(scope.row)"
                 size="small"
               >
                 成本报价
               </el-button>
+            </template>
+          </el-table-column>
+          <el-table-column
+            v-if="baseInfo.orderStatus == 2"
+            label="操作"
+            width="100"
+            align="center"
+            fixed="right"
+          >
+            <template v-slot="scope">
               <el-button
-                v-if="baseInfo.orderStatus == 2"
+                v-if="baseInfo.roleType == 2"
                 type="text"
                 @click="toCostOffer(scope.row)"
                 size="small"
               >
                 销售报价
               </el-button>
-              <el-button
-                v-if="
-                  baseInfo.orderStatus == 3 ||
-                  baseInfo.orderStatus == 4 ||
-                  baseInfo.orderStatus == 5
-                "
-                type="text"
-                @click="toCostOffer(scope.row)"
-                size="small"
-              >
+            </template>
+          </el-table-column>
+          <el-table-column
+            v-if="
+              baseInfo.orderStatus == 3 || baseInfo.orderStatus == 4 || baseInfo.orderStatus == 5
+            "
+            label="操作"
+            width="100"
+            align="center"
+            v-show="baseInfo.orderStatus"
+            fixed="right"
+          >
+            <template v-slot="scope">
+              <el-button type="text" @click="toCostOffer(scope.row)" size="small">
                 查看详情
               </el-button>
             </template>
           </el-table-column>
         </el-table>
       </div>
-      <div class="footer" v-if="baseInfo.orderStatus == 1 || baseInfo.orderStatus == 2">
+      <div class="footer" v-if="baseInfo.orderStatus == 1 && baseInfo.roleType == 1">
         <el-button @click="cancel()" class="save-btn">取消</el-button>
         <el-button
           @click="submit()"
+          :disabled="
+            (baseInfo.offerFlag == '1' && baseInfo.orderStatus == 1) ||
+            (baseInfo.auditFlag == '1' && baseInfo.orderStatus == 2)
+          "
+          class="sub-btn"
+          >提交</el-button
+        >
+      </div>
+      <div class="footer" v-if="baseInfo.orderStatus == 2">
+        <el-button @click="cancel()" class="save-btn" v-if="baseInfo.roleType == 2">取消</el-button>
+        <el-button
+          @click="submit()"
+          v-if="baseInfo.roleType == 1 || baseInfo.roleType == 2"
           :disabled="
             (baseInfo.offerFlag == '1' && baseInfo.orderStatus == 1) ||
             (baseInfo.auditFlag == '1' && baseInfo.orderStatus == 2)
@@ -346,6 +391,7 @@ export default {
   data() {
     return {
       type: '', // 表单类型
+      flagTable: false,
       labelPosition: 'right',
       // 表单验证规则
       rules: Object.freeze(formRules),
@@ -511,6 +557,7 @@ export default {
           if (res.data.enclosureAddress) {
             this.imgList = res.data.enclosureAddress.split(';')
           }
+          this.flagTable = true
         })
       })
     },

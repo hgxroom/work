@@ -970,6 +970,7 @@ export default {
         font-size: 16px;
         font-weight: bold;
         color: rgba(36, 36, 36, 1);
+        padding-left: 40px;
       }
       ul {
         margin: 0;
