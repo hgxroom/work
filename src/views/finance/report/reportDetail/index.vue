@@ -534,7 +534,9 @@ export default {
           query: {
             type: 'detail',
             quotedOrderNo: this.$route.query.quotedOrderNo,
-            clothNo: this.baseInfo.clothNo,
+            clothNo: val.clothNo,
+            component: val.component,
+            yarnName: val.pm,
           },
         })
       }

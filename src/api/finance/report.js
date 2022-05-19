@@ -307,3 +307,10 @@ export function getProductCustomerInfoByName(quotedOrderNo) {
     method: 'get',
   })
 }
+//根据纱线编号获取该纱线历史五次报价
+export function getHistoricalQuoted(yarnNo) {
+  return request({
+    url: `/system/quotedOrder/getHistoricalQuoted/${yarnNo}`,
+    method: 'get',
+  })
+}

@@ -26,7 +26,7 @@
             :show-overflow-tooltip="true"
           >
             <template v-slot="scope">
-              <div class="hostory-box">
+              <div class="hostory-box" @click="history(scope.row.yarnNo)">
                 <div>{{ scope.row.yarnNo }}</div>
                 <div class="el-icon-search font">历史纱价</div>
               </div>
@@ -40,7 +40,7 @@
           />
 
           <el-table-column
-            label="纱支比例（%）"
+            label="纱支比例(%)"
             align="left"
             prop="yarnRatio"
             :show-overflow-tooltip="true"
@@ -108,13 +108,13 @@
           </el-table-column>
 
           <el-table-column
-            label="织造损耗（%）"
+            label="织造损耗(%)"
             align="left"
             prop="weavingLoss"
             :show-overflow-tooltip="true"
           />
           <el-table-column
-            label="毛坯成本（元）"
+            label="毛坯成本(元)"
             align="center"
             prop="blankCost"
             :show-overflow-tooltip="true"
@@ -170,13 +170,13 @@
             </template>
           </el-table-column>
           <el-table-column
-            label="染整损耗"
+            label="染整损耗(元)"
             align="left"
             prop="dyeingLoss"
             :show-overflow-tooltip="true"
           />
           <el-table-column
-            label="染费"
+            label="染费(元)"
             align="center"
             prop="dyeingFee"
             :show-overflow-tooltip="true"
@@ -239,7 +239,7 @@
             :show-overflow-tooltip="true"
           />
           <el-table-column
-            label="特整损耗"
+            label="特整损耗(%)"
             align="center"
             prop="extraLoss"
             :show-overflow-tooltip="true"
@@ -363,34 +363,44 @@
     >
       <div class="box">
         <div class="basic-info">
-          <p class="info">60S 皮马棉 精梳 紧密纺+140D</p>
+          <p class="info">{{ historyYarnNo }}</p>
         </div>
         <el-table
           size="small"
-          :data="formData.data"
+          :data="historyList"
           style="width: 100%; font-size: 14px; color: #242424; bordercolor: #000"
           header-row-class-name="tableHeader"
         >
           <el-table-column label="序号" type="index" align="center" width="100px"></el-table-column>
           <el-table-column
-            v-for="(item, index) in formData.columns"
-            :key="index"
-            :label="item.label"
-            :prop="item.prop"
-            :width="item.width"
-            :align="item.align"
-          >
-            <template v-slot="scope">
-              <div>
-                {{ scope.row[item.prop] }}
-              </div>
-            </template>
-          </el-table-column>
+            label="纱线编号"
+            align="left"
+            prop="yarnNo"
+            :show-overflow-tooltip="true"
+          />
+          <el-table-column
+            label="纱价(元)"
+            align="left"
+            prop="yarnCost"
+            :show-overflow-tooltip="true"
+          />
+          <el-table-column
+            label="客户"
+            align="left"
+            prop="customerName"
+            :show-overflow-tooltip="true"
+          />
+          <el-table-column
+            label="报价时间"
+            align="left"
+            prop="quotedTime"
+            :show-overflow-tooltip="true"
+          />
         </el-table>
-        <div class="bottom-btn">
+        <!-- <div class="bottom-btn">
           <el-button class="cancel-btn" @click="handleClose">取消</el-button>
           <el-button class="sub-btn" type="primary" @click="resetQuery">确认</el-button>
-        </div>
+        </div> -->
       </div>
     </el-dialog>
   </div>
@@ -404,6 +414,7 @@ import {
   getFunctionalCommitmentByName,
   calcQuotedPrice,
   getDyeingFeeDataByJobStatus,
+  getHistoricalQuoted,
 } from '@/api/finance/report'
 export default {
   dicts: [
@@ -411,6 +422,9 @@ export default {
   ],
   data() {
     return {
+      historyYarnNo: '',
+      //历史纱价
+      historyList: [],
       yarnName: '', //品名
       component: '', //成分
       reportBtn: true, //是否能点击确认报价按钮
@@ -518,15 +532,27 @@ export default {
     this.getCheckList()
   },
   methods: {
+    //历史报价
+    history(val) {
+      getHistoricalQuoted(val).then((res) => {
+        console.log(res)
+        this.productDialogVisible = true
+        this.historyList = res.data
+        this.historyYarnNo = res.data[0].yarnName
+      })
+    },
     //计算报价
     reportCalculator() {
-      //（毛胚成本+染费+特整总成本+功能性总成本）*（1+染整损耗+特整总损耗）
+      if (this.validate()) {
+        return
+      }
+      //(毛胚成本+染费+特整总成本+功能性总成本)*(1+染整损耗+特整总损耗)
       this.reportBtn = false
       this.dyeingCostList.forEach((item, index) => {
         this.finalQuotedList.forEach((val) => {
           if (item.colorName == val.colorName) {
             val.costPrice =
-              (this.weavingCostList[0].blankCost +
+              (Number(this.weavingCostList[0].blankCost) +
                 this.dyeingCostList[index].dyeingFee +
                 this.functionCostTotal +
                 this.extraWholeCost) *
@@ -573,9 +599,6 @@ export default {
     },
     //确认报价
     submit() {
-      if (this.validate()) {
-        return
-      }
       let data = {}
       data.clothNo = this.clothNo
       data.dyeingCostDtoList = this.dyeingCostList
@@ -646,6 +669,7 @@ export default {
       if (!this.specialFinishingList) {
         this.specialFinishingList = []
       }
+      this.reportBtn = true
       this.specialFinishingList.push(params)
     },
     //添加功能性承诺
@@ -654,6 +678,7 @@ export default {
         functionalCommitmentName: '',
         laborCost: '',
       }
+      this.reportBtn = true
       this.functionCostList.push(params)
     },
     //功能性改变
@@ -661,9 +686,12 @@ export default {
       this.reportBtn = true
       let cost = 0
       //是否有重复数据
-      let Redata = this.functionCostList.find((val) => {
-        return val.functionalCommitmentName == evt && val.laborCost
-      })
+      let Redata = null
+      if (this.functionCostList.length > 1) {
+        Redata = this.functionCostList.find((val) => {
+          return val.functionalCommitmentName == evt && val.laborCost
+        })
+      }
 
       if (Redata) {
         this.functionCostList[index].functionalCommitmentName = ''
@@ -686,9 +714,12 @@ export default {
       let loss = 0
       this.reportBtn = true
       // //是否有重复数据
-      let Redata = this.specialFinishingList.find((val) => {
-        return val.processName == evt && val.laborCost
-      })
+      let Redata = null
+      if (this.specialFinishingList.length > 1) {
+        Redata = this.specialFinishingList.find((val) => {
+          return val.processName == evt && val.laborCost
+        })
+      }
 
       if (Redata) {
         this.specialFinishingList[index].processName = ''
@@ -726,22 +757,25 @@ export default {
       if (!this.yarnCostTotal) {
         return this.$message.error(`请将纱线价格填写完整`)
       }
+      Number(this.yarnCostTotal)
       this.reportBtn = true
-      this.weavingCostList[scope.$index].blankCost =
-        Number(this.weavingCostList[scope.$index].weavingFee) +
-        this.yarnCostTotal +
-        (this.yarnCostTotal * this.weavingCostList[scope.$index].weavingLoss) / 100
-      console.log(this.weavingCostList[scope.$index].blankCost)
+      let cost =
+        Number(this.weavingCostList[0].weavingFee) +
+        Number(this.yarnCostTotal) +
+        (Number(this.yarnCostTotal) * this.weavingCostList[0].weavingLoss) / 100
+      this.weavingCostList[0].blankCost = cost.toFixed(4)
     },
     //纱线价格变化
     handleCount(scope) {
       let count = 0
       this.reportBtn = true
       this.yarnCostList.forEach((val) => {
-        count = count + Number(val.yarnCost)
+        count = count + Number(val.yarnCost) * Number(val.yarnRatio / 100)
       })
-      this.yarnCostTotal = count
-      console.log(scope, this.yarnCostList)
+      this.yarnCostTotal = count.toFixed(4)
+      if (this.weavingCostList[0].blankCost) {
+        this.handleweaving()
+      }
     },
     //工艺合并单元格
     specialMethod({ row, column, rowIndex, columnIndex }) {
