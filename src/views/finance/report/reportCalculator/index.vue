@@ -69,7 +69,7 @@
             <template v-slot="scope">
               <div class="hostory-box" @click="history(scope.row.yarnNo)">
                 <div>{{ scope.row.yarnNo }}</div>
-                <div class="el-icon-search font">历史纱价</div>
+                <div v-if="type == 'edit'" class="el-icon-search font">历史纱价</div>
               </div>
             </template>
           </el-table-column>
@@ -389,7 +389,7 @@
           <el-button @click="reportCalculator" class="computed-btn">计算报价</el-button>
         </div>
       </div>
-      <div class="footer">
+      <div class="footer" v-if="type == 'edit'">
         <el-button @click="cancel" class="save-btn">取消</el-button>
         <el-button @click="submit" :disabled="reportBtn" class="sub-btn">确认报价</el-button>
       </div>

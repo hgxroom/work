@@ -681,7 +681,7 @@ export default {
         orderNum: '', // 重量
         yarnName: '', // 品名
         meterWeight: 0, // 米重
-        rawYarnVoList: [], // 纱织信息
+        rawYarnVoList: [], // 纱支信息
       }
       this.formProductData.data = []
       setTimeout(() => {

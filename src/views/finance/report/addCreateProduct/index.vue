@@ -181,7 +181,7 @@
       </div>
       <div class="card-box">
         <el-row>
-          <p class="font_h1">纱织信息</p>
+          <p class="font_h1">纱支信息</p>
           <el-form :model="formData" class="shazhi-form" :rules="formData.rules" ref="formRef">
             <el-table
               size="small"
@@ -296,7 +296,7 @@
             </el-table>
           </el-form>
           <div class="add_info" v-if="this.formData.data.length < 5 && type !== 'detail'">
-            <el-button @click="addCraft">添加纱织</el-button>
+            <el-button @click="addCraft">添加纱支</el-button>
           </div>
         </el-row>
       </div>
@@ -389,7 +389,7 @@ export default {
         widthCloth: [{ required: true, message: '请输入幅宽', trigger: ['blur', 'change'] }],
         component: [{ required: true, message: '请输入成分', trigger: ['blur', 'change'] }],
       },
-      //纱织信息
+      //纱支信息
       // yarnInfo: {
       //   yarnName: '',
       //   yarnNo: '',
@@ -397,7 +397,7 @@ export default {
       //   editFlag: false,
       //   states: 0,
       // },
-      //纱织信息
+      //纱支信息
       yarnInfo: {
         yarnName: '',
         yarnNo: '',
@@ -517,7 +517,7 @@ export default {
       this.baseInfo.loomSpecification = item.loomType
       this.baseInfo.functionName = item.functionName
       this.baseInfo.specialProcessName = item.specialProcessName
-      //纱织信息
+      //纱支信息
       if (item.quotationYarnVoList) {
         let list = []
         item.quotationYarnVoList.forEach((val) => {
@@ -649,9 +649,9 @@ export default {
           this.onCancel()
         })
       } else if (this.formData.data.length == 0) {
-        this.$message.error('请添加纱织信息！')
+        this.$message.error('请添加纱支信息！')
       } else {
-        this.$message.error('请填选正确的纱织信息比例！')
+        this.$message.error('请填选正确的纱支信息比例！')
       }
     },
     onCancel() {
@@ -666,7 +666,7 @@ export default {
       this.formData.data.splice(index, 1)
       console.log(this.formData.data)
     },
-    //添加纱织
+    //添加纱支
     addCraft() {
       for (const i of this.formData.data) {
         if (i.editFlag) return this.$message.warning('请先保存当前编辑项')
@@ -676,7 +676,7 @@ export default {
         this.formData.data.push(data)
         this.formData.sel = data
       } else {
-        this.$message.error('纱织信息最多只能新增5条！')
+        this.$message.error('纱支信息最多只能新增5条！')
       }
     },
     // validatorNumber(rule, value, callback) {
