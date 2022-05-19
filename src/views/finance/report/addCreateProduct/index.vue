@@ -214,8 +214,27 @@
                       trigger: 'blur',
                     }"
                   >
+                    <el-select
+                      v-model="formData.sel[val.prop]"
+                      filterable
+                      remote
+                      placeholder="请输入关键词"
+                      :remote-method="val.prop == 'yarnName' ? yarnNameMethod : yarnNoMethod"
+                      :loading="loading"
+                      @change="
+                        handleSelect(val.prop == 'yarnName' ? 'yarnName' : 'yarnNo', $event, scope)
+                      "
+                    >
+                      <el-option
+                        v-for="item in options"
+                        :key="val.prop == 'yarnName' ? item.wlmch : item.wlbh"
+                        :label="val.prop == 'yarnName' ? item.wlmch : item.wlbh"
+                        :value="val.prop == 'yarnName' ? item.wlmch : item.wlbh"
+                      >
+                      </el-option>
+                    </el-select>
                     <!-- 搜索框 -->
-                    <el-autocomplete
+                    <!-- <el-autocomplete
                       v-model="formData.sel[val.prop]"
                       :fetch-suggestions="val.prop == 'yarnName' ? queryName : queryName2"
                       placeholder="请输入内容"
@@ -224,7 +243,7 @@
                       <template slot-scope="{ item }">
                         <div>{{ val.prop == 'yarnName' ? item.wlmch : item.wlbh }}</div>
                       </template>
-                    </el-autocomplete>
+                    </el-autocomplete> -->
                     <!-- <el-input size="small" placeholder="请输入内容" v-model="formData.sel[item.prop]">
                 </el-input> -->
                   </el-form-item>
@@ -442,7 +461,8 @@ export default {
       rules: _.cloneDeep(formRules),
 
       componentList: [],
-
+      loading: false,
+      options: [],
       componentDialogVisible: false,
       labelPosition: 'right',
       baseInfo: {
@@ -482,6 +502,42 @@ export default {
   },
 
   methods: {
+    yarnNameMethod(query) {
+      if (query !== '') {
+        this.loading = true
+        let data = {
+          wlmch: query,
+        }
+        clearTimeout(this.timeout)
+        this.timeout = setTimeout(() => {
+          getRawYarnInfoList(data).then((res) => {
+            // cb(res.data)
+            this.options = res.data
+            this.loading = false
+          })
+        }, 700)
+      } else {
+        this.options = []
+      }
+    },
+    yarnNoMethod(query) {
+      if (query !== '') {
+        this.loading = true
+        let data = {
+          wlbh: query,
+        }
+        clearTimeout(this.timeout)
+        this.timeout = setTimeout(() => {
+          getRawYarnInfoList(data).then((res) => {
+            // cb(res.data)
+            this.options = res.data
+            this.loading = false
+          })
+        }, 700)
+      } else {
+        this.options = []
+      }
+    },
     //详情通过id初始化
     getDetailById(data) {
       getBuildProductById(data).then((res) => {
@@ -725,10 +781,42 @@ export default {
      * 点选客户名称事件
      * @param {*} item 选择的客户名称
      */
-    handleSelect(item) {
-      console.log(item, this.formData.sel)
-      this.formData.sel.yarnName = item.wlmch
-      this.formData.sel.yarnNo = item.wlbh
+    handleSelect(type, evt, scope) {
+      //去重
+      if (type == 'yarnName') {
+        let data = this.formData.data.find((val) => {
+          return val.yarnName == evt && val.yarnNo
+        })
+        if (data) {
+          this.formData.data[scope.$index].yarnName = ''
+          this.formData.sel.yarnName = ''
+          return this.$message.error('不能选择相同数据')
+        }
+      }
+      //去重
+      if (type == 'yarnNo') {
+        let data = this.formData.data.find((val) => {
+          return val.yarnNo == evt && val.yarnName
+        })
+        if (data) {
+          this.formData.data[scope.$index].yarnNo = ''
+          this.formData.sel.yarnNo = ''
+          return this.$message.error('不能选择相同数据')
+        }
+      }
+
+      this.options.forEach((val) => {
+        if (type == 'yarnName' && this.formData.sel.yarnName == val.wlmch) {
+          this.formData.sel.yarnNo = val.wlbh
+        }
+        if (type == 'yarnNo' && this.formData.sel.yarnNo == val.wlbh) {
+          this.formData.sel.yarnName = val.wlmch
+        }
+        this.options = []
+      })
+    },
+    blur(evt) {
+      console.log(evt, this.formData.sel)
     },
     saveRow(row, index) {
       console.log(row)

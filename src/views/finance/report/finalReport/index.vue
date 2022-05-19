@@ -480,10 +480,11 @@ export default {
         case '元/米':
           this.labelList.forEach((element) => {
             this.datalist[index][element.key] = (
-              this.datalist[0][element.key] *
-              this.reportData.meterWeight *
-              (1 + this.datalist[index].interestRate / 100) *
-              this.reportData.weightFactor
+              (this.datalist[0][element.key] *
+                this.reportData.meterWeight *
+                (1 + this.datalist[index].interestRate / 100) *
+                this.reportData.weightFactor) /
+              1000
             ).toFixed(4)
           })
           break
