@@ -22,6 +22,7 @@
               <el-input
                 v-if="!(scope.$index === 0)"
                 size="small"
+                type="number"
                 class="numrule"
                 placeholder="请输入内容"
                 @change="handleCount(scope)"
@@ -350,6 +351,16 @@ export default {
   methods: {
     //选中
     handlecheck(scope) {
+      let num = 0
+      this.datalist.forEach((val) => {
+        if (val.choiceflag) {
+          num = num + 1
+        }
+      })
+      if (num > 3) {
+        this.$message.error('最终报价最多只能选择三个！')
+        this.datalist[scope.$index].choiceflag = false
+      }
       console.log(scope)
     },
     //提交
@@ -448,7 +459,7 @@ export default {
               this.datalist[0][element.key] *
               (1 + this.datalist[index].interestRate / 100) *
               this.reportData.weightFactor
-            ).toFixed(2)
+            ).toFixed(4)
           })
           break
         case '元/米':
@@ -458,7 +469,7 @@ export default {
               this.reportData.meterWeight *
               (1 + this.datalist[index].interestRate / 100) *
               this.reportData.weightFactor
-            ).toFixed(2)
+            ).toFixed(4)
           })
           break
 
@@ -470,7 +481,7 @@ export default {
                 this.reportData.exchangeRate) *
               (1 + this.datalist[index].interestRate / 100) *
               this.reportData.weightFactor
-            ).toFixed(2)
+            ).toFixed(4)
           })
           break
         case '美元/磅':
@@ -482,7 +493,7 @@ export default {
                 2.2046) *
               (1 + this.datalist[index].interestRate / 100) *
               this.reportData.weightFactor
-            ).toFixed(2)
+            ).toFixed(4)
           })
           break
         case '美元/码':
@@ -496,7 +507,7 @@ export default {
               0.9144 *
               (1 + this.datalist[index].interestRate / 100) *
               this.reportData.weightFactor
-            ).toFixed(2)
+            ).toFixed(4)
           })
           break
         default:
@@ -885,6 +896,7 @@ export default {
 }
 ::v-deep.numrule input[type='number'] {
   -moz-appearance: textfield;
+  text-align: center;
 }
 .el-divider {
   background-color: rgba(243, 243, 243, 1);

@@ -2,9 +2,16 @@
 <template>
   <div class="app-container">
     <!-- 搜索栏 -->
+    <!-- 搜索和筛选栏 -->
     <el-row>
-      <el-col :span="18">
-        <el-form :model="queryParams" ref="queryForm" label-width="90px" :inline="true">
+      <el-col style="width: calc(100% - 224px)">
+        <el-form
+          class="base-form"
+          :model="queryParams"
+          ref="queryForm"
+          label-width="90px"
+          :inline="true"
+        >
           <el-form-item label="布号">
             <el-input
               v-model="queryParams.newClothNo"
@@ -43,15 +50,12 @@
           </el-form-item>
         </el-form>
       </el-col>
-      <el-col :span="6">
-        <el-form :inline="true">
-          <el-form-item>
-            <el-button type="primary" @click="handleQueryBtn">查询</el-button>
-          </el-form-item>
-          <el-button icon="el-icon-refresh" @click="resetQuery">重置</el-button>
-        </el-form>
+      <el-col style="width: 224px">
+        <el-button type="primary" @click="handleQueryBtn">查询</el-button>
+        <el-button icon="el-icon-refresh" @click="resetQuery">重置</el-button>
       </el-col>
     </el-row>
+
     <el-row>
       <el-col :span="12">
         <el-button style="color: #fff" @click="addProduct" class="add-btn">新增</el-button>
@@ -415,5 +419,24 @@ export default {
 }
 .tab-div:last-child {
   border-bottom: none;
+}
+.base-form {
+  display: flex;
+  flex-wrap: wrap;
+  .el-form-item {
+    min-width: 180px;
+    width: calc(30% - 40px);
+    margin-right: 40px;
+  }
+  ::v-deep .el-form-item__content {
+    width: calc(100% - 90px);
+  }
+
+  ::v-deep .el-range-editor.el-input__inner {
+    width: 100%;
+  }
+  ::v-deep .el-select {
+    width: 100%;
+  }
 }
 </style>
