@@ -15,11 +15,12 @@
           <el-form-item label="客户" prop="customerName">
             <!-- 搜索框 -->
             <el-autocomplete
-              v-model="baseInfo.customerName"
+              v-model.trim="baseInfo.customerName"
               :fetch-suggestions="queryName"
               placeholder="请输入客户名称"
               :trigger-on-focus="false"
               @select="handleSelect"
+              class="auto-prop"
               style="width: 100%"
             >
               <template slot-scope="{ item }">
@@ -50,6 +51,7 @@
               v-model="baseInfo.productApplication"
               placeholder="请输入成品用途"
               :clearable="type == 'detail' ? false : true"
+              class="auto-prop"
               :class="[type == 'detail' ? 'input-detail' : '']"
             ></el-input>
           </el-form-item>
@@ -68,7 +70,7 @@
           </el-form-item>
         </el-form>
         <div class="upload-img">
-          <div style="width: 90px; text-align: right; padding-right: 12px">上传图片</div>
+          <div style="width: 90px; text-align: right; padding-right: 12px">附件</div>
           <div class="flex">
             <el-upload
               :action="uploadUrl"
@@ -510,9 +512,12 @@ export default {
           }
           item.colorName = []
           item.colorName = colorArray
-          item.functionName = item.functionName.split(',')
-          item.specialProcessName = item.specialProcessName.split(',')
-          // console.log(item, colorArray)
+          if (item.functionName) {
+            item.functionName = item.functionName.split(',')
+          }
+          if (item.specialProcessName) {
+            item.specialProcessName = item.specialProcessName.split(',')
+          }
         })
         this.baseInfo = res.data
         this.formData.data = this.baseInfo.productList
@@ -601,11 +606,13 @@ export default {
         referenceClothNo: queryString,
       }
       clearTimeout(this.timeout)
-      this.timeout = setTimeout(() => {
-        getFabricQuotationByBh(data).then((res) => {
-          cb(res.data)
-        })
-      }, 500)
+      if (queryString.length >= 6) {
+        this.timeout = setTimeout(() => {
+          getFabricQuotationByBh(data).then((res) => {
+            cb(res.data)
+          })
+        }, 700)
+      }
     },
     //选择布类
     handleSelectClothType(item) {
@@ -1051,6 +1058,18 @@ export default {
   white-space: nowrap;
   text-overflow: ellipsis;
   -o-text-overflow: ellipsis; /* for Opera */
+}
+.auto-prop {
+  ::v-deep .el-input {
+    .el-input__inner {
+      width: 280px;
+    }
+  }
+}
+.auto-prop {
+  ::v-deep .el-input__inner {
+    width: 280px;
+  }
 }
 </style>
 <style>
