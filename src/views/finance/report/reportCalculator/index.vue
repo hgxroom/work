@@ -569,7 +569,7 @@ export default {
     this.component = this.$route.query.component
     this.yarnName = this.$route.query.yarnName
     const obj = Object.assign({}, this.$route, {
-      title: `销售报价`,
+      title: `成本报价`,
     })
     if (this.type == 'detail') {
       obj.meta.title = '报价详情'
