@@ -229,13 +229,14 @@
             >
               <template v-slot="scope">
                 <div v-for="(item, index) in scope.row.finalQuotedPrice1" :key="index">
-                  {{ item }} {{ baseInfo.settlementMethod }}
+                  {{ item }}
                 </div>
               </template>
             </el-table-column>
             <el-table-column label="利润率1(%)" width="120" :key="Math.random()">
               <template v-slot="scope">
-                <div v-for="(item, index) in scope.row.interestRate1" :key="index">{{ item }}</div>
+                <div style="padding-left: 24px">{{ scope.row.interestRate1[0] || '-' }}</div>
+                <!-- <div v-for="(item, index) in scope.row.interestRate1" :key="index">{{ item }}</div> -->
               </template>
             </el-table-column>
             <el-table-column
@@ -245,13 +246,14 @@
             >
               <template v-slot="scope">
                 <div v-for="(item, index) in scope.row.finalQuotedPrice2" :key="index">
-                  {{ item }} {{ baseInfo.settlementMethod }}
+                  {{ item }}
                 </div>
               </template>
             </el-table-column>
             <el-table-column label="利润率2(%)" width="120" :key="Math.random()">
               <template v-slot="scope">
-                <div v-for="(item, index) in scope.row.interestRate2" :key="index">{{ item }}</div>
+                <div style="padding-left: 24px">{{ scope.row.interestRate2[0] || '-' }}</div>
+                <!-- <div v-for="(item, index) in scope.row.interestRate2" :key="index">{{ item }}</div> -->
               </template>
             </el-table-column>
             <el-table-column
@@ -261,13 +263,14 @@
             >
               <template v-slot="scope">
                 <div v-for="(item, index) in scope.row.finalQuotedPrice3" :key="index">
-                  {{ item }} {{ baseInfo.settlementMethod }}
+                  {{ item }}
                 </div>
               </template>
             </el-table-column>
             <el-table-column label="利润率3(%)" width="120" :key="Math.random()">
               <template v-slot="scope">
-                <div v-for="(item, index) in scope.row.interestRate3" :key="index">{{ item }}</div>
+                <div style="padding-left: 24px">{{ scope.row.interestRate3[0] || '-' }}</div>
+                <!-- <div v-for="(item, index) in scope.row.interestRate3" :key="index">{{ item }}</div> -->
               </template>
             </el-table-column>
           </template>
