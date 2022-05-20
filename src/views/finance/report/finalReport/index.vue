@@ -190,8 +190,8 @@
           </el-table-column>
           <el-table-column label="利润率(%)" width="90px">
             <template v-slot="scope">
-              <div v-for="(item, index) in scope.row.quotedOrderPriceVoList" :key="index">
-                {{ item.interestRate2 }}
+              <div>
+                {{ scope.row.quotedOrderPriceVoList[0].interestRate2 }}
               </div>
             </template>
           </el-table-column>
@@ -210,8 +210,8 @@
           </el-table-column>
           <el-table-column label="利润率(%)" width="90px">
             <template v-slot="scope">
-              <div v-for="(item, index) in scope.row.quotedOrderPriceVoList" :key="index">
-                {{ item.interestRate3 }}
+              <div>
+                {{ scope.row.quotedOrderPriceVoList[0].interestRate3 }}
               </div>
             </template>
           </el-table-column>
