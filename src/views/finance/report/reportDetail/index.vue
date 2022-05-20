@@ -218,7 +218,12 @@
             v-if="baseInfo.roleType == 1 || baseInfo.roleType == 2"
           >
             <template v-slot="scope">
-              <div v-for="(item, index) in scope.row.costPrice" :key="index">{{ item }}</div>
+              <div v-if="baseInfo.orderStatus > 1 && baseInfo.roleType !== 1">
+                <div v-for="(item, index) in scope.row.costPrice" :key="index">{{ item }}</div>
+              </div>
+              <div v-if="baseInfo.orderStatus == 1 || baseInfo.roleType == 1">
+                <div v-for="(item, index) in scope.row.costPrice" :key="index">{{ item }}</div>
+              </div>
             </template>
           </el-table-column>
           <template v-if="baseInfo.orderStatus !== 1">
@@ -228,14 +233,26 @@
               :key="Math.random()"
             >
               <template v-slot="scope">
-                <div v-for="(item, index) in scope.row.finalQuotedPrice1" :key="index">
-                  {{ item }}
+                <div v-if="baseInfo.orderStatus == 3">
+                  <div v-for="(item, index) in scope.row.finalQuotedPrice1" :key="index">
+                    {{ item }}
+                  </div>
+                </div>
+                <div v-if="baseInfo.orderStatus == 2 && baseInfo.roleType == 2">
+                  <div v-for="(item, index) in scope.row.finalQuotedPrice1" :key="index">
+                    {{ item }}
+                  </div>
                 </div>
               </template>
             </el-table-column>
             <el-table-column label="利润率1(%)" width="120" :key="Math.random()">
               <template v-slot="scope">
-                <div style="padding-left: 24px">{{ scope.row.interestRate1[0] || '-' }}</div>
+                <div v-if="baseInfo.orderStatus == 3">
+                  <div style="padding-left: 24px">{{ scope.row.interestRate1[0] || '-' }}</div>
+                </div>
+                <div v-if="baseInfo.orderStatus == 2 && baseInfo.roleType == 2">
+                  <div style="padding-left: 24px">{{ scope.row.interestRate1[0] || '-' }}</div>
+                </div>
                 <!-- <div v-for="(item, index) in scope.row.interestRate1" :key="index">{{ item }}</div> -->
               </template>
             </el-table-column>
@@ -245,14 +262,26 @@
               :key="Math.random()"
             >
               <template v-slot="scope">
-                <div v-for="(item, index) in scope.row.finalQuotedPrice2" :key="index">
-                  {{ item }}
+                <div v-if="baseInfo.orderStatus == 3">
+                  <div v-for="(item, index) in scope.row.finalQuotedPrice2" :key="index">
+                    {{ item }}
+                  </div>
+                </div>
+                <div v-if="baseInfo.orderStatus == 2 && baseInfo.roleType == 2">
+                  <div v-for="(item, index) in scope.row.finalQuotedPrice2" :key="index">
+                    {{ item }}
+                  </div>
                 </div>
               </template>
             </el-table-column>
             <el-table-column label="利润率2(%)" width="120" :key="Math.random()">
               <template v-slot="scope">
-                <div style="padding-left: 24px">{{ scope.row.interestRate2[0] || '-' }}</div>
+                <div v-if="baseInfo.orderStatus == 3">
+                  <div style="padding-left: 24px">{{ scope.row.interestRate2[0] || '-' }}</div>
+                </div>
+                <div v-if="baseInfo.orderStatus == 2 && baseInfo.roleType == 2">
+                  <div style="padding-left: 24px">{{ scope.row.interestRate2[0] || '-' }}</div>
+                </div>
                 <!-- <div v-for="(item, index) in scope.row.interestRate2" :key="index">{{ item }}</div> -->
               </template>
             </el-table-column>
@@ -262,14 +291,26 @@
               :key="Math.random()"
             >
               <template v-slot="scope">
-                <div v-for="(item, index) in scope.row.finalQuotedPrice3" :key="index">
-                  {{ item }}
+                <div v-if="baseInfo.orderStatus == 3">
+                  <div v-for="(item, index) in scope.row.finalQuotedPrice3" :key="index">
+                    {{ item }}
+                  </div>
+                </div>
+                <div v-if="baseInfo.orderStatus == 2 && baseInfo.roleType == 2">
+                  <div v-for="(item, index) in scope.row.finalQuotedPrice3" :key="index">
+                    {{ item }}
+                  </div>
                 </div>
               </template>
             </el-table-column>
             <el-table-column label="利润率3(%)" width="120" :key="Math.random()">
               <template v-slot="scope">
-                <div style="padding-left: 24px">{{ scope.row.interestRate3[0] || '-' }}</div>
+                <div v-if="baseInfo.orderStatus == 3">
+                  <div style="padding-left: 24px">{{ scope.row.interestRate3[0] || '-' }}</div>
+                </div>
+                <div v-if="baseInfo.orderStatus == 2 && baseInfo.roleType == 2">
+                  <div style="padding-left: 24px">{{ scope.row.interestRate3[0] || '-' }}</div>
+                </div>
                 <!-- <div v-for="(item, index) in scope.row.interestRate3" :key="index">{{ item }}</div> -->
               </template>
             </el-table-column>
@@ -282,17 +323,32 @@
             v-if="baseInfo.orderStatus !== 1 && baseInfo.orderStatus !== 0"
           >
             <template v-slot="scope">
-              <el-popover
-                trigger="hover"
-                placement="top"
-                popper-class="popper-class"
-                :visible-arrow="false"
-              >
-                <p style="max-width: 600px; margin: 0">{{ scope.row.quotationStrategy }}</p>
-                <div slot="reference" class="content-colum">
-                  {{ scope.row.quotationStrategy }}
-                </div>
-              </el-popover>
+              <div v-if="baseInfo.orderStatus == 3">
+                <el-popover
+                  trigger="hover"
+                  placement="top"
+                  popper-class="popper-class"
+                  :visible-arrow="false"
+                >
+                  <p style="max-width: 600px; margin: 0">{{ scope.row.quotationStrategy }}</p>
+                  <div slot="reference" class="content-colum">
+                    {{ scope.row.quotationStrategy }}
+                  </div>
+                </el-popover>
+              </div>
+              <div v-if="baseInfo.orderStatus == 2 && baseInfo.roleType == 2">
+                <el-popover
+                  trigger="hover"
+                  placement="top"
+                  popper-class="popper-class"
+                  :visible-arrow="false"
+                >
+                  <p style="max-width: 600px; margin: 0">{{ scope.row.quotationStrategy }}</p>
+                  <div slot="reference" class="content-colum">
+                    {{ scope.row.quotationStrategy }}
+                  </div>
+                </el-popover>
+              </div>
             </template>
           </el-table-column>
           <el-table-column
