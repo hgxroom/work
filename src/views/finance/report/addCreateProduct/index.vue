@@ -259,7 +259,7 @@
                     <el-input
                       size="small"
                       class="numrule"
-                      onkeyup="value=value.replace(/\D/g, '').replace(/^0{1,}/g, '')"
+                      @change="RatioChange($event)"
                       placeholder="请输入内容"
                       :type="val.type"
                       v-model="formData.sel[val.prop]"
@@ -502,6 +502,12 @@ export default {
   },
 
   methods: {
+    //比例改变
+    RatioChange(evt) {
+      if (Number(evt) === 0) {
+        this.formData.sel.yarnRatio = ''
+      }
+    },
     yarnNameMethod(query) {
       if (query !== '') {
         this.loading = true
@@ -819,10 +825,6 @@ export default {
       console.log(evt, this.formData.sel)
     },
     saveRow(row, index) {
-      console.log(row)
-      if (row.yarnRatio == '0') {
-        this.formData.sel.yarnRatio = ''
-      }
       // 保存
       this.$refs['formRef'].validate((valid) => {
         if (valid) {

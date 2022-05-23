@@ -139,7 +139,7 @@
               </div>
             </template>
           </el-table-column>
-          <el-table-column label="纱线比例" width="100">
+          <el-table-column label="纱线比例(%)" width="100">
             <template v-slot="scope">
               <div
                 class="tab-div tab-divline2"

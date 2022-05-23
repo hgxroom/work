@@ -4,27 +4,18 @@
     :class="{ collapse: collapse }"
     :style="{
       backgroundColor:
-        sideTheme === 'theme-dark'
-          ? variables.menuBackground
-          : variables.menuLightBackground,
+        sideTheme === 'theme-dark' ? variables.menuBackground : variables.menuLightBackground,
     }"
   >
     <transition name="sidebarLogoFade">
-      <router-link
-        v-if="collapse"
-        key="collapse"
-        class="sidebar-logo-link"
-        to="/"
-      >
+      <router-link v-if="collapse" key="collapse" class="sidebar-logo-link" to="/">
         <img v-if="logo" :src="logo" class="sidebar-logo" />
         <h1
           v-else
           class="sidebar-title"
           :style="{
             color:
-              sideTheme === 'theme-dark'
-                ? variables.logoTitleColor
-                : variables.logoLightTitleColor,
+              sideTheme === 'theme-dark' ? variables.logoTitleColor : variables.logoLightTitleColor,
           }"
         >
           {{ title }}
@@ -36,9 +27,7 @@
           class="sidebar-title"
           :style="{
             color:
-              sideTheme === 'theme-dark'
-                ? variables.logoTitleColor
-                : variables.logoLightTitleColor,
+              sideTheme === 'theme-dark' ? variables.logoTitleColor : variables.logoLightTitleColor,
           }"
         >
           {{ title }}
@@ -49,11 +38,11 @@
 </template>
 
 <script>
-import logoImg from "@/assets/logo/logo.png";
-import variables from "@/assets/styles/variables.scss";
+import logoImg from '@/assets/logo/logo.png'
+import variables from '@/assets/styles/variables.scss'
 
 export default {
-  name: "SidebarLogo",
+  name: 'SidebarLogo',
   props: {
     collapse: {
       type: Boolean,
@@ -62,19 +51,19 @@ export default {
   },
   computed: {
     variables() {
-      return variables;
+      return variables
     },
     sideTheme() {
-      return this.$store.state.settings.sideTheme;
+      return this.$store.state.settings.sideTheme
     },
   },
   data() {
     return {
-      title: "管理系统",
+      title: '引鹿客户管理系统',
       logo: logoImg,
-    };
+    }
   },
-};
+}
 </script>
 
 <style lang="scss" scoped>

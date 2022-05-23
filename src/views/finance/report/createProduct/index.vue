@@ -63,7 +63,13 @@
       <el-col :span="12" style="text-align: right"></el-col>
     </el-row>
     <!-- 列表 -->
-    <el-table :data="listData" ref="customerList" style="width: 100%" :row-style="rowstyle">
+    <el-table
+      :data="listData"
+      ref="customerList"
+      style="width: 100%"
+      :max-height="500"
+      :row-style="rowstyle"
+    >
       <el-table-column label="序号" align="center" width="60px">
         <template v-slot="scope">
           {{ (pageNum - 1) * pageSize + scope.$index + 1 }}

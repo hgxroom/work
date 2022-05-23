@@ -100,7 +100,7 @@
               </div>
             </template>
           </el-table-column>
-          <el-table-column label="纱线编号">
+          <el-table-column label="纱线编号" width="120px">
             <template v-slot="scope">
               <div v-for="(item, index) in scope.row.quotedOrderYarnCostList" :key="index">
                 {{ item.newClothNo }}
@@ -109,11 +109,23 @@
           </el-table-column>
           <el-table-column label="纱线品名">
             <template v-slot="scope">
-              <div v-for="(item, index) in scope.row.quotedOrderYarnCostList" :key="index">
+              <div
+                class="tab-div"
+                v-for="(item, index) in scope.row.quotedOrderYarnCostList"
+                :key="index"
+                :title="item.yarnName"
+              >
                 {{ item.yarnName }}
               </div>
             </template>
           </el-table-column>
+          <!-- <el-table-column label="纱线品名">
+            <template v-slot="scope">
+              <div v-for="(item, index) in scope.row.quotedOrderYarnCostList" :key="index">
+                {{ item.yarnName }}
+              </div>
+            </template>
+          </el-table-column> -->
           <el-table-column label="纱线价格">
             <template v-slot="scope">
               <div v-for="(item, index) in scope.row.quotedOrderYarnCostList" :key="index">
@@ -123,57 +135,83 @@
           </el-table-column>
           <el-table-column label="颜色">
             <template v-slot="scope">
-              <div v-for="(item, index) in scope.row.quotedOrderPriceVoList" :key="index">
+              <div
+                class="tab-div"
+                v-for="(item, index) in scope.row.quotedOrderPriceVoList"
+                :key="index"
+              >
                 {{ item.colorName }}
               </div>
             </template>
           </el-table-column>
           <el-table-column label="成本价(元/kg)" width="110px">
             <template v-slot="scope">
-              <div v-for="(item, index) in scope.row.quotedOrderPriceVoList" :key="index">
+              <div
+                class="tab-div"
+                v-for="(item, index) in scope.row.quotedOrderPriceVoList"
+                :key="index"
+              >
                 {{ item.costPrice }}
               </div>
             </template>
           </el-table-column>
           <el-table-column :label="'销售报价1' + settlementMethod" width="130px">
             <template v-slot="scope">
-              <div v-for="(item, index) in scope.row.quotedOrderPriceVoList" :key="index">
-                {{ item.finalQuotedPrice1 }}
+              <div
+                class="tab-div"
+                v-for="(item, index) in scope.row.quotedOrderPriceVoList"
+                :key="index"
+              >
+                {{
+                  item.finalQuotedPrice1 ? item.finalQuotedPrice3 + scope.row.settlementMethod : ''
+                }}
               </div>
             </template>
           </el-table-column>
-          <el-table-column label="利润率(%)">
+          <el-table-column label="利润率(%)" width="90px">
             <template v-slot="scope">
-              <div v-for="(item, index) in scope.row.quotedOrderPriceVoList" :key="index">
-                {{ item.interestRate1 }}
+              <div>
+                {{ scope.row.quotedOrderPriceVoList[0].interestRate1 }}
               </div>
             </template>
           </el-table-column>
           <el-table-column :label="'销售报价2' + settlementMethod" width="130px">
             <template v-slot="scope">
-              <div v-for="(item, index) in scope.row.quotedOrderPriceVoList" :key="index">
-                {{ item.finalQuotedPrice2 }}
+              <div
+                class="tab-div"
+                v-for="(item, index) in scope.row.quotedOrderPriceVoList"
+                :key="index"
+              >
+                {{
+                  item.finalQuotedPrice2 ? item.finalQuotedPrice3 + scope.row.settlementMethod : ''
+                }}
               </div>
             </template>
           </el-table-column>
-          <el-table-column label="利润率(%)">
+          <el-table-column label="利润率(%)" width="90px">
             <template v-slot="scope">
-              <div v-for="(item, index) in scope.row.quotedOrderPriceVoList" :key="index">
-                {{ item.interestRate2 }}
+              <div>
+                {{ scope.row.quotedOrderPriceVoList[0].interestRate2 }}
               </div>
             </template>
           </el-table-column>
           <el-table-column :label="'销售报价3' + settlementMethod" width="130px">
             <template v-slot="scope">
-              <div v-for="(item, index) in scope.row.quotedOrderPriceVoList" :key="index">
-                {{ item.finalQuotedPrice3 }}
+              <div
+                class="tab-div"
+                v-for="(item, index) in scope.row.quotedOrderPriceVoList"
+                :key="index"
+              >
+                {{
+                  item.finalQuotedPrice3 ? item.finalQuotedPrice3 + scope.row.settlementMethod : ''
+                }}
               </div>
             </template>
           </el-table-column>
-          <el-table-column label="利润率(%)">
+          <el-table-column label="利润率(%)" width="90px">
             <template v-slot="scope">
-              <div v-for="(item, index) in scope.row.quotedOrderPriceVoList" :key="index">
-                {{ item.interestRate3 }}
+              <div>
+                {{ scope.row.quotedOrderPriceVoList[0].interestRate3 }}
               </div>
             </template>
           </el-table-column>
@@ -247,12 +285,14 @@ export default {
             label: '报价时间',
             align: 'left',
             type: 'text',
+            width: '160px',
             prop: 'createTime',
           },
           {
             label: '布号',
             align: 'left',
             type: 'text',
+            width: '140px',
             prop: 'clothNo',
           },
           {
@@ -272,7 +312,7 @@ export default {
             label: '订单时间',
             align: 'left',
             type: 'text',
-            prop: 'bzrq',
+            prop: 'bzhrq',
           },
           {
             label: '订单号',
@@ -917,5 +957,24 @@ export default {
 }
 .el-divider {
   background-color: rgba(243, 243, 243, 1);
+}
+.tab-div {
+  border-bottom: 1px solid #dfe6ec;
+  margin: 0 -10px;
+  padding: 8px 10px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.tab-divline {
+  padding-left: 0;
+  margin-left: 0px;
+}
+.tab-divline2 {
+  padding-right: 0;
+  margin-right: 0px;
+}
+.tab-div:last-child {
+  border-bottom: none;
 }
 </style>

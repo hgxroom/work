@@ -153,8 +153,8 @@
 </template>
 
 <script>
-import { getReportList, getStatusNum } from '@/api/finance/report'
-import { getPlanVisitDeptList } from '@/api/customer/visitPlanList'
+import { getReportList, getStatusNum, getdeptList } from '@/api/finance/report'
+
 export default {
   data() {
     return {
@@ -295,7 +295,7 @@ export default {
     },
     //获取部门字典
     getDeptList() {
-      getPlanVisitDeptList().then((res) => {
+      getdeptList().then((res) => {
         this.deptsList = res.data.secondarySector
       })
     },

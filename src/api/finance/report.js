@@ -314,3 +314,12 @@ export function getHistoricalQuoted(yarnNo) {
     method: 'get',
   })
 }
+/**
+ * 获取部门信息
+ */
+export function getdeptList() {
+  return request({
+    url: `/system/quotedOrder/deptList`,
+    method: 'get',
+  })
+}
