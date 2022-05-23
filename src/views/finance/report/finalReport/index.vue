@@ -102,8 +102,12 @@
           </el-table-column>
           <el-table-column label="纱线编号" width="120px">
             <template v-slot="scope">
-              <div v-for="(item, index) in scope.row.quotedOrderYarnCostList" :key="index">
-                {{ item.newClothNo }}
+              <div
+                class="tab-div"
+                v-for="(item, index) in scope.row.quotedOrderYarnCostList"
+                :key="index"
+              >
+                {{ item.yarnNo }}
               </div>
             </template>
           </el-table-column>
@@ -128,7 +132,11 @@
           </el-table-column> -->
           <el-table-column label="纱线价格">
             <template v-slot="scope">
-              <div v-for="(item, index) in scope.row.quotedOrderYarnCostList" :key="index">
+              <div
+                class="tab-div"
+                v-for="(item, index) in scope.row.quotedOrderYarnCostList"
+                :key="index"
+              >
                 {{ item.yarnCost }}
               </div>
             </template>
@@ -160,15 +168,18 @@
               <div
                 class="tab-div"
                 v-for="(item, index) in scope.row.quotedOrderPriceVoList"
+                :title="
+                  item.finalQuotedPrice1 ? item.finalQuotedPrice1 + scope.row.settlementMethod : ''
+                "
                 :key="index"
               >
                 {{
-                  item.finalQuotedPrice1 ? item.finalQuotedPrice3 + scope.row.settlementMethod : ''
+                  item.finalQuotedPrice1 ? item.finalQuotedPrice1 + scope.row.settlementMethod : ''
                 }}
               </div>
             </template>
           </el-table-column>
-          <el-table-column label="利润率(%)" width="90px">
+          <el-table-column label="利润率(%)" width="90px" align="center">
             <template v-slot="scope">
               <div>
                 {{ scope.row.quotedOrderPriceVoList[0].interestRate1 }}
@@ -179,16 +190,19 @@
             <template v-slot="scope">
               <div
                 class="tab-div"
+                :title="
+                  item.finalQuotedPrice2 ? item.finalQuotedPrice2 + scope.row.settlementMethod : ''
+                "
                 v-for="(item, index) in scope.row.quotedOrderPriceVoList"
                 :key="index"
               >
                 {{
-                  item.finalQuotedPrice2 ? item.finalQuotedPrice3 + scope.row.settlementMethod : ''
+                  item.finalQuotedPrice2 ? item.finalQuotedPrice2 + scope.row.settlementMethod : ''
                 }}
               </div>
             </template>
           </el-table-column>
-          <el-table-column label="利润率(%)" width="90px">
+          <el-table-column label="利润率(%)" width="90px" align="center">
             <template v-slot="scope">
               <div>
                 {{ scope.row.quotedOrderPriceVoList[0].interestRate2 }}
@@ -200,6 +214,9 @@
               <div
                 class="tab-div"
                 v-for="(item, index) in scope.row.quotedOrderPriceVoList"
+                :title="
+                  item.finalQuotedPrice3 ? item.finalQuotedPrice3 + scope.row.settlementMethod : ''
+                "
                 :key="index"
               >
                 {{
@@ -208,7 +225,7 @@
               </div>
             </template>
           </el-table-column>
-          <el-table-column label="利润率(%)" width="90px">
+          <el-table-column label="利润率(%)" width="90px" align="center">
             <template v-slot="scope">
               <div>
                 {{ scope.row.quotedOrderPriceVoList[0].interestRate3 }}

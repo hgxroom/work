@@ -245,7 +245,12 @@
                 </div>
               </template>
             </el-table-column>
-            <el-table-column label="利润率1(%)" width="120" :key="Math.random()">
+            <el-table-column
+              label="利润率1(%)"
+              width="120"
+              :key="Math.random()"
+              v-if="baseInfo.roleType !== 0"
+            >
               <template v-slot="scope">
                 <div v-if="baseInfo.orderStatus == 3">
                   <div style="padding-left: 24px">{{ scope.row.interestRate1[0] || '-' }}</div>
@@ -274,7 +279,12 @@
                 </div>
               </template>
             </el-table-column>
-            <el-table-column label="利润率2(%)" width="120" :key="Math.random()">
+            <el-table-column
+              label="利润率2(%)"
+              width="120"
+              :key="Math.random()"
+              v-if="baseInfo.roleType !== 0"
+            >
               <template v-slot="scope">
                 <div v-if="baseInfo.orderStatus == 3">
                   <div style="padding-left: 24px">{{ scope.row.interestRate2[0] || '-' }}</div>
@@ -303,7 +313,12 @@
                 </div>
               </template>
             </el-table-column>
-            <el-table-column label="利润率3(%)" width="120" :key="Math.random()">
+            <el-table-column
+              label="利润率3(%)"
+              width="120"
+              :key="Math.random()"
+              v-if="baseInfo.roleType !== 0"
+            >
               <template v-slot="scope">
                 <div v-if="baseInfo.orderStatus == 3">
                   <div style="padding-left: 24px">{{ scope.row.interestRate3[0] || '-' }}</div>
