@@ -76,6 +76,7 @@
     <!-- 列表 -->
     <el-table
       :data="listData"
+      :max-height="550"
       ref="customerList"
       @selection-change="handleSelectionChange"
       style="width: 100%"
