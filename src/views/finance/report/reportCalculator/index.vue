@@ -425,12 +425,12 @@
             prop="yarnCost"
             :show-overflow-tooltip="true"
           />
-          <el-table-column
+          <!-- <el-table-column
             label="客户"
             align="left"
             prop="customerName"
             :show-overflow-tooltip="true"
-          />
+          /> -->
           <el-table-column
             label="报价时间"
             align="left"
