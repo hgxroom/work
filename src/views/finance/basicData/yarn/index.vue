@@ -15,6 +15,7 @@
           <el-table
             size="small"
             :data="formData.data"
+            height="600"
             style="width: 100%; font-size: 14px; color: #242424; bordercolor: #000"
             highlight-current-row
             header-row-class-name="tableHeader"
