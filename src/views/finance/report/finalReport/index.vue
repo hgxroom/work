@@ -102,7 +102,11 @@
           </el-table-column>
           <el-table-column label="纱线编号" width="120px">
             <template v-slot="scope">
-              <div v-for="(item, index) in scope.row.quotedOrderYarnCostList" :key="index">
+              <div
+                class="tab-div"
+                v-for="(item, index) in scope.row.quotedOrderYarnCostList"
+                :key="index"
+              >
                 {{ item.yarnNo }}
               </div>
             </template>
@@ -128,7 +132,11 @@
           </el-table-column> -->
           <el-table-column label="纱线价格">
             <template v-slot="scope">
-              <div v-for="(item, index) in scope.row.quotedOrderYarnCostList" :key="index">
+              <div
+                class="tab-div"
+                v-for="(item, index) in scope.row.quotedOrderYarnCostList"
+                :key="index"
+              >
                 {{ item.yarnCost }}
               </div>
             </template>
