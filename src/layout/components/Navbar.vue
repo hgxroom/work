@@ -7,11 +7,7 @@
       @toggleClick="toggleSideBar"
     />
 
-    <breadcrumb
-      id="breadcrumb-container"
-      class="breadcrumb-container"
-      v-if="!topNav"
-    />
+    <breadcrumb id="breadcrumb-container" class="breadcrumb-container" v-if="!topNav" />
     <top-nav id="topmenu-container" class="topmenu-container" v-if="topNav" />
 
     <div class="right-menu">
@@ -29,10 +25,7 @@
         </el-tooltip> -->
       </template>
       <LuNotice class="right-menu-item hover-effect"></LuNotice>
-      <el-dropdown
-        class="avatar-container right-menu-item hover-effect"
-        trigger="click"
-      >
+      <el-dropdown class="avatar-container right-menu-item hover-effect" trigger="click">
         <div class="avatar-wrapper">
           <img :src="avatar" class="user-avatar" />
           <i class="el-icon-caret-bottom" />
@@ -42,7 +35,7 @@
             <el-dropdown-item>个人中心</el-dropdown-item>
           </router-link>
           <el-dropdown-item @click.native="setting = true">
-            <span>布局设置</span>
+            <!-- <span>布局设置</span> -->
           </el-dropdown-item>
           <el-dropdown-item divided @click.native="logout">
             <span>退出登录</span>
@@ -54,15 +47,15 @@
 </template>
 
 <script>
-import { mapGetters } from "vuex";
-import Breadcrumb from "@/components/Breadcrumb";
-import TopNav from "@/components/TopNav";
-import Hamburger from "@/components/Hamburger";
-import Screenfull from "@/components/Screenfull";
-import SizeSelect from "@/components/SizeSelect";
-import Search from "@/components/HeaderSearch";
-import DevDoc from "@/components/CrmShow/Doc";
-import LuNotice from "@/components/stationNotice";
+import { mapGetters } from 'vuex'
+import Breadcrumb from '@/components/Breadcrumb'
+import TopNav from '@/components/TopNav'
+import Hamburger from '@/components/Hamburger'
+import Screenfull from '@/components/Screenfull'
+import SizeSelect from '@/components/SizeSelect'
+import Search from '@/components/HeaderSearch'
+import DevDoc from '@/components/CrmShow/Doc'
+import LuNotice from '@/components/stationNotice'
 
 export default {
   components: {
@@ -76,43 +69,43 @@ export default {
     LuNotice,
   },
   computed: {
-    ...mapGetters(["sidebar", "avatar", "device"]),
+    ...mapGetters(['sidebar', 'avatar', 'device']),
     setting: {
       get() {
-        return this.$store.state.settings.showSettings;
+        return this.$store.state.settings.showSettings
       },
       set(val) {
-        this.$store.dispatch("settings/changeSetting", {
-          key: "showSettings",
+        this.$store.dispatch('settings/changeSetting', {
+          key: 'showSettings',
           value: val,
-        });
+        })
       },
     },
     topNav: {
       get() {
-        return this.$store.state.settings.topNav;
+        return this.$store.state.settings.topNav
       },
     },
   },
   methods: {
     toggleSideBar() {
-      this.$store.dispatch("app/toggleSideBar");
+      this.$store.dispatch('app/toggleSideBar')
     },
     async logout() {
-      this.$confirm("确定注销并退出系统吗？", "提示", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning",
+      this.$confirm('确定注销并退出系统吗？', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning',
       })
         .then(() => {
-          this.$store.dispatch("LogOut").then(() => {
-            location.href = "/index";
-          });
+          this.$store.dispatch('LogOut').then(() => {
+            location.href = '/index'
+          })
         })
-        .catch(() => {});
+        .catch(() => {})
     },
   },
-};
+}
 </script>
 
 <style lang="scss" scoped>
@@ -181,21 +174,23 @@ export default {
       margin-right: 30px;
 
       .avatar-wrapper {
-        margin-top: 5px;
+        margin-top: 2px;
         position: relative;
 
         .user-avatar {
           cursor: pointer;
-          width: 40px;
-          height: 40px;
-          border-radius: 10px;
+          // width: 40px;
+          // height: 40px;
+          width: 18px;
+          height: 18px;
+          // border-radius: 10px;
         }
 
         .el-icon-caret-bottom {
           cursor: pointer;
           position: absolute;
           right: -20px;
-          top: 25px;
+          top: 18px;
           font-size: 12px;
         }
       }

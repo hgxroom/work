@@ -112,7 +112,7 @@ h6 {
 /** 表格布局 **/
 .pagination-container {
   position: relative;
-  height: 25px;
+  height: 50px;
   margin-bottom: 10px;
   margin-top: 15px;
   padding: 10px 20px !important;
@@ -149,7 +149,7 @@ h6 {
 /** 表格更多操作下拉样式 */
 .el-table .el-dropdown-link {
   cursor: pointer;
-  color: #409eff;
+  color: #0052D9;
   margin-left: 5px;
 }
 
@@ -283,4 +283,30 @@ h6 {
 .top-right-btn {
   position: relative;
   float: right;
+}
+/*分块样式 */
+.app-container {
+  margin: 24px;
+  .card-box {
+    position: relative;
+    padding: 16px 16px 24px 16px;
+    margin-bottom: 24px;
+    border-radius: 8px;
+    background-color: #fff;
+    .title {
+      color: rgba(0, 0, 0, 0.85);
+      margin: 0 0 16px 0;
+      font-weight: 600;
+      text-align: left;
+    }
+    .btn-box {
+      margin-top: 24px;
+      text-align: center;
+      .el-button {
+        border: 1px dashed rgba(38, 111, 232, 1);
+        border-color: rgba(38, 111, 232, 1);
+        color: rgba(38, 111, 232, 1);
+      }
+    }
+  }
 }

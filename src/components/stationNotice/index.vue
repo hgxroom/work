@@ -3,6 +3,9 @@
     <div style="height: 100%">
       <el-badge :is-dot="showDot" class="remind-item">
         <i class="el-icon-chat-line-square" />
+        <!-- <div>
+          <image style="width: 16px; height: 16px" src="../../assets/images/profile.jpg">123</image>
+        </div> -->
       </el-badge>
     </div>
     <el-dropdown-menu slot="dropdown">
