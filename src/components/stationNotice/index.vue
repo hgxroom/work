@@ -42,24 +42,27 @@ export default {
         list = list.filter((item) => {
           return item.status !== 1
         })
-        console.log(list)
-        // if (auth.hasRole('admin')) {
-        //   this.list = list
-        //   return
-        // }
-        // if (auth.hasRole('salesman')) {
-        //   list = list.filter((info) => {
-        //     return info.receiverDept === '0'
-        //   })
-        // } else if (auth.hasRole('dev')) {
-        //   list = list.filter((info) => {
-        //     return info.receiverDept === '1'
-        //   })
-        // } else if (auth.hasRole('quotedPrice')) {
-        //   list = list.filter((info) => {
-        //     return info.receiverDept === '2'
-        //   })
-        // }
+        if (auth.hasRole('admin')) {
+          this.list = list
+          return
+        }
+        if (auth.hasRole('salesman')) {
+          list = list.filter((info) => {
+            return info.receiverDept === '0'
+          })
+        } else if (auth.hasRole('dev')) {
+          list = list.filter((info) => {
+            return info.receiverDept === '1'
+          })
+        } else if (auth.hasRole('quotedPrice')) {
+          list = list.filter((info) => {
+            return info.receiverDept === '1'
+          })
+        } else if (auth.hasRole('saleLeader')) {
+          list = list.filter((info) => {
+            return info.receiverDept === '2'
+          })
+        }
         this.list = list
       })
     },
@@ -94,5 +97,27 @@ export default {
 .remind-item {
   display: flex;
   top: 15px;
+}
+.el-dropdown-menu {
+  overflow-y: scroll; // 添加滚动条
+  max-height: 200px; // 最大高度
+  overflow-x: hidden; // 隐藏x轴上的滚动条
+}
+::-webkit-scrollbar {
+  /*滚动条整体样式*/
+  width: 4px; /*高宽分别对应横竖滚动条的尺寸*/
+  height: 1px;
+}
+::-webkit-scrollbar-thumb {
+  /*滚动条里面小方块*/
+  border-radius: 10px;
+  box-shadow: inset 0 0 5px rgba(97, 184, 179, 0.1);
+  background: rgba(212, 227, 252, 0.6);
+}
+::-webkit-scrollbar-track {
+  /*滚动条里面轨道*/
+  box-shadow: inset 0 0 5px rgba(87, 175, 187, 0.1);
+  border-radius: 10px;
+  background: #fff;
 }
 </style>
