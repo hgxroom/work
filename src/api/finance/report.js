@@ -323,3 +323,17 @@ export function getdeptList() {
     method: 'get',
   })
 }
+/**
+ * 上传
+ */
+export function ossUpload(data) {
+  return request({
+    header: {
+      // 'Content-Type': 'multipart/form-data;boundary=<calculated when request is sent>',
+      'Content-Type': 'multipart/form-data',
+    },
+    url: `/file/ossUpload`,
+    method: 'POST',
+    data: data,
+  })
+}
