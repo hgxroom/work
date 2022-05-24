@@ -140,7 +140,6 @@
           <el-form-item label="状态" prop="status">
             <el-radio-group v-model="form.status">
               <el-radio
-                :disabled="disabled"
                 v-for="dict in dict.type.sys_normal_disable"
                 :key="dict.value"
                 :label="dict.value"
@@ -441,7 +440,7 @@ export default {
     reset() {
       this.form = {
         PriceCoefficient: undefined,
-        status: '1',
+        status: '0',
       }
       this.resetForm('form')
     },
