@@ -79,7 +79,8 @@
               :before-remove="handleRemove"
               :before-upload="beforeUpload"
               :on-success="handleSuccess"
-              :auto-upload="true"
+              :on-change="handleLicensePreview"
+              :auto-upload="false"
               :headers="headers"
             >
               <i class="el-icon-plus"></i>
@@ -362,6 +363,7 @@ import {
   deleteQuotedOrderProduct,
   deleteQuotedOrderNo,
   getProductCustomerInfoByName,
+  ossUpload,
 } from '@/api/finance/report'
 import { getCustomerInfoByName } from '@/api/customer/visit'
 import { formRules, formProductRules, brandInfoTemp, dictMap } from './utils.js'
@@ -637,7 +639,6 @@ export default {
       }, 700)
     },
     handleRemove(file, fileList) {
-      debugger
       fileList.forEach((item, index) => {
         if (item.uid === file.uid) {
           this.imgUrl.splice(index, 1)
@@ -666,6 +667,13 @@ export default {
     },
     handleSuccess(file) {
       this.imgUrl.push(file.data.url)
+    },
+    handleLicensePreview(file) {
+      let fd = new FormData()
+      fd.append('multipartFile', file.raw)
+      ossUpload(fd).then((res) => {
+        this.imgUrl.push(res.data.url)
+      })
     },
     add() {
       this.productDialogVisible = true

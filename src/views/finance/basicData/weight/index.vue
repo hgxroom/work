@@ -303,7 +303,7 @@ export default {
       this.form = {
         commitmentName: undefined,
         laborCost: undefined,
-        status: '1',
+        status: '0',
       }
       this.resetForm('form')
     },
