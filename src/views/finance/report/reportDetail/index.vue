@@ -104,7 +104,12 @@
           <div style="width: 90px; text-align: right; padding-right: 12px">附件</div>
           <div class="flex">
             <span v-for="item in this.imgList" :key="item" style="padding-right: 15px">
-              <el-image style="width: 100px; height: 100px" :src="item" fit="fill"></el-image>
+              <el-image
+                :preview-src-list="imgList"
+                style="width: 100px; height: 100px"
+                :src="item"
+                fit="fill"
+              ></el-image>
             </span>
           </div>
         </div>
@@ -284,11 +289,19 @@
             </template>
           </el-table-column>
           <el-table-column label="布类" prop="clothType" width="100"></el-table-column>
-          <el-table-column label="品名" prop="pm" width="120" :show-overflow-tooltip="true">
+          <el-table-column label="品名" prop="pm" width="120" :show-overflow-tooltip="false">
             <template v-slot="scope">
-              <div class="content-colum">
-                {{ scope.row.pm }}
-              </div>
+              <el-popover
+                trigger="hover"
+                placement="top"
+                popper-class="popper-class"
+                :visible-arrow="false"
+              >
+                <p style="max-width: 600px; margin: 0">{{ scope.row.pm }}</p>
+                <div slot="reference" class="content-colum">
+                  {{ scope.row.pm }}
+                </div>
+              </el-popover>
             </template>
           </el-table-column>
           <el-table-column label="纱线编号" width="150">
