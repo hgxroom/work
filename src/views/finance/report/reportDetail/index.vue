@@ -637,9 +637,8 @@ export default {
       })
     },
     toCostOffer(val) {
-      // console.log(this.baseInfo)
       if (this.baseInfo.orderStatus == 1) {
-        let url = '/finance/reportCalculator'
+        let url = '/finance/reportCalculatorEdit'
         this.$router.push({
           path: url,
           query: {
@@ -648,6 +647,7 @@ export default {
             clothNo: val.clothNo,
             component: val.component,
             yarnName: val.pm,
+            remark: val.bzh,
           },
         })
       } else if (this.baseInfo.orderStatus == 2) {
@@ -675,6 +675,7 @@ export default {
             clothNo: val.clothNo,
             component: val.component,
             yarnName: val.pm,
+            remark: val.bzh,
           },
         })
       }

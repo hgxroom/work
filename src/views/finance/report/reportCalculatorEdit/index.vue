@@ -12,47 +12,6 @@
       </div>
     </div>
     <div class="container">
-      <!-- 最终报价详情 -->
-      <div class="card-box" v-if="type == 'detail'">
-        <p class="title">最终报价</p>
-        <el-table
-          size="small"
-          :data="finalQuotedList"
-          style="width: 100%; font-size: 14px; color: #242424; border-color: #000"
-          header-row-class-name="tableHeader"
-        >
-          <el-table-column
-            label="颜色"
-            align="left"
-            prop="colorName"
-            :show-overflow-tooltip="true"
-          />
-          <el-table-column
-            label="成本价(元/kg)"
-            align="left"
-            prop="costPrice"
-            :show-overflow-tooltip="true"
-          />
-          <el-table-column
-            label="销售报价1(元/kg)"
-            align="left"
-            prop="finalQuotedPriceFirst"
-            :show-overflow-tooltip="true"
-          />
-          <el-table-column
-            label="销售报价2(元/kg)"
-            align="left"
-            prop="finalQuotedPriceSecond"
-            :show-overflow-tooltip="true"
-          />
-          <el-table-column
-            label="销售报价3(元/kg)"
-            align="left"
-            prop="finalQuotedPriceThird"
-            :show-overflow-tooltip="true"
-          />
-        </el-table>
-      </div>
       <!-- 纱线成本 -->
       <div class="card-box">
         <p class="title">纱线成本</p>
@@ -121,84 +80,32 @@
           </el-table-column>
         </el-table>
       </div>
-      <!-- 织布成本 -->
-      <div class="card-box">
-        <p class="title">织布成本</p>
-        <el-table
-          size="small"
-          :data="weavingCostList"
-          style="width: 100%; font-size: 14px; color: #242424; border-color: #000"
-          header-row-class-name="tableHeader"
-        >
-          <el-table-column
-            label="织费"
-            align="left"
-            prop="weavingFee"
-            :show-overflow-tooltip="true"
-          >
-            <template v-slot="scope">
-              <el-input
-                :disabled="type == 'detail' ? true : false"
-                :class="[type == 'detail' ? 'input-detail' : '']"
-                size="small"
-                type="number"
-                class="numrule"
-                placeholder="请输入内容"
-                @change="handleweaving(scope)"
-                v-model="scope.row.weavingFee"
-              >
-              </el-input>
-            </template>
-          </el-table-column>
-
-          <el-table-column
-            label="织造损耗(%)"
-            align="left"
-            prop="weavingLoss"
-            :show-overflow-tooltip="true"
-          />
-          <el-table-column
-            label="毛坯成本(元)"
-            align="center"
-            prop="blankCost"
-            :show-overflow-tooltip="true"
-          >
-            <template v-slot="scope">
-              <div class="total-num">{{ scope.row.blankCost }}</div>
-            </template>
-          </el-table-column>
-        </el-table>
-      </div>
-      <!-- 染色成本 -->
-      <div class="card-box">
-        <p class="title">染色成本</p>
-        <el-table
-          size="small"
-          :data="dyeingCostList"
-          style="width: 100%; font-size: 14px; color: #242424; border-color: #000"
-          header-row-class-name="tableHeader"
-        >
-          <el-table-column
-            label="颜色"
-            align="left"
-            prop="colorName"
-            :show-overflow-tooltip="true"
-          />
-          <el-table-column
-            label="作业类型"
-            align="left"
-            prop="jobType"
-            :show-overflow-tooltip="true"
-          >
-            <template v-slot="scope">
-              <div v-if="scope.$index === 0">
+      <div>
+        <el-row class="card-box" style="display: flex">
+          <el-col :span="8">
+            <p class="title">纱线成本</p>
+            <el-form class="base-form" ref="queryForm" label-width="90px" :inline="true">
+              <el-form-item label="织费">
+                <el-input
+                  v-model="weavingCostList[0].weavingFee"
+                  :disabled="type == 'detail' ? true : false"
+                  :class="[type == 'detail' ? 'input-detail' : '']"
+                  size="small"
+                  type="number"
+                  class="numrule"
+                  placeholder="请输入内容"
+                  @change="handleweaving($event)"
+                >
+                </el-input>
+              </el-form-item>
+              <el-form-item label="作业类型">
                 <el-select
-                  v-model="dyeingCostList[scope.$index].jobType"
+                  v-model="dyeingCostList[0].jobType"
                   placeholder="请选择"
                   style="width: 100%"
                   :disabled="type == 'detail' ? true : false"
                   :class="[type == 'detail' ? 'select-detail' : '']"
-                  @change="handleJob(scope)"
+                  @change="handleJob($event)"
                 >
                   <el-option
                     v-for="(dicts, index) in dict.type.job_type"
@@ -207,191 +114,222 @@
                     :value="dicts.label"
                   ></el-option>
                 </el-select>
-              </div>
-              <div v-else>
-                <div>{{ dyeingCostList[scope.$index].jobType }}</div>
-              </div>
-            </template>
-          </el-table-column>
-          <el-table-column
-            label="染整损耗(%)"
-            align="left"
-            prop="dyeingLoss"
-            :show-overflow-tooltip="true"
-          />
-          <el-table-column
-            label="染费(元)"
-            align="center"
-            prop="dyeingFee"
-            :show-overflow-tooltip="true"
-          >
-            <template v-slot="scope">
-              <div class="total-num">{{ scope.row.dyeingFee }}</div>
-            </template>
-          </el-table-column>
-        </el-table>
+              </el-form-item>
+              <el-form-item label="工艺">
+                <el-select
+                  v-model="splList"
+                  multiple
+                  :disabled="type == 'detail' ? true : false"
+                  :class="[type == 'detail' ? 'select-detail' : '']"
+                  placeholder="请选择"
+                  style="width: 100%"
+                  @change="handleType($event)"
+                >
+                  <el-option
+                    v-for="(dict, index) in specialList"
+                    :key="index"
+                    :label="dict.processName"
+                    :value="dict.processName"
+                  ></el-option>
+                </el-select>
+              </el-form-item>
+              <el-form-item label="功能性承诺">
+                <el-select
+                  v-model="funList"
+                  multiple
+                  :disabled="type == 'detail' ? true : false"
+                  :class="[type == 'detail' ? 'select-detail' : '']"
+                  placeholder="请选择"
+                  style="width: 100%"
+                  @change="handleFunc($event)"
+                >
+                  <el-option
+                    v-for="(dict, index) in functionList"
+                    :key="index"
+                    :label="dict.commitmentName"
+                    :value="dict.commitmentName"
+                  ></el-option>
+                </el-select>
+              </el-form-item>
+            </el-form>
+          </el-col>
+          <el-col :span="1" style="display: flex; justify-content: center">
+            <div style="border-left: 18px solid #f5f7fa"></div>
+          </el-col>
+          <el-col :span="15" style="">
+            <p class="title">最终报价</p>
+            <div class="computed">
+              <p class="computed-item" v-for="(item, index) in finalQuotedList" :key="index">
+                <span>{{ item.colorName }}：</span>{{ item.costPrice }}
+              </p>
+            </div>
+            <div class="btn-box btn-box-left">
+              <el-button @click="reportCalculator" class="computed-btn">计算报价</el-button>
+            </div>
+          </el-col>
+        </el-row>
       </div>
-      <!-- 特整成本 -->
       <div class="card-box">
-        <p class="title">特整成本</p>
+        <p class="title">历史报价信息</p>
         <el-table
           size="small"
-          :span-method="specialMethod"
-          :data="specialFinishingList"
+          :data="formHistoryData.data"
           style="width: 100%; font-size: 14px; color: #242424; border-color: #000"
+          highlight-current-row
           header-row-class-name="tableHeader"
         >
-          <el-table-column label="操作" width="112px" align="center" v-if="type == 'edit'">
+          <el-table-column label="序号" type="index" align="center" width="100px"></el-table-column>
+          <el-table-column
+            v-for="(item, index) in formHistoryData.columns"
+            :key="index"
+            :label="item.label"
+            :prop="item.prop"
+            :width="item.width"
+            :align="item.align"
+          >
             <template v-slot="scope">
-              <el-button
-                type="text"
-                @click="deleteRow(scope.row, scope.$index, 'special')"
-                size="small"
+              <div>
+                {{ scope.row[item.prop] }}
+              </div>
+            </template>
+          </el-table-column>
+          <el-table-column label="纱线编号" width="120px">
+            <template v-slot="scope">
+              <div
+                class="tab-div"
+                v-for="(item, index) in scope.row.quotedOrderYarnCostList"
+                :key="index"
               >
-                删除
-              </el-button>
+                {{ item.yarnNo }}
+              </div>
             </template>
           </el-table-column>
-          <el-table-column
-            label="工艺"
-            align="left"
-            prop="processName"
-            :show-overflow-tooltip="true"
-          >
+          <el-table-column label="纱线品名">
             <template v-slot="scope">
-              <el-select
-                v-model="specialFinishingList[scope.$index].processName"
-                :disabled="type == 'detail' ? true : false"
-                :class="[type == 'detail' ? 'select-detail' : '']"
-                placeholder="请选择"
-                style="width: 100%"
-                @change="handleType(scope, scope.$index, $event)"
+              <div
+                class="tab-div"
+                v-for="(item, index) in scope.row.quotedOrderYarnCostList"
+                :key="index"
+                :title="item.yarnName"
               >
-                <el-option
-                  v-for="(dict, index) in specialList"
-                  :key="index"
-                  :label="dict.processName"
-                  :value="dict.processName"
-                ></el-option>
-              </el-select>
+                {{ item.yarnName }}
+              </div>
             </template>
           </el-table-column>
-          <el-table-column
-            label="工费"
-            align="left"
-            prop="laborCost"
-            :show-overflow-tooltip="true"
-          />
-          <el-table-column
-            label="特整损耗(%)"
-            align="center"
-            prop="extraLoss"
-            :show-overflow-tooltip="true"
-          />
-          <el-table-column
-            label="特整总损耗(%)"
-            align="center"
-            prop="extraWholeLoss"
-            :show-overflow-tooltip="true"
-          >
+          <!-- <el-table-column label="纱线品名">
             <template v-slot="scope">
-              <div class="total-num">{{ extraWholeLoss }}</div>
+              <div v-for="(item, index) in scope.row.quotedOrderYarnCostList" :key="index">
+                {{ item.yarnName }}
+              </div>
             </template>
-          </el-table-column>
-          <el-table-column
-            label="特整总成本(元)"
-            align="center"
-            prop="extraWholeCost"
-            :show-overflow-tooltip="true"
-          >
+          </el-table-column> -->
+          <el-table-column label="纱线价格">
             <template v-slot="scope">
-              <div class="total-num">{{ extraWholeCost }}</div>
+              <div
+                class="tab-div"
+                v-for="(item, index) in scope.row.quotedOrderYarnCostList"
+                :key="index"
+              >
+                {{ item.yarnCost }}
+              </div>
             </template>
           </el-table-column>
+          <el-table-column label="颜色">
+            <template v-slot="scope">
+              <div
+                class="tab-div"
+                v-for="(item, index) in scope.row.quotedOrderPriceVoList"
+                :key="index"
+              >
+                {{ item.colorName }}
+              </div>
+            </template>
+          </el-table-column>
+          <el-table-column label="成本价(元/kg)" width="110px">
+            <template v-slot="scope">
+              <div
+                class="tab-div"
+                v-for="(item, index) in scope.row.quotedOrderPriceVoList"
+                :key="index"
+              >
+                {{ item.costPrice }}
+              </div>
+            </template>
+          </el-table-column>
+          <el-table-column :label="'销售报价1' + settlementMethod" width="130px">
+            <template v-slot="scope">
+              <div
+                class="tab-div"
+                v-for="(item, index) in scope.row.quotedOrderPriceVoList"
+                :title="
+                  item.finalQuotedPrice1 ? item.finalQuotedPrice1 + scope.row.settlementMethod : ''
+                "
+                :key="index"
+              >
+                {{
+                  item.finalQuotedPrice1 ? item.finalQuotedPrice1 + scope.row.settlementMethod : ''
+                }}
+              </div>
+            </template>
+          </el-table-column>
+          <el-table-column label="利润率(%)" width="90px" align="center">
+            <template v-slot="scope">
+              <div>
+                {{ scope.row.quotedOrderPriceVoList[0].interestRate1 }}
+              </div>
+            </template>
+          </el-table-column>
+          <el-table-column :label="'销售报价2' + settlementMethod" width="130px">
+            <template v-slot="scope">
+              <div
+                class="tab-div"
+                :title="
+                  item.finalQuotedPrice2 ? item.finalQuotedPrice2 + scope.row.settlementMethod : ''
+                "
+                v-for="(item, index) in scope.row.quotedOrderPriceVoList"
+                :key="index"
+              >
+                {{
+                  item.finalQuotedPrice2 ? item.finalQuotedPrice2 + scope.row.settlementMethod : ''
+                }}
+              </div>
+            </template>
+          </el-table-column>
+          <el-table-column label="利润率(%)" width="90px" align="center">
+            <template v-slot="scope">
+              <div>
+                {{ scope.row.quotedOrderPriceVoList[0].interestRate2 }}
+              </div>
+            </template>
+          </el-table-column>
+          <el-table-column :label="'销售报价3' + settlementMethod" width="130px">
+            <template v-slot="scope">
+              <div
+                class="tab-div"
+                v-for="(item, index) in scope.row.quotedOrderPriceVoList"
+                :title="
+                  item.finalQuotedPrice3 ? item.finalQuotedPrice3 + scope.row.settlementMethod : ''
+                "
+                :key="index"
+              >
+                {{
+                  item.finalQuotedPrice3 ? item.finalQuotedPrice3 + scope.row.settlementMethod : ''
+                }}
+              </div>
+            </template>
+          </el-table-column>
+          <el-table-column label="利润率(%)" width="90px" align="center">
+            <template v-slot="scope">
+              <div>
+                {{ scope.row.quotedOrderPriceVoList[0].interestRate3 }}
+              </div>
+            </template>
+          </el-table-column>
+          <el-table-column label="客户" prop="customerName"></el-table-column>
+          <el-table-column label="提交人" prop="createBy"></el-table-column>
         </el-table>
-        <div class="add_info" v-if="type == 'edit'">
-          <el-button @click="addSpecial">添加工艺</el-button>
-        </div>
       </div>
-      <!-- 功能性成本 -->
-      <div class="card-box">
-        <p class="title">功能性成本</p>
-        <el-table
-          size="small"
-          :span-method="functionMethod"
-          :data="functionCostList"
-          style="width: 100%; font-size: 14px; color: #242424; border-color: #000"
-          header-row-class-name="tableHeader"
-        >
-          <el-table-column label="操作" width="112px" align="center" v-if="type == 'edit'">
-            <template v-slot="scope">
-              <el-button
-                type="text"
-                @click="deleteRow(scope.row, scope.$index, 'function')"
-                size="small"
-              >
-                删除
-              </el-button>
-            </template>
-          </el-table-column>
-          <el-table-column
-            label="功能性承诺"
-            align="left"
-            prop="processName"
-            :show-overflow-tooltip="true"
-          >
-            <template v-slot="scope">
-              <el-select
-                v-model="functionCostList[scope.$index].functionalCommitmentName"
-                :disabled="type == 'detail' ? true : false"
-                :class="[type == 'detail' ? 'select-detail' : '']"
-                placeholder="请选择"
-                style="width: 100%"
-                @change="handleFunc(scope, scope.$index, $event)"
-              >
-                <el-option
-                  v-for="(dict, index) in functionList"
-                  :key="index"
-                  :label="dict.commitmentName"
-                  :value="dict.commitmentName"
-                ></el-option>
-              </el-select>
-            </template>
-          </el-table-column>
-          <el-table-column
-            label="工费(元)"
-            align="left"
-            prop="laborCost"
-            :show-overflow-tooltip="true"
-          />
 
-          <el-table-column
-            label="功能性总成本(元)"
-            align="center"
-            prop="functionCostTotal"
-            :show-overflow-tooltip="true"
-          >
-            <template v-slot="scope">
-              <div class="total-num">{{ functionCostTotal }}</div>
-            </template>
-          </el-table-column>
-        </el-table>
-        <div class="add_info" v-if="type == 'edit'">
-          <el-button @click="addFunction">添加功能性承诺</el-button>
-        </div>
-      </div>
-      <!-- 最终成本报价 -->
-      <div class="card-box" v-if="type == 'edit'">
-        <p class="title">最终报价</p>
-        <div class="computed">
-          <p class="computed-item" v-for="(item, index) in finalQuotedList" :key="index">
-            <span>{{ item.colorName }}：</span>{{ item.costPrice }}
-          </p>
-        </div>
-        <div class="btn-box btn-box-left">
-          <el-button @click="reportCalculator" class="computed-btn">计算报价</el-button>
-        </div>
-      </div>
       <div class="footer" v-if="type == 'edit'">
         <el-button @click="cancel" class="save-btn">取消</el-button>
         <el-button @click="submit" :disabled="reportBtn" class="sub-btn">确认报价</el-button>
@@ -459,6 +397,7 @@ import {
   calcQuotedPrice,
   getDyeingFeeDataByJobStatus,
   getHistoricalQuoted,
+  getQuotedListByNewClothNo,
 } from '@/api/finance/report'
 export default {
   dicts: [
@@ -467,6 +406,9 @@ export default {
   data() {
     return {
       remark: '', //备注
+      jobTypeList: [], //选中作业类型
+      splList: [], //选中工艺
+      funList: [], //选中功能性
       historyYarnNo: '',
       //历史纱价
       historyList: [],
@@ -499,6 +441,33 @@ export default {
       //纱线成本数据
       yarnCostList: [],
       yarnCostTotal: [],
+      // 历史报价信息
+      formHistoryData: {
+        sel: null, // 选中行
+        columns: [
+          {
+            label: '报价时间',
+            align: 'left',
+            type: 'text',
+            width: '160px',
+            prop: 'createTime',
+          },
+          {
+            label: '布号',
+            align: 'left',
+            type: 'text',
+            width: '140px',
+            prop: 'clothNo',
+          },
+          {
+            label: '毛坯成本',
+            align: 'left',
+            type: 'text',
+            prop: 'blankCost',
+          },
+        ],
+        data: [],
+      },
       // 纱线成本表格数据
       formData: {
         sel: null, // 选中行
@@ -558,6 +527,7 @@ export default {
       //功能性承诺
       functionList: [],
       productDialogVisible: false,
+      settlementMethod: '',
     }
   },
 
@@ -582,8 +552,23 @@ export default {
     this.$tab.updatePage(obj)
     this.getlist()
     this.getCheckList()
+    this.getHistory()
   },
   methods: {
+    // 历史报价
+    getHistory() {
+      const { clothNo } = this
+      let data = {}
+      data = {
+        newClothNo: clothNo,
+      }
+      getQuotedListByNewClothNo(data).then((res) => {
+        this.formHistoryData.data = res.data
+        if (res.data.settlementMethod) {
+          this.settlementMethod = res.data.settlementMethod
+        }
+      })
+    },
     //历史报价
     history(val) {
       getHistoricalQuoted(val).then((res) => {
@@ -734,26 +719,25 @@ export default {
       this.functionCostList.push(params)
     },
     //功能性改变
-    handleFunc(scope, index, evt) {
+    handleFunc(evt) {
       this.reportBtn = true
       let cost = 0
-      //是否有重复数据
-      let Redata = null
-      if (this.functionCostList.length > 1) {
-        Redata = this.functionCostList.find((val) => {
-          return val.functionalCommitmentName == evt && val.laborCost
-        })
-      }
-
-      if (Redata) {
-        this.functionCostList[index].functionalCommitmentName = ''
-        this.functionCostList[index].laborCost = ''
-        return this.$message.error(`请功能性承诺选项不能重复！`)
-      }
-      this.functionList.forEach((val) => {
-        if (val.commitmentName == evt) {
-          this.functionCostList[index].laborCost = val.laborCost
+      //重新生成功能性数据结构
+      this.functionCostList = []
+      evt.forEach((item, index) => {
+        let params = {
+          functionalCommitmentName: item,
+          laborCost: '',
         }
+        this.functionCostList.push(params)
+      })
+      //遍历赋值
+      this.functionCostList.forEach((item, ind) => {
+        this.functionList.forEach((val) => {
+          if (val.commitmentName == item.functionalCommitmentName) {
+            item.laborCost = val.laborCost
+          }
+        })
       })
       this.functionCostList.forEach((item) => {
         cost = item.laborCost + cost
@@ -761,30 +745,28 @@ export default {
       this.functionCostTotal = cost
     },
     //工艺改变
-    handleType(scope, index, evt) {
+    handleType(evt) {
       let cost = 0
       let loss = 0
       this.reportBtn = true
-      // //是否有重复数据
-      let Redata = null
-      if (this.specialFinishingList.length > 1) {
-        Redata = this.specialFinishingList.find((val) => {
-          return val.processName == evt && val.laborCost
-        })
-      }
-
-      if (Redata) {
-        this.specialFinishingList[index].processName = ''
-        this.specialFinishingList[index].laborCost = ''
-        this.specialFinishingList[index].extraLoss = ''
-        return this.$message.error(`请工艺选项不能重复！`)
-      }
-
-      this.specialList.forEach((val) => {
-        if (val.processName == evt) {
-          this.specialFinishingList[index].laborCost = val.laborCost
-          this.specialFinishingList[index].extraLoss = val.loss
+      //重新生成工艺数据结构
+      this.specialFinishingList = []
+      evt.forEach((item, index) => {
+        let params = {
+          extraLoss: '',
+          laborCost: '',
+          processName: item,
         }
+        this.specialFinishingList.push(params)
+      })
+      //遍历赋值
+      this.specialFinishingList.forEach((item, ind) => {
+        this.specialList.forEach((val) => {
+          if (val.processName == item.processName) {
+            item.laborCost = val.laborCost
+            item.extraLoss = val.loss
+          }
+        })
       })
       this.specialFinishingList.forEach((item) => {
         cost = item.laborCost + cost
@@ -851,9 +833,13 @@ export default {
       }
     },
     //作业类类型改变
-    handleJob(scope) {
+    handleJob(evt) {
+      // console.log(evt)
+      // evt.forEach((val,index) =>{
+      //   this.dyeingCostList[index].jobType = val.jobType
+      // })
       this.dyeingCostList.forEach((val) => {
-        val.jobType = scope.row.jobType
+        val.jobType = evt
       })
       this.reportBtn = true
       //遍历获取对应颜色染费
@@ -866,6 +852,7 @@ export default {
           val.dyeingFee = res.data
         })
       })
+      console.log(this.dyeingCostList)
     },
     //获取基本数据
     getlist() {
@@ -884,12 +871,18 @@ export default {
         }
         if (res.data.specialVo.specialFinishingList) {
           this.specialFinishingList = res.data.specialVo.specialFinishingList
+          this.specialFinishingList.forEach((val) => {
+            this.splList.push(val.processName)
+          })
         }
 
         this.extraWholeCost = res.data.specialVo.extraWholeCost
         this.extraWholeLoss = res.data.specialVo.extraWholeLoss
         if (res.data.functionCostVo.functionCostList) {
           this.functionCostList = res.data.functionCostVo.functionCostList
+          this.functionCostList.forEach((val) => {
+            this.funList.push(val.functionalCommitmentName)
+          })
         }
 
         this.functionCostTotal = res.data.functionCostVo.functionCostTotal
@@ -1076,13 +1069,10 @@ export default {
   .el-autocomplete {
     width: 100%;
   }
-  .mark-textarea {
-    width: calc(25% + 308px) !important;
-    margin-right: 0 !important;
-    ::v-deep .el-form-item__content {
-      width: calc(100% - 90px);
-    }
+  ::v-deep .el-form-item__content {
+    width: calc(100% - 90px);
   }
+
   .fullWidth {
     width: 100%;
     ::v-deep .el-form-item__label {
@@ -1243,7 +1233,7 @@ export default {
 }
 
 ::v-deep.el-form-item {
-  width: calc(25% - 10px);
+  width: 100%;
   .el-form-item__label {
     font-weight: normal !important;
     color: rgba(36, 36, 36, 1);

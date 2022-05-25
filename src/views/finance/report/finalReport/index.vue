@@ -365,7 +365,7 @@ export default {
             label: '单价',
             align: 'left',
             type: 'text',
-            prop: 'djkg',
+            prop: 'price',
           },
           {
             label: '成品重量',
