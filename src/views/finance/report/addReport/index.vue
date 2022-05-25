@@ -13,8 +13,25 @@
           :label-position="labelPosition"
         >
           <el-form-item label="客户" prop="customerName">
+            <el-select
+              v-model="baseInfo.customerName"
+              filterable
+              remote
+              reserve-keyword
+              placeholder="请输入关键词"
+              :remote-method="remoteMethod"
+              :loading="loading"
+            >
+              <el-option
+                v-for="item in options"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+              >
+              </el-option>
+            </el-select>
             <!-- 搜索框 -->
-            <el-autocomplete
+            <!-- <el-autocomplete
               v-model.trim="baseInfo.customerName"
               :fetch-suggestions="queryName"
               placeholder="请输入客户名称"
@@ -26,7 +43,7 @@
               <template slot-scope="{ item }">
                 <div>{{ item.khmch }}</div>
               </template>
-            </el-autocomplete>
+            </el-autocomplete> -->
           </el-form-item>
           <el-form-item label="最终客户" prop="finalCustomerName">
             <el-input
@@ -83,6 +100,8 @@
               :on-change="handleLicensePreview"
               :auto-upload="false"
               :headers="headers"
+              :limit="4"
+              :class="{ hide: showUpload }"
             >
               <i class="el-icon-plus"></i>
             </el-upload>
@@ -393,6 +412,9 @@ export default {
       // 图片上传地址
       imgUrl: [],
       fileList: [],
+      options: [],
+      loading: false,
+      showUpload: false,
       //基础信息
       baseInfo: {
         orderStatus: '',
@@ -530,6 +552,9 @@ export default {
           })
           this.imgUrl = res.data.enclosureAddress.split(';')
           this.fileList = imgList
+          if (this.fileList.length >= 4) {
+            this.showUpload = true
+          }
         }
         this.baseInfo = res.data
         this.formData.data = this.baseInfo.productList
@@ -567,6 +592,29 @@ export default {
           cb(res.data.data)
         })
       }, 700)
+    },
+    remoteMethod(query) {
+      if (query !== '') {
+        this.loading = true
+        clearTimeout(this.timeout)
+        this.timeout = setTimeout(() => {
+          getProductCustomerInfoByName(query).then((res) => {
+            if (res.data.data) {
+              let data = res.data.data.map((item) => {
+                return {
+                  value: item.khmch,
+                  label: item.khmch,
+                }
+              })
+              // cb(res.data)
+              this.options = data
+              this.loading = false
+            }
+          })
+        }, 700)
+      } else {
+        this.options = []
+      }
     },
     /**
      * 点选客户名称事件
@@ -655,6 +703,11 @@ export default {
           return false
         }
       })
+      if (fileList.length < 5) {
+        setTimeout(() => {
+          this.showUpload = false
+        }, 800)
+      }
     },
     handlePictureCardPreview(file) {
       this.dialogImageUrl = file.url
@@ -679,6 +732,9 @@ export default {
       this.imgUrl.push(file.data.url)
     },
     handleLicensePreview(file) {
+      if (this.imgUrl.length > 2) {
+        this.showUpload = true
+      }
       let fd = new FormData()
       fd.append('multipartFile', file.raw)
       ossUpload(fd).then((res) => {
@@ -1095,5 +1151,8 @@ export default {
 .popper-class {
   background-color: rgba(48, 49, 51, 0.95);
   color: #fff;
+}
+.flex .hide .el-upload--picture-card {
+  display: none !important;
 }
 </style>
