@@ -75,6 +75,7 @@
             <el-upload
               :action="uploadUrl"
               list-type="picture-card"
+              :file-list="fileList"
               :on-preview="handlePictureCardPreview"
               :before-remove="handleRemove"
               :before-upload="beforeUpload"
@@ -101,10 +102,9 @@
           header-row-class-name="tableHeader"
           empty-text=" "
         >
-          <el-table-column label="序号" type="index" align="center" width="100"></el-table-column>
           <el-table-column label="布号" prop="clothNo" width="100"></el-table-column>
           <el-table-column label="布类" prop="clothType" width="100"></el-table-column>
-          <el-table-column label="品名" prop="pm" width="260" :show-overflow-tooltip="true">
+          <el-table-column label="品名" prop="pm" width="120" :show-overflow-tooltip="true">
             <template v-slot="scope">
               <div class="content-colum">
                 {{ scope.row.pm }}
@@ -289,7 +289,7 @@
               ></el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="下单重量" prop="orderNum">
+          <el-form-item label="订单规模" prop="orderNum">
             <el-select
               v-model="productInfo.orderNum"
               placeholder="请选择"
@@ -392,6 +392,7 @@ export default {
       weightList: [],
       // 图片上传地址
       imgUrl: [],
+      fileList: [],
       //基础信息
       baseInfo: {
         orderStatus: '',
@@ -608,7 +609,7 @@ export default {
         referenceClothNo: queryString,
       }
       clearTimeout(this.timeout)
-      if (queryString.length >= 2) {
+      if (queryString.length >= 3) {
         this.timeout = setTimeout(() => {
           getFabricQuotationByBh(data).then((res) => {
             cb(res.data)
