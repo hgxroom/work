@@ -731,7 +731,23 @@ export default {
     handleSuccess(file) {
       this.imgUrl.push(file.data.url)
     },
-    handleLicensePreview(file) {
+    handleLicensePreview(file, fileList) {
+      if (file) {
+        const isJPG = file.raw.type === 'image/jpeg'
+        const isPNG = file.raw.type === 'image/png'
+        const isJPEG = file.raw.type === 'image/jpeg'
+        const isLt10M = file.raw.size / 1024 / 1024 < 10
+        let isImg = isJPG || isJPEG || isPNG
+        if (!isImg) {
+          this.$message.error('只能上传JPG/JPEG/PNG文件!')
+          fileList.pop()
+        }
+        if (!isLt10M) {
+          this.$message.error('上传头像图片大小不能超过 10MB!')
+          fileList.pop()
+        }
+        return isImg && isLt10M
+      }
       if (this.imgUrl.length > 2) {
         this.showUpload = true
       }
