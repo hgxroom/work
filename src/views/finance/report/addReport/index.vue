@@ -522,6 +522,15 @@ export default {
             item.specialProcessName = item.specialProcessName.split(',')
           }
         })
+        if (res.data.enclosureAddress) {
+          let imgList = res.data.enclosureAddress.split(';').map((x) => {
+            return {
+              url: x,
+            }
+          })
+          this.imgUrl = res.data.enclosureAddress.split(';')
+          this.fileList = imgList
+        }
         this.baseInfo = res.data
         this.formData.data = this.baseInfo.productList
       })
