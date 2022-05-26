@@ -881,6 +881,15 @@ export default {
         this.dyeingCostList = res.data.dyeingCostList
         // this.productYarnVoData = res.data.productYarnVo
         this.yarnCostList = res.data.productYarnVo.yarnCostList
+        //是否存在纱线价格没有填的情况
+        let data = this.yarnCostList.find((val) => {
+          return val.yarnCost == '' || val.yarnCost == null
+        })
+        if (data) {
+          this.weavingFeeBtn = true
+        } else {
+          this.weavingFeeBtn = false
+        }
         this.yarnCostTotal = res.data.productYarnVo.yarnCostTotal
         if (res.data.weavingCostList) {
           this.weavingCostList = res.data.weavingCostList
