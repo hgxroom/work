@@ -323,3 +323,27 @@ export function getdeptList() {
     method: 'get',
   })
 }
+/**
+ * 上传
+ */
+export function ossUpload(data) {
+  return request({
+    header: {
+      // 'Content-Type': 'multipart/form-data;boundary=<calculated when request is sent>',
+      'Content-Type': 'multipart/form-data',
+    },
+    url: `/file/ossUpload`,
+    method: 'POST',
+    data: data,
+  })
+}
+/**
+ * 导出
+ * @returns
+ */
+export function salesmanExport(params) {
+  return download(`/system/quotedOrder/salesmanExport`, params, '报价单信息.xls')
+}
+export function quotedPriceExport(params) {
+  return download(`/system/quotedOrder/quotedPriceExport`, params, '报价单信息.xls')
+}

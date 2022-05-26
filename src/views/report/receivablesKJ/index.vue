@@ -2,8 +2,14 @@
   <div class="app-container">
     <!-- 搜索框 -->
     <el-row>
-      <el-col>
-        <el-form :model="queryParams" ref="queryForm" :inline="true">
+      <el-col class="search-col-from">
+        <el-form
+          :model="queryParams"
+          class="search-form"
+          label-width="100px"
+          ref="queryForm"
+          :inline="true"
+        >
           <el-form-item label="单位名称">
             <el-input v-model="queryParams.company" size="mini" clearble></el-input>
           </el-form-item>
@@ -13,11 +19,22 @@
           <el-form-item label="付款方式">
             <el-input v-model="queryParams.payWay" size="mini" clearble></el-input>
           </el-form-item>
-          <el-form-item>
-            <el-button type="primary" @click="getList">查询</el-button>
+          <el-form-item label="是否逾期欠款">
+            <el-select size="mini" v-model="queryParams.overdueFlag" placeholder="请选择">
+              <el-option label="全部" value=""></el-option>
+              <el-option
+                v-for="(dict, index) in overdueFlagList"
+                :key="index"
+                :label="dict.label"
+                :value="dict.key"
+              ></el-option>
+            </el-select>
           </el-form-item>
-          <el-button icon="el-icon-refresh" @click="resetQuery">重置</el-button>
         </el-form>
+      </el-col>
+      <el-col class="search-col-btn">
+        <el-button type="primary" @click="getList">查询</el-button>
+        <el-button icon="el-icon-refresh" @click="resetQuery">重置</el-button>
       </el-col>
     </el-row>
     <el-row class="mb8">
@@ -74,7 +91,12 @@
         prop="salesman"
         :show-overflow-tooltip="true"
       />
-      <el-table-column label="付款方式" align="left" prop="payWay" :show-overflow-tooltip="true" />
+      <el-table-column
+        label="付款方式"
+        align="center"
+        prop="payWay"
+        :show-overflow-tooltip="true"
+      />
       <el-table-column align="center" label="月末应回款金额(元)">
         <el-table-column align="center" label="逾期金额(元)">
           <el-table-column
@@ -134,20 +156,32 @@ export default {
         company: '',
         salesman: '',
         payWay: '',
+        overdueFlag: '',
       },
       loading: false,
       listData: [],
       downloadLoading: false,
+      overdueFlagList: [
+        {
+          key: '0',
+          label: '是',
+        },
+        {
+          key: '1',
+          label: '否',
+        },
+      ],
     }
   },
   methods: {
     getList() {
       this.loading = true
-      const { company, salesman, payWay } = this.queryParams
+      const { company, salesman, payWay, overdueFlag } = this.queryParams
       const data = {
         company,
         salesman,
         payWay,
+        overdueFlag,
       }
       getFinance(data)
         .finally(() => {
@@ -199,6 +233,7 @@ export default {
       this.queryParams.company = ''
       this.queryParams.salesman = ''
       this.queryParams.payWay = ''
+      this.queryParams.overdueFlag = ''
       this.getList()
     },
     exportReport() {
@@ -218,3 +253,8 @@ export default {
   },
 }
 </script>
+<style lang="scss" scoped>
+::v-deep .search-form .el-form-item__content {
+  width: calc(100% - 100px);
+}
+</style>

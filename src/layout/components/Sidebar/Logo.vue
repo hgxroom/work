@@ -9,8 +9,8 @@
   >
     <transition name="sidebarLogoFade">
       <router-link v-if="collapse" key="collapse" class="sidebar-logo-link" to="/">
-        <img v-if="logo" :src="logo" class="sidebar-logo" />
-        <h1
+        <img v-if="logo2" :src="logo2" class="sidebar-logo2" />
+        <!-- <h1
           v-else
           class="sidebar-title"
           :style="{
@@ -19,11 +19,11 @@
           }"
         >
           {{ title }}
-        </h1>
+        </h1> -->
       </router-link>
       <router-link v-else key="expand" class="sidebar-logo-link" to="/">
         <img v-if="logo" :src="logo" class="sidebar-logo" />
-        <h1
+        <!-- <h1
           class="sidebar-title"
           :style="{
             color:
@@ -31,7 +31,7 @@
           }"
         >
           {{ title }}
-        </h1>
+        </h1> -->
       </router-link>
     </transition>
   </div>
@@ -39,6 +39,7 @@
 
 <script>
 import logoImg from '@/assets/logo/logo.png'
+import logoImg2 from '@/assets/logo/logo-min.png'
 import variables from '@/assets/styles/variables.scss'
 
 export default {
@@ -61,6 +62,7 @@ export default {
     return {
       title: '引鹿客户管理系统',
       logo: logoImg,
+      logo2: logoImg2,
     }
   },
 }
@@ -90,12 +92,17 @@ export default {
     width: 100%;
 
     & .sidebar-logo {
+      width: 160px;
+      height: 32px;
+      vertical-align: middle;
+      // margin-right: 12px;
+    }
+    & .sidebar-logo2 {
       width: 32px;
       height: 32px;
       vertical-align: middle;
-      margin-right: 12px;
+      // margin-right: 12px;
     }
-
     & .sidebar-title {
       display: inline-block;
       margin: 0;

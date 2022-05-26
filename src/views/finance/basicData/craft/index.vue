@@ -313,7 +313,7 @@ export default {
     reset() {
       this.form = {
         specialFinishingProcessCoefficient: undefined,
-        status: '1',
+        status: '0',
       }
       this.resetForm('form')
     },

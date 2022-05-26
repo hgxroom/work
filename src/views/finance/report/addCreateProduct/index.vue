@@ -26,8 +26,26 @@
         >
           <el-form-item label="参考布号" prop="referenceClothNo">
             <!-- 搜索框 -->
-
-            <el-autocomplete
+            <el-select
+              v-model="baseInfo.referenceClothNo"
+              filterable
+              remote
+              :class="[type == 'detail' ? 'input-detail' : '']"
+              :disabled="type == 'detail' ? true : false"
+              placeholder="请输入关键词"
+              :remote-method="queryReferenceClothNo"
+              :loading="loading"
+              @change="handleSelectReferenceClothNo($event)"
+            >
+              <el-option
+                v-for="item in clothoptions"
+                :key="item.clothNo"
+                :label="item.clothNo"
+                :value="item.clothNo"
+              >
+              </el-option>
+            </el-select>
+            <!-- <el-autocomplete
               v-model="baseInfo.referenceClothNo"
               :fetch-suggestions="queryReferenceClothNo"
               :placeholder="type == 'detail' ? '' : '请输入参考布号'"
@@ -39,7 +57,7 @@
               <template slot-scope="{ item }">
                 <div>{{ item.clothNo }}</div>
               </template>
-            </el-autocomplete>
+            </el-autocomplete> -->
             <!-- <el-input
               style="width: 100%"
               v-model="baseInfo.referenceClothNo"
@@ -463,6 +481,7 @@ export default {
       componentList: [],
       loading: false,
       options: [],
+      clothoptions: [],
       componentDialogVisible: false,
       labelPosition: 'right',
       baseInfo: {
@@ -569,20 +588,30 @@ export default {
       })
     },
     //选择参考布号
-    handleSelectReferenceClothNo(item) {
+    handleSelectReferenceClothNo(evt) {
+      console.log(evt, this.clothoptions)
+      let data = this.clothoptions.find((val) => {
+        return val.clothNo == evt
+      })
+      console.log(evt, this.clothoptions, data)
       //基本信息
-      this.baseInfo.referenceClothNo = item.clothNo
-      this.baseInfo.component = item.cf
-      this.baseInfo.clothType = item.productCategory
-      this.baseInfo.widthCloth = item.fk
-      this.baseInfo.gramWeight = item.kz
-      this.baseInfo.loomSpecification = item.loomType
-      this.baseInfo.functionName = item.functionName
-      this.baseInfo.specialProcessName = item.specialProcessName
-      //纱支信息
-      if (item.quotationYarnVoList) {
+      this.baseInfo.referenceClothNo = data.clothNo
+      this.baseInfo.component = data.cf
+      this.baseInfo.clothType = data.productCategory
+      this.baseInfo.widthCloth = data.fk
+      this.baseInfo.gramWeight = data.kz
+      this.baseInfo.loomSpecification = data.loomType
+      if (data.functionName) {
+        this.baseInfo.functionName = data.functionName
+      }
+      if (data.specialProcessName) {
+        this.baseInfo.specialProcessName = data.specialProcessName
+      }
+
+      // //纱支信息
+      if (data.quotationYarnVoList) {
         let list = []
-        item.quotationYarnVoList.forEach((val) => {
+        data.quotationYarnVoList.forEach((val) => {
           let param = {
             yarnName: '',
             yarnNo: '',
@@ -599,24 +628,40 @@ export default {
       }
     },
     //模糊参考布号
-    queryReferenceClothNo(queryString, cb) {
-      if (queryString === '') {
-        cb([])
-        return
-      }
-      let data = {
-        referenceClothNo: queryString,
-      }
-      console.log(queryString.length)
-
-      clearTimeout(this.timeout)
-      if (queryString.length >= 6) {
+    queryReferenceClothNo(query) {
+      if (query !== '') {
+        this.loading = true
+        let data = {
+          referenceClothNo: query,
+        }
+        clearTimeout(this.timeout)
         this.timeout = setTimeout(() => {
           getFabricQuotationByBh(data).then((res) => {
-            cb(res.data)
+            // cb(res.data)
+            this.clothoptions = res.data
+            this.loading = false
           })
         }, 700)
+      } else {
+        this.clothoptions = []
       }
+      // if (queryString === '') {
+      //   cb([])
+      //   return
+      // }
+      // let data = {
+      //   referenceClothNo: queryString,
+      // }
+      // console.log(queryString.length)
+
+      // clearTimeout(this.timeout)
+      // if (queryString.length >= 6) {
+      //   this.timeout = setTimeout(() => {
+      //     getFabricQuotationByBh(data).then((res) => {
+      //       cb(res.data)
+      //     })
+      //   }, 700)
+      // }
     },
     //选择布类
     handleSelectClothType(item) {
@@ -1050,5 +1095,8 @@ export default {
 }
 .el-table td.el-table__cell div {
   width: 100%;
+}
+::v-deep .el-select .el-input.is-disabled .el-input__inner:hover {
+  border-color: transparent;
 }
 </style>

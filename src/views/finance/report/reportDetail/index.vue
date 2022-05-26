@@ -1,7 +1,7 @@
 <template>
   <div class="app-main">
     <div class="title-box">
-      <div class="tit">报价详情</div>
+      <!-- <div class="tit">报价详情</div> -->
       <div class="tit-info">
         <el-row>
           <div style="display: inline-block">
@@ -104,7 +104,12 @@
           <div style="width: 90px; text-align: right; padding-right: 12px">附件</div>
           <div class="flex">
             <span v-for="item in this.imgList" :key="item" style="padding-right: 15px">
-              <el-image style="width: 100px; height: 100px" :src="item" fit="fill"></el-image>
+              <el-image
+                :preview-src-list="imgList"
+                style="width: 100px; height: 100px"
+                :src="item"
+                fit="fill"
+              ></el-image>
             </span>
           </div>
         </div>
@@ -115,97 +120,13 @@
         <el-table
           v-if="flagTable"
           size="small"
+          border
           :data="formData.data"
           style="width: 100%; font-size: 14px; color: #242424; bordercolor: #000"
           header-row-class-name="tableHeader"
         >
-          <el-table-column label="序号" type="index" align="center" width="100"></el-table-column>
-          <el-table-column label="布号" prop="clothNo" width="100"></el-table-column>
-          <el-table-column label="布类" prop="clothType" width="100"></el-table-column>
-          <el-table-column label="品名" prop="pm" width="260" :show-overflow-tooltip="true">
-            <template v-slot="scope">
-              <div class="content-colum">
-                {{ scope.row.pm }}
-              </div>
-            </template>
-          </el-table-column>
-          <el-table-column label="纱线编号" width="150">
-            <template v-slot="scope">
-              <div
-                class="tab-div tab-divline"
-                v-for="(item, index) in scope.row.rawYarnVoList"
-                :key="index"
-              >
-                {{ item.yarnNo }}
-              </div>
-            </template>
-          </el-table-column>
-          <el-table-column label="纱线品名" width="260">
-            <template v-slot="scope">
-              <div class="tab-div" v-for="(item, index) in scope.row.rawYarnVoList" :key="index">
-                <el-popover
-                  trigger="hover"
-                  placement="top"
-                  popper-class="popper-class"
-                  :visible-arrow="false"
-                >
-                  <p style="max-width: 600px; margin: 0">{{ item.yarnName }}</p>
-                  <div slot="reference" class="content-colum">
-                    {{ item.yarnName }}
-                  </div>
-                </el-popover>
-              </div>
-            </template>
-          </el-table-column>
-          <el-table-column label="纱线比例(%)" width="100">
-            <template v-slot="scope">
-              <div
-                class="tab-div tab-divline2"
-                v-for="(item, index) in scope.row.rawYarnVoList"
-                :key="index"
-              >
-                {{ item.yarnRatio }}
-              </div>
-            </template>
-          </el-table-column>
-          <el-table-column
-            v-for="(item, index) in formData.columns"
-            :key="index"
-            :label="item.label"
-            :prop="item.prop"
-            :width="item.width"
-            :align="item.align"
-          >
-            <template v-slot="scope">
-              <div>
-                {{ scope.row[item.prop] }}
-              </div>
-            </template>
-          </el-table-column>
-          <el-table-column label="特殊工艺">
-            <template v-slot="scope">
-              <div v-for="(item, index) in scope.row.specialProcessName" :key="index">
-                {{ item }}
-              </div>
-            </template>
-          </el-table-column>
-          <el-table-column label="功能性承诺" width="120">
-            <template v-slot="scope">
-              <div v-for="(item, index) in scope.row.functionName" :key="index">
-                {{ item }}
-              </div>
-            </template>
-          </el-table-column>
-          <el-table-column
-            label="作业类型"
-            width="120"
-            v-if="baseInfo.orderStatus !== 1 && baseInfo.orderStatus !== 0"
-          >
-            <template v-slot="scope">
-              {{ scope.row.jobType || '-' }}
-            </template>
-          </el-table-column>
-          <el-table-column label="颜色" width="120">
+          <el-table-column label="布号" prop="clothNo" width="100" fixed="left"></el-table-column>
+          <el-table-column label="颜色" width="120" fixed="left">
             <template v-slot="scope">
               <div v-for="(item, index) in scope.row.colorName" :key="index">
                 {{ item }}
@@ -216,6 +137,7 @@
             label="成本价格(元/kg)"
             width="140"
             v-if="baseInfo.roleType == 1 || baseInfo.roleType == 2"
+            fixed="left"
           >
             <template v-slot="scope">
               <div v-if="baseInfo.orderStatus > 1 && baseInfo.roleType !== 1">
@@ -364,6 +286,98 @@
                   </div>
                 </el-popover>
               </div>
+            </template>
+          </el-table-column>
+          <el-table-column label="布类" prop="clothType" width="100"></el-table-column>
+          <el-table-column label="品名" prop="pm" width="120" :show-overflow-tooltip="false">
+            <template v-slot="scope">
+              <el-popover
+                trigger="hover"
+                placement="top"
+                popper-class="popper-class"
+                :visible-arrow="false"
+              >
+                <p style="max-width: 600px; margin: 0">{{ scope.row.pm }}</p>
+                <div slot="reference" class="content-colum">
+                  {{ scope.row.pm }}
+                </div>
+              </el-popover>
+            </template>
+          </el-table-column>
+          <el-table-column label="纱线编号" width="150">
+            <template v-slot="scope">
+              <div
+                class="tab-div tab-divline"
+                v-for="(item, index) in scope.row.rawYarnVoList"
+                :key="index"
+              >
+                {{ item.yarnNo }}
+              </div>
+            </template>
+          </el-table-column>
+          <el-table-column label="纱线品名" width="120">
+            <template v-slot="scope">
+              <div class="tab-div" v-for="(item, index) in scope.row.rawYarnVoList" :key="index">
+                <el-popover
+                  trigger="hover"
+                  placement="top"
+                  popper-class="popper-class"
+                  :visible-arrow="false"
+                >
+                  <p style="max-width: 600px; margin: 0">{{ item.yarnName }}</p>
+                  <div slot="reference" class="content-colum">
+                    {{ item.yarnName }}
+                  </div>
+                </el-popover>
+              </div>
+            </template>
+          </el-table-column>
+          <el-table-column label="纱线比例(%)" width="100">
+            <template v-slot="scope">
+              <div
+                class="tab-div tab-divline2"
+                v-for="(item, index) in scope.row.rawYarnVoList"
+                :key="index"
+              >
+                {{ item.yarnRatio }}
+              </div>
+            </template>
+          </el-table-column>
+          <el-table-column
+            v-for="(item, index) in formData.columns"
+            :key="index"
+            :label="item.label"
+            :prop="item.prop"
+            :width="item.width"
+            :align="item.align"
+          >
+            <template v-slot="scope">
+              <div>
+                {{ scope.row[item.prop] }}
+              </div>
+            </template>
+          </el-table-column>
+          <el-table-column label="特殊工艺">
+            <template v-slot="scope">
+              <div v-for="(item, index) in scope.row.specialProcessName" :key="index">
+                {{ item }}
+              </div>
+            </template>
+          </el-table-column>
+          <el-table-column label="功能性承诺" width="120">
+            <template v-slot="scope">
+              <div v-for="(item, index) in scope.row.functionName" :key="index">
+                {{ item }}
+              </div>
+            </template>
+          </el-table-column>
+          <el-table-column
+            label="作业类型"
+            width="120"
+            v-if="baseInfo.orderStatus !== 1 && baseInfo.orderStatus !== 0"
+          >
+            <template v-slot="scope">
+              {{ scope.row.jobType || '-' }}
             </template>
           </el-table-column>
           <el-table-column
@@ -543,7 +557,7 @@ export default {
             prop: 'meterWeight',
           },
           {
-            label: '下单重量',
+            label: '订单规模',
             align: 'center',
             type: 'text',
             prop: 'orderNum',
@@ -637,9 +651,8 @@ export default {
       })
     },
     toCostOffer(val) {
-      // console.log(this.baseInfo)
       if (this.baseInfo.orderStatus == 1) {
-        let url = '/finance/reportCalculator'
+        let url = '/finance/reportCalculatorEdit'
         this.$router.push({
           path: url,
           query: {
@@ -648,6 +661,7 @@ export default {
             clothNo: val.clothNo,
             component: val.component,
             yarnName: val.pm,
+            remark: val.bzh,
           },
         })
       } else if (this.baseInfo.orderStatus == 2) {
@@ -675,6 +689,7 @@ export default {
             clothNo: val.clothNo,
             component: val.component,
             yarnName: val.pm,
+            remark: val.bzh,
           },
         })
       }
@@ -1122,6 +1137,12 @@ export default {
 .el-table--group:after,
 .el-table:before {
   background-color: #f3f3f3;
+}
+.el-table--border {
+  border: 1px solid #f3f3f3;
+}
+::v-deep .el-table--border .el-table__cell {
+  border-right: 1px solid #f3f3f3;
 }
 ::v-deep.el-form-item {
   width: calc(25% - 10px);

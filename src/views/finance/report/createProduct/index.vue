@@ -67,7 +67,7 @@
       :data="listData"
       ref="customerList"
       style="width: 100%"
-      :max-height="500"
+      :max-height="600"
       :row-style="rowstyle"
     >
       <el-table-column label="序号" align="center" width="60px">
@@ -444,5 +444,10 @@ export default {
   ::v-deep .el-select {
     width: 100%;
   }
+}
+</style>
+<style>
+.el-tooltip__popper {
+  max-width: 300px;
 }
 </style>
