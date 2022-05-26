@@ -741,12 +741,13 @@ export default {
         if (!isImg) {
           this.$message.error('只能上传JPG/JPEG/PNG文件!')
           fileList.pop()
+          return
         }
         if (!isLt10M) {
           this.$message.error('上传头像图片大小不能超过 10MB!')
           fileList.pop()
+          return
         }
-        return isImg && isLt10M
       }
       if (this.imgUrl.length > 2) {
         this.showUpload = true

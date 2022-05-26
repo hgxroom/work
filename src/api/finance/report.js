@@ -337,3 +337,13 @@ export function ossUpload(data) {
     data: data,
   })
 }
+/**
+ * 导出
+ * @returns
+ */
+export function salesmanExport(params) {
+  return download(`/system/quotedOrder/salesmanExport`, params, '报价单信息.xls')
+}
+export function quotedPriceExport(params) {
+  return download(`/system/quotedOrder/quotedPriceExport`, params, '报价单信息.xls')
+}
