@@ -369,6 +369,12 @@ export default {
             prop: 'price',
           },
           {
+            label: '结算单位',
+            align: 'left',
+            type: 'text',
+            prop: 'jsdw',
+          },
+          {
             label: '成品重量',
             align: 'left',
             type: 'text',
