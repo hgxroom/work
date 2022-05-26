@@ -255,6 +255,19 @@
             :width="item.width"
             :align="item.align"
           >
+            <template v-slot="scope">
+              <el-popover
+                trigger="hover"
+                placement="top"
+                popper-class="popper-class"
+                :visible-arrow="false"
+              >
+                <p style="max-width: 400px; margin: 0">{{ scope.row[item.prop] }}</p>
+                <div slot="reference" :class="item.prop == 'pm' ? 'content-colum' : ''">
+                  {{ scope.row[item.prop] }}
+                </div>
+              </el-popover>
+            </template>
           </el-table-column>
         </el-table>
       </div>
@@ -331,6 +344,7 @@ export default {
             align: 'left',
             type: 'text',
             prop: 'bzhrq',
+            width: 150,
           },
           {
             label: '订单号',
@@ -951,7 +965,7 @@ export default {
 }
 ::v-deep .el-table td {
   border-bottom: 1px solid #f3f3f3;
-  padding: 0;
+  // padding: 0;
 }
 .el-table--border:after,
 .el-table--group:after,
@@ -1000,5 +1014,17 @@ export default {
 }
 .tab-div:last-child {
   border-bottom: none;
+}
+.content-colum {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  -o-text-overflow: ellipsis; /* for Opera */
+}
+</style>
+<style>
+.popper-class {
+  background-color: rgba(48, 49, 51, 0.95);
+  color: #fff;
 }
 </style>

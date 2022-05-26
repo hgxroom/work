@@ -425,10 +425,10 @@ export default {
         startTime: this.queryParams.dateTimePicker[0] ? dateTimePicker[0] + ' 00:00:00' : '',
         endTime: this.queryParams.dateTimePicker[1] ? dateTimePicker[1] + ' 23:59:59' : '',
       }
-      if (salesman || saleLeader) {
+      if (salesman) {
         salesmanExport(params)
       }
-      if (quotedPrice) {
+      if (quotedPrice || saleLeader) {
         quotedPriceExport(params)
       }
     },

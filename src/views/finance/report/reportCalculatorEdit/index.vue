@@ -179,12 +179,14 @@
         <p class="title">历史报价信息</p>
         <el-table
           size="small"
+          border
+          max-height="500"
           :data="formHistoryData.data"
-          style="width: 100%; font-size: 14px; color: #242424; border-color: #000"
+          style="width: 100%; font-size: 14px; color: #242424"
           highlight-current-row
           header-row-class-name="tableHeader"
         >
-          <el-table-column label="序号" type="index" align="center" width="100px"></el-table-column>
+          <el-table-column label="序号" type="index" align="center" width="80px"></el-table-column>
           <el-table-column
             v-for="(item, index) in formHistoryData.columns"
             :key="index"
@@ -218,7 +220,18 @@
                 :key="index"
                 :title="item.yarnName"
               >
-                {{ item.yarnName }}
+                <el-popover
+                  trigger="hover"
+                  placement="top"
+                  popper-class="popper-class"
+                  :visible-arrow="false"
+                >
+                  <p style="max-width: 600px; margin: 0">{{ item.yarnName }}</p>
+                  <div slot="reference" class="content-colum">
+                    {{ item.yarnName }}
+                  </div>
+                </el-popover>
+                <!-- {{ item.yarnName }} -->
               </div>
             </template>
           </el-table-column>
@@ -444,7 +457,12 @@ export default {
         },
       ],
       //染色成本数据
-      dyeingCostList: [],
+      dyeingCostList: [
+        {
+          jobType: '',
+          colorName: '',
+        },
+      ],
       //纱线成本数据
       yarnCostList: [],
       yarnCostTotal: [],
@@ -1256,7 +1274,17 @@ export default {
 ::v-deep .el-table tr:hover > td {
   background-color: #fff !important;
 }
-
+.el-table--border:after,
+.el-table--group:after,
+.el-table:before {
+  background-color: #f3f3f3;
+}
+.el-table--border {
+  border: 1px solid #f3f3f3;
+}
+::v-deep .el-table--border .el-table__cell {
+  border-right: 1px solid #f3f3f3;
+}
 ::v-deep.el-form-item {
   width: 100%;
   .el-form-item__label {
@@ -1292,5 +1320,36 @@ export default {
     cursor: pointer;
     line-height: 23px;
   }
+}
+.tab-div {
+  border-bottom: 1px solid #f3f3f3;
+  margin: 0 -10px;
+  padding: 8px 10px;
+}
+.tab-divline {
+  padding-left: 0;
+  margin-left: 0px;
+}
+.tab-divline2 {
+  padding-right: 0;
+  margin-right: 0px;
+}
+.tab-div:last-child {
+  border-bottom: none;
+}
+.el-divider {
+  background-color: rgba(243, 243, 243, 1);
+}
+.content-colum {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  -o-text-overflow: ellipsis; /* for Opera */
+}
+</style>
+<style>
+.popper-class {
+  background-color: rgba(48, 49, 51, 0.95);
+  color: #fff;
 }
 </style>
