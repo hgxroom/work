@@ -495,7 +495,12 @@ export default {
         },
       ],
       //染色成本数据
-      dyeingCostList: [],
+      dyeingCostList: [
+        {
+          jobType: '',
+          colorName: '',
+        },
+      ],
       //纱线成本数据
       yarnCostList: [],
       yarnCostTotal: [],
@@ -574,11 +579,11 @@ export default {
     this.yarnName = this.$route.query.yarnName
     this.remark = this.$route.query.remark
     const obj = Object.assign({}, this.$route, {
-      title: `成本报价`,
+      title: `报价详情`,
     })
-    if (this.type == 'detail') {
-      obj.meta.title = '报价详情'
-    }
+    // if (this.type == 'detail') {
+    //   obj.meta.title = '报价详情'
+    // }
     this.$tab.updatePage(obj)
     this.getlist()
     this.getCheckList()
