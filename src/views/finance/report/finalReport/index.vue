@@ -66,6 +66,7 @@
               <div class="remarks-text">
                 <el-input
                   type="textarea"
+                  maxlength="50"
                   :rows="5"
                   placeholder="请输入报价策略"
                   v-model="reportData.quotationStrategy"

@@ -29,9 +29,15 @@
             :show-overflow-tooltip="true"
           >
             <template v-slot="scope">
-              <div class="hostory-box" @click="history(scope.row.yarnNo)">
+              <div class="hostory-box">
                 <div>{{ scope.row.yarnNo }}</div>
-                <div v-if="type == 'edit'" class="el-icon-search font">历史纱价</div>
+                <div
+                  v-if="type == 'edit'"
+                  @click="history(scope.row.yarnNo)"
+                  class="el-icon-search font"
+                >
+                  历史纱价
+                </div>
               </div>
             </template>
           </el-table-column>
@@ -88,7 +94,7 @@
               <el-form-item label="织费">
                 <el-input
                   v-model="weavingCostList[0].weavingFee"
-                  :disabled="type == 'detail' ? true : false"
+                  :disabled="weavingFeeBtn"
                   :class="[type == 'detail' ? 'input-detail' : '']"
                   size="small"
                   type="number"
@@ -405,6 +411,7 @@ export default {
   ],
   data() {
     return {
+      weavingFeeBtn: true, //织费输入框
       remark: '', //备注
       jobTypeList: [], //选中作业类型
       splList: [], //选中工艺
@@ -803,6 +810,15 @@ export default {
     handleCount(scope) {
       let count = 0
       this.reportBtn = true
+      //是否存在纱线价格没有填的情况
+      let data = this.yarnCostList.find((val) => {
+        return val.yarnCost == '' || val.yarnCost == null
+      })
+      if (data) {
+        this.weavingFeeBtn = true
+      } else {
+        this.weavingFeeBtn = false
+      }
       this.yarnCostList.forEach((val) => {
         count = count + Number(val.yarnCost) * Number(val.yarnRatio / 100)
       })
