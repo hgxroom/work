@@ -70,9 +70,15 @@
             :show-overflow-tooltip="true"
           >
             <template v-slot="scope">
-              <div class="hostory-box" @click="history(scope.row.yarnNo)">
+              <div class="hostory-box">
                 <div>{{ scope.row.yarnNo }}</div>
-                <div v-if="type == 'edit'" class="el-icon-search font">历史纱价</div>
+                <div
+                  v-if="type == 'edit'"
+                  @click="history(scope.row.yarnNo)"
+                  class="el-icon-search font"
+                >
+                  历史纱价
+                </div>
               </div>
             </template>
           </el-table-column>
