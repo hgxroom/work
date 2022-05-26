@@ -117,6 +117,7 @@
         <el-table
           size="small"
           :data="formData.data"
+          border
           style="width: 100%; font-size: 14px; color: #242424; bordercolor: #000"
           header-row-class-name="tableHeader"
           empty-text=" "
@@ -1118,6 +1119,12 @@ export default {
 .el-table--group:after,
 .el-table:before {
   background-color: #f3f3f3;
+}
+.el-table--border {
+  border: 1px solid #f3f3f3;
+}
+::v-deep .el-table--border .el-table__cell {
+  border-right: 1px solid #f3f3f3;
 }
 ::v-deep.el-form-item {
   width: calc(25% - 10px);
