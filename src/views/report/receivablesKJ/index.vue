@@ -2,8 +2,14 @@
   <div class="app-container">
     <!-- 搜索框 -->
     <el-row>
-      <el-col>
-        <el-form :model="queryParams" ref="queryForm" :inline="true">
+      <el-col class="search-col-from">
+        <el-form
+          :model="queryParams"
+          class="search-form"
+          label-width="100px"
+          ref="queryForm"
+          :inline="true"
+        >
           <el-form-item label="单位名称">
             <el-input v-model="queryParams.company" size="mini" clearble></el-input>
           </el-form-item>
@@ -24,11 +30,11 @@
               ></el-option>
             </el-select>
           </el-form-item>
-          <el-form-item>
-            <el-button type="primary" @click="getList">查询</el-button>
-          </el-form-item>
-          <el-button icon="el-icon-refresh" @click="resetQuery">重置</el-button>
         </el-form>
+      </el-col>
+      <el-col class="search-col-btn">
+        <el-button type="primary" @click="getList">查询</el-button>
+        <el-button icon="el-icon-refresh" @click="resetQuery">重置</el-button>
       </el-col>
     </el-row>
     <el-row class="mb8">
@@ -247,3 +253,8 @@ export default {
   },
 }
 </script>
+<style lang="scss" scoped>
+::v-deep .search-form .el-form-item__content {
+  width: calc(100% - 100px);
+}
+</style>

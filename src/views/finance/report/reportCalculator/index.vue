@@ -34,19 +34,19 @@
             :show-overflow-tooltip="true"
           />
           <el-table-column
-            label="销售报价1(元/kg)"
+            :label="'销售报价1' + '(' + settlementMethod + ')'"
             align="left"
             prop="finalQuotedPriceFirst"
             :show-overflow-tooltip="true"
           />
           <el-table-column
-            label="销售报价2(元/kg)"
+            :label="'销售报价2' + '(' + settlementMethod + ')'"
             align="left"
             prop="finalQuotedPriceSecond"
             :show-overflow-tooltip="true"
           />
           <el-table-column
-            label="销售报价3(元/kg)"
+            :label="'销售报价3' + '(' + settlementMethod + ')'"
             align="left"
             prop="finalQuotedPriceThird"
             :show-overflow-tooltip="true"
@@ -472,6 +472,7 @@ export default {
   ],
   data() {
     return {
+      settlementMethod: '', //结算方式
       remark: '', //备注
       historyYarnNo: '',
       //历史纱价
@@ -905,6 +906,7 @@ export default {
 
         this.functionCostTotal = res.data.functionCostVo.functionCostTotal
         this.finalQuotedList = res.data.finalQuotedList
+        this.settlementMethod = this.finalQuotedList[0].settlementMethod
       })
       console.log('this.weavingCostList', this.weavingCostList)
     },

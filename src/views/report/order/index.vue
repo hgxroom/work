@@ -2,13 +2,18 @@
   <div class="app-container">
     <!-- 搜索框 -->
     <el-row>
-      <el-col :span="21">
-        <el-form :model="queryParams" ref="queryForm" label-width="90px" :inline="true" size="mini">
+      <el-col class="search-col-from">
+        <el-form
+          :model="queryParams"
+          class="search-form"
+          ref="queryForm"
+          label-width="90px"
+          :inline="true"
+          size="mini"
+        >
           <el-form-item label="发货日期">
             <el-date-picker
               v-model="dateRange"
-              size="small"
-              style="width: 240px"
               value-format="yyyy-MM-dd"
               type="daterange"
               range-separator="-"
@@ -60,7 +65,7 @@
           </el-form-item>
         </el-form>
       </el-col>
-      <el-col :span="3">
+      <el-col class="search-col-btn">
         <el-button type="primary" @click="getList">查询</el-button>
         <el-button type="" @click="resetQuery">重置</el-button>
       </el-col>
