@@ -479,7 +479,7 @@ export default {
             prop: 'meterWeight',
           },
           {
-            label: '下单重量',
+            label: '订单规模',
             align: 'center',
             type: 'text',
             prop: 'orderNum',
