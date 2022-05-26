@@ -5,7 +5,7 @@ export const formRules = {
   // 客户名称
   customerName: [
     { required: true, message: '请输入客户名称', trigger: 'blur' },
-    { min: 1, max: 20, message: '长度在 1 到 20 个字符', trigger: ['change', 'blur'] },
+    // { min: 1, max: 30, message: '长度在 1 到 20 个字符', trigger: ['change', 'blur'] },
   ],
   // 结算方式
   settlementMethod: {

@@ -57,7 +57,9 @@
       <el-col :span="12">
         <el-button type="primary" class="add-btn" @click="addRepot()">新增</el-button>
       </el-col>
-      <el-col :span="12" style="text-align: right"></el-col>
+      <el-col :span="12" style="text-align: right">
+        <el-button type="default" @click="handleExportBtn" class="right-btn"> 导出 </el-button>
+      </el-col>
     </el-row>
     <!-- 列表状态 -->
     <el-row class="tab_head">
@@ -153,8 +155,14 @@
 </template>
 
 <script>
-import { getReportList, getStatusNum, getdeptList } from '@/api/finance/report'
-
+import { mapGetters } from 'vuex'
+import {
+  getReportList,
+  getStatusNum,
+  getdeptList,
+  salesmanExport,
+  quotedPriceExport,
+} from '@/api/finance/report'
 export default {
   data() {
     return {
@@ -206,7 +214,9 @@ export default {
 
   components: {},
 
-  computed: {},
+  computed: {
+    ...mapGetters({ roles: 'roles' }),
+  },
 
   created() {
     this.getList()
@@ -380,6 +390,30 @@ export default {
       this.type = val
       this.queryParams.orderStatus = val
       this.getList()
+    },
+    handleExportBtn() {
+      const { quotedOrderNo, createBy, customerName, departmentId, clothNo, dateTimePicker } =
+        this.queryParams
+      let salesman = this.roles.includes('salesman')
+      let quotedPrice = this.roles.includes('quotedPrice')
+      let saleLeader = this.roles.includes('saleLeader')
+      console.log(this.roles)
+      console.log('点击导出')
+      let params = {
+        quotedOrderNo,
+        createBy,
+        customerName,
+        departmentId,
+        clothNo,
+        startTime: this.queryParams.dateTimePicker[0] ? dateTimePicker[0] + ' 00:00:00' : '',
+        endTime: this.queryParams.dateTimePicker[1] ? dateTimePicker[1] + ' 23:59:59' : '',
+      }
+      if (salesman || saleLeader) {
+        salesmanExport(params)
+      }
+      if (quotedPrice) {
+        quotedPriceExport(params)
+      }
     },
   },
 }
