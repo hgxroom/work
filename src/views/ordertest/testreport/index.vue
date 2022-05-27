@@ -1,186 +1,195 @@
 <template>
   <div class="app-container">
-    <!-- 搜索框 -->
-    <el-row>
-      <el-col>
-        <el-form :model="queryParams" ref="queryForm" :inline="true">
-          <el-col :span="15">
-            <el-form-item label="客户名称">
-              <el-input v-model="queryParams.khmc" size="mini" clearble></el-input>
+    <div class="card-box">
+      <!-- 搜索框 -->
+      <el-row>
+        <el-col>
+          <el-form :model="queryParams" ref="queryForm" :inline="true">
+            <el-col :span="15">
+              <el-form-item label="客户名称">
+                <el-input v-model="queryParams.khmc" size="mini" clearble></el-input>
+              </el-form-item>
+              <el-form-item label="订单号">
+                <el-input v-model="queryParams.ddh" size="mini" clearble></el-input>
+              </el-form-item>
+              <el-form-item label="颜色">
+                <el-input v-model="queryParams.ys" size="mini" clearble></el-input>
+              </el-form-item>
+              <el-form-item label="缩水日期">
+                <el-date-picker
+                  v-model="dateRange"
+                  size="small"
+                  style="width: 240px"
+                  value-format="yyyy-MM-dd"
+                  type="daterange"
+                  range-separator="-"
+                  start-placeholder="开始日期"
+                  end-placeholder="结束日期"
+                  :picker-options="pickerOptions"
+                ></el-date-picker>
+              </el-form-item>
+              <el-form-item label="流转卡号">
+                <el-input v-model="queryParams.lzkh" size="mini" clearble></el-input>
+              </el-form-item>
+              <el-form-item label="缸号">
+                <el-input v-model="queryParams.gh" size="mini" clearble></el-input>
+              </el-form-item>
+            </el-col>
+            <el-form-item>
+              <el-button type="primary" @click="getList">查询</el-button>
             </el-form-item>
-            <el-form-item label="订单号">
-              <el-input v-model="queryParams.ddh" size="mini" clearble></el-input>
-            </el-form-item>
-            <el-form-item label="颜色">
-              <el-input v-model="queryParams.ys" size="mini" clearble></el-input>
-            </el-form-item>
-            <el-form-item label="缩水日期">
-              <el-date-picker
-                v-model="dateRange"
-                size="small"
-                style="width: 240px"
-                value-format="yyyy-MM-dd"
-                type="daterange"
-                range-separator="-"
-                start-placeholder="开始日期"
-                end-placeholder="结束日期"
-                :picker-options="pickerOptions"
-              ></el-date-picker>
-            </el-form-item>
-            <el-form-item label="流转卡号">
-              <el-input v-model="queryParams.lzkh" size="mini" clearble></el-input>
-            </el-form-item>
-            <el-form-item label="缸号">
-              <el-input v-model="queryParams.gh" size="mini" clearble></el-input>
-            </el-form-item>
-          </el-col>
-          <el-form-item>
-            <el-button type="primary" @click="getList">查询</el-button>
-          </el-form-item>
-          <el-button icon="el-icon-refresh" @click="resetQuery">重置</el-button>
-        </el-form>
-      </el-col>
-    </el-row>
-    <el-row class="mb8">
-      <el-col>
-        <el-button
-          plain
-          size="mini"
-          icon="el-icon-tickets"
-          :loading="downloadLoading"
-          @click="exportReport"
-          >导出报表</el-button
-        >
-      </el-col>
-    </el-row>
-    <el-table
-      ref="tableData"
-      :data="listData"
-      v-loading="loading"
-      :height="tableHeight"
-      style="width: 100%"
-    >
-      <el-table-column
-        label="订单号"
-        align="center"
-        prop="ddh"
-        width="100"
-        :show-overflow-tooltip="true"
-      />
-      <el-table-column
-        label="流转卡号"
-        align="center"
-        prop="lzkh"
-        width="80"
-        :show-overflow-tooltip="true"
-      />
-      <el-table-column label="缸号" align="center" prop="gh" :show-overflow-tooltip="true" />
-      <el-table-column label="客户" align="center" prop="khmc" :show-overflow-tooltip="true" />
-      <el-table-column
-        label="款号"
-        align="center"
-        prop="kh"
-        width="80"
-        :show-overflow-tooltip="true"
-      />
-      <el-table-column label="颜色" align="center" prop="ys" :show-overflow-tooltip="true" />
-      <el-table-column label="布类" align="center" prop="bl" :show-overflow-tooltip="true" />
-      <el-table-column label="客户要求" align="center">
+            <el-button icon="el-icon-refresh" @click="resetQuery">重置</el-button>
+          </el-form>
+        </el-col>
+      </el-row>
+    </div>
+    <div class="card-box">
+      <el-row class="mb8">
+        <el-col>
+          <el-button
+            plain
+            size="mini"
+            icon="el-icon-tickets"
+            :loading="downloadLoading"
+            @click="exportReport"
+            >导出报表</el-button
+          >
+        </el-col>
+      </el-row>
+      <el-table
+        ref="tableData"
+        :data="listData"
+        v-loading="loading"
+        :height="tableHeight"
+        style="width: 100%"
+      >
         <el-table-column
-          label="封度"
+          label="订单号"
           align="center"
-          prop="fd"
-          width="60"
+          prop="ddh"
+          width="100"
           :show-overflow-tooltip="true"
         />
         <el-table-column
-          label="克重"
+          label="流转卡号"
           align="center"
-          prop="kz"
-          width="60"
+          prop="lzkh"
+          width="80"
           :show-overflow-tooltip="true"
         />
-      </el-table-column>
-      <el-table-column label="色牢度" align="center">
+        <el-table-column label="缸号" align="center" prop="gh" :show-overflow-tooltip="true" />
+        <el-table-column label="客户" align="center" prop="khmc" :show-overflow-tooltip="true" />
         <el-table-column
-          label="湿擦"
+          label="款号"
           align="center"
-          prop="sc"
-          width="60"
+          prop="kh"
+          width="80"
+          :show-overflow-tooltip="true"
+        />
+        <el-table-column label="颜色" align="center" prop="ys" :show-overflow-tooltip="true" />
+        <el-table-column label="布类" align="center" prop="bl" :show-overflow-tooltip="true" />
+        <el-table-column label="客户要求" align="center">
+          <el-table-column
+            label="封度"
+            align="center"
+            prop="fd"
+            width="60"
+            :show-overflow-tooltip="true"
+          />
+          <el-table-column
+            label="克重"
+            align="center"
+            prop="kz"
+            width="60"
+            :show-overflow-tooltip="true"
+          />
+        </el-table-column>
+        <el-table-column label="色牢度" align="center">
+          <el-table-column
+            label="湿擦"
+            align="center"
+            prop="sc"
+            width="60"
+            :show-overflow-tooltip="true"
+          />
+          <el-table-column
+            label="干擦"
+            align="center"
+            prop="gc"
+            width="60"
+            :show-overflow-tooltip="true"
+          />
+          <el-table-column
+            label="日光牢度"
+            align="center"
+            prop="rgld"
+            width="60"
+            :show-overflow-tooltip="true"
+          />
+        </el-table-column>
+        <el-table-column label="" align="center">
+          <el-table-column
+            label="PH值"
+            align="center"
+            prop="phz"
+            width="60"
+            :show-overflow-tooltip="true"
+          />
+        </el-table-column>
+        <el-table-column label="定后" align="center">
+          <el-table-column
+            label="封度"
+            align="center"
+            prop="fd2"
+            width="60"
+            :show-overflow-tooltip="true"
+          />
+          <el-table-column
+            label="克重"
+            align="center"
+            prop="kz2"
+            width="60"
+            :show-overflow-tooltip="true"
+          />
+        </el-table-column>
+        <el-table-column label="定后缩水" align="center">
+          <el-table-column
+            label="横缩"
+            align="center"
+            prop="hs"
+            width="60"
+            :show-overflow-tooltip="true"
+          />
+          <el-table-column
+            label="直缩"
+            align="center"
+            prop="zs"
+            width="60"
+            :show-overflow-tooltip="true"
+          />
+          <el-table-column
+            label="扭度"
+            align="center"
+            prop="nj"
+            width="60"
+            :show-overflow-tooltip="true"
+          />
+        </el-table-column>
+        <el-table-column
+          label="备注"
+          align="center"
+          prop="bz"
+          width="80"
           :show-overflow-tooltip="true"
         />
         <el-table-column
-          label="干擦"
+          label="缩水日期"
           align="center"
-          prop="gc"
-          width="60"
+          prop="ssrq"
           :show-overflow-tooltip="true"
         />
-        <el-table-column
-          label="日光牢度"
-          align="center"
-          prop="rgld"
-          width="60"
-          :show-overflow-tooltip="true"
-        />
-      </el-table-column>
-      <el-table-column label="" align="center">
-        <el-table-column
-          label="PH值"
-          align="center"
-          prop="phz"
-          width="60"
-          :show-overflow-tooltip="true"
-        />
-      </el-table-column>
-      <el-table-column label="定后" align="center">
-        <el-table-column
-          label="封度"
-          align="center"
-          prop="fd2"
-          width="60"
-          :show-overflow-tooltip="true"
-        />
-        <el-table-column
-          label="克重"
-          align="center"
-          prop="kz2"
-          width="60"
-          :show-overflow-tooltip="true"
-        />
-      </el-table-column>
-      <el-table-column label="定后缩水" align="center">
-        <el-table-column
-          label="横缩"
-          align="center"
-          prop="hs"
-          width="60"
-          :show-overflow-tooltip="true"
-        />
-        <el-table-column
-          label="直缩"
-          align="center"
-          prop="zs"
-          width="60"
-          :show-overflow-tooltip="true"
-        />
-        <el-table-column
-          label="扭度"
-          align="center"
-          prop="nj"
-          width="60"
-          :show-overflow-tooltip="true"
-        />
-      </el-table-column>
-      <el-table-column
-        label="备注"
-        align="center"
-        prop="bz"
-        width="80"
-        :show-overflow-tooltip="true"
-      />
-      <el-table-column label="缩水日期" align="center" prop="ssrq" :show-overflow-tooltip="true" />
-    </el-table>
+      </el-table>
+    </div>
   </div>
 </template>
 <script>

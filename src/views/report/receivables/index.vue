@@ -1,143 +1,148 @@
 <template>
   <div class="app-container">
-    <!-- 搜索框 -->
-    <el-row>
-      <el-col>
-        <el-form :model="queryParams" ref="queryForm" :inline="true">
-          <el-form-item label="单位名称">
-            <el-input v-model="queryParams.company" size="mini" clearble></el-input>
-          </el-form-item>
-          <el-form-item label="业务员">
-            <el-input v-model="queryParams.salesman" size="mini" clearble></el-input>
-          </el-form-item>
-          <el-form-item label="付款方式">
-            <el-input v-model="queryParams.payWay" size="mini" clearble></el-input>
-          </el-form-item>
-          <el-form-item label="是否逾期欠款">
-            <el-select size="mini" v-model="queryParams.overdueFlag" placeholder="请选择">
-              <el-option label="全部" value=""></el-option>
-              <el-option
-                v-for="(dict, index) in overdueFlagList"
-                :key="index"
-                :label="dict.label"
-                :value="dict.key"
-              ></el-option>
-            </el-select>
-          </el-form-item>
-          <el-form-item>
-            <el-button type="primary" @click="getList">查询</el-button>
-          </el-form-item>
-          <el-button icon="el-icon-refresh" @click="resetQuery">重置</el-button>
-        </el-form>
-      </el-col>
-    </el-row>
-    <el-row class="mb8">
-      <el-col>
-        <el-button
-          plain
-          size="mini"
-          icon="el-icon-tickets"
-          :loading="downloadLoading"
-          @click="exportReport"
-          >导出报表</el-button
-        >
-      </el-col>
-    </el-row>
-    <el-table
-      ref="tableData"
-      :data="listData"
-      v-loading="loading"
-      :show-summary="true"
-      :summary-method="tableSummaries"
-      :height="tableHeight"
-      style="width: 100%"
-    >
-      <el-table-column
-        label="单位名称"
-        align="center"
-        prop="company"
-        :show-overflow-tooltip="true"
-      />
-      <el-table-column label="累计欠款金额" align="center">
+    <div class="card-box">
+      <!-- 搜索框 -->
+      <el-row>
+        <el-col>
+          <el-form :model="queryParams" ref="queryForm" :inline="true">
+            <el-form-item label="单位名称">
+              <el-input v-model="queryParams.company" size="mini" clearble></el-input>
+            </el-form-item>
+            <el-form-item label="业务员">
+              <el-input v-model="queryParams.salesman" size="mini" clearble></el-input>
+            </el-form-item>
+            <el-form-item label="付款方式">
+              <el-input v-model="queryParams.payWay" size="mini" clearble></el-input>
+            </el-form-item>
+            <el-form-item label="是否逾期欠款">
+              <el-select size="mini" v-model="queryParams.overdueFlag" placeholder="请选择">
+                <el-option label="全部" value=""></el-option>
+                <el-option
+                  v-for="(dict, index) in overdueFlagList"
+                  :key="index"
+                  :label="dict.label"
+                  :value="dict.key"
+                ></el-option>
+              </el-select>
+            </el-form-item>
+            <el-form-item>
+              <el-button type="primary" @click="getList">查询</el-button>
+            </el-form-item>
+            <el-button icon="el-icon-refresh" @click="resetQuery">重置</el-button>
+          </el-form>
+        </el-col>
+      </el-row>
+    </div>
+    <div class="card-box">
+      <el-row class="mb8">
+        <el-col>
+          <el-button
+            plain
+            size="mini"
+            icon="el-icon-tickets"
+            :loading="downloadLoading"
+            @click="exportReport"
+            >导出报表</el-button
+          >
+        </el-col>
+      </el-row>
+      <el-table
+        ref="tableData"
+        :data="listData"
+        v-loading="loading"
+        :show-summary="true"
+        :summary-method="tableSummaries"
+        :height="tableHeight"
+        style="width: 100%"
+        max-height="580px"
+      >
         <el-table-column
-          label="已开票金额(元)"
+          label="单位名称"
           align="center"
-          prop="invoiceAmount"
+          prop="company"
           :show-overflow-tooltip="true"
         />
-        <el-table-column
-          label="未开票金额(元)"
-          align="center"
-          prop="unInvoicedAmount"
-          :show-overflow-tooltip="true"
-        />
-        <el-table-column
-          label="总计金额(元)"
-          align="center"
-          prop="totalAmount"
-          :show-overflow-tooltip="true"
-        />
-      </el-table-column>
-
-      <el-table-column
-        label="业务员"
-        align="center"
-        prop="salesman"
-        :show-overflow-tooltip="true"
-      />
-      <el-table-column
-        label="付款方式"
-        align="center"
-        prop="payWay"
-        :show-overflow-tooltip="true"
-      />
-      <el-table-column align="center" label="月末应回款金额(元)">
-        <el-table-column align="center" label="逾期金额(元)">
+        <el-table-column label="累计欠款金额" align="center">
           <el-table-column
-            label="1-30天"
+            label="已开票金额(元)"
             align="center"
-            prop="oneMonthAmount"
+            prop="invoiceAmount"
             :show-overflow-tooltip="true"
           />
           <el-table-column
-            label="31-60天"
+            label="未开票金额(元)"
             align="center"
-            prop="twoMonthAmount"
+            prop="unInvoicedAmount"
             :show-overflow-tooltip="true"
           />
           <el-table-column
-            label="61-90天"
+            label="总计金额(元)"
             align="center"
-            prop="threeMonthAmount"
-            :show-overflow-tooltip="true"
-          />
-          <el-table-column
-            label="91-150天"
-            align="center"
-            prop="fourMonthAmount"
-            :show-overflow-tooltip="true"
-          />
-          <el-table-column
-            label="150天以上"
-            align="center"
-            prop="fiveMonthAmount"
+            prop="totalAmount"
             :show-overflow-tooltip="true"
           />
         </el-table-column>
+
         <el-table-column
-          label="月末到期金额(元)"
+          label="业务员"
           align="center"
-          prop="endMonthAmount"
+          prop="salesman"
           :show-overflow-tooltip="true"
         />
         <el-table-column
-          label="合计金额"
+          label="付款方式"
           align="center"
-          prop="endMonthTotalAmount"
+          prop="payWay"
           :show-overflow-tooltip="true"
         />
-      </el-table-column>
-    </el-table>
+        <el-table-column align="center" label="月末应回款金额(元)">
+          <el-table-column align="center" label="逾期金额(元)">
+            <el-table-column
+              label="1-30天"
+              align="center"
+              prop="oneMonthAmount"
+              :show-overflow-tooltip="true"
+            />
+            <el-table-column
+              label="31-60天"
+              align="center"
+              prop="twoMonthAmount"
+              :show-overflow-tooltip="true"
+            />
+            <el-table-column
+              label="61-90天"
+              align="center"
+              prop="threeMonthAmount"
+              :show-overflow-tooltip="true"
+            />
+            <el-table-column
+              label="91-150天"
+              align="center"
+              prop="fourMonthAmount"
+              :show-overflow-tooltip="true"
+            />
+            <el-table-column
+              label="150天以上"
+              align="center"
+              prop="fiveMonthAmount"
+              :show-overflow-tooltip="true"
+            />
+          </el-table-column>
+          <el-table-column
+            label="月末到期金额(元)"
+            align="center"
+            prop="endMonthAmount"
+            :show-overflow-tooltip="true"
+          />
+          <el-table-column
+            label="合计金额"
+            align="center"
+            prop="endMonthTotalAmount"
+            :show-overflow-tooltip="true"
+          />
+        </el-table-column>
+      </el-table>
+    </div>
   </div>
 </template>
 <script>

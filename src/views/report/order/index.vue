@@ -1,232 +1,247 @@
 <template>
   <div class="app-container">
-    <!-- 搜索框 -->
-    <el-row>
-      <el-col :span="21">
-        <el-form :model="queryParams" ref="queryForm" label-width="90px" :inline="true" size="mini">
-          <el-form-item label="发货日期">
-            <el-date-picker
-              v-model="dateRange"
-              size="small"
-              style="width: 240px"
-              value-format="yyyy-MM-dd"
-              type="daterange"
-              range-separator="-"
-              start-placeholder="开始日期"
-              end-placeholder="结束日期"
-              :picker-options="pickerOptions"
-            ></el-date-picker>
-          </el-form-item>
-          <el-form-item label="客户名称">
-            <el-input v-model="queryParams.company"></el-input>
-          </el-form-item>
-          <el-form-item label="订单号">
-            <el-input v-model="queryParams.orderNum"></el-input>
-          </el-form-item>
-          <el-form-item label="业务员">
-            <el-input v-model="queryParams.salesman"></el-input>
-          </el-form-item>
-          <el-form-item label="所属办事处">
-            <el-input v-model="queryParams.department"></el-input>
-          </el-form-item>
-          <el-form-item label="客服经理">
-            <el-input v-model="queryParams.manager"></el-input>
-          </el-form-item>
-          <el-form-item label="付款方式">
-            <el-input v-model="queryParams.payWay"></el-input>
-          </el-form-item>
-          <el-form-item label="发货单号">
-            <el-input v-model="queryParams.sendOutNum"></el-input>
-          </el-form-item>
-          <el-form-item label="缸号">
-            <el-input v-model="queryParams.gangNum"></el-input>
-          </el-form-item>
-          <el-form-item label="开发单号">
-            <el-input v-model="queryParams.developNum"></el-input>
-          </el-form-item>
-          <el-form-item label="发票号码">
-            <el-input v-model="queryParams.invoiceNum"></el-input>
-          </el-form-item>
-          <el-form-item label="是否欠款">
-            <el-select v-model="queryParams.arrearsFlag" placeholder="请选择">
-              <el-option label="全部" value=""></el-option>
-              <el-option
-                v-for="(dict, index) in arrearsFlagList"
-                :key="index"
-                :label="dict.label"
-                :value="dict.key"
-              ></el-option>
-            </el-select>
-          </el-form-item>
-        </el-form>
-      </el-col>
-      <el-col :span="3">
-        <el-button type="primary" @click="getList">查询</el-button>
-        <el-button type="" @click="resetQuery">重置</el-button>
-      </el-col>
-    </el-row>
-    <el-row class="mb8">
-      <el-col>
-        <el-button
-          plain
-          size="mini"
-          icon="el-icon-tickets"
-          :loading="downloadLoading"
-          @click="exportReport"
-          >导出报表</el-button
-        >
-      </el-col>
-    </el-row>
-    <el-table
-      ref="tableData"
-      :data="listData"
-      v-loading="loading"
-      :show-summary="true"
-      :summary-method="tableSummaries"
-      :height="tableHeight"
-      style="width: 100%"
-      :span-method="arraySpanMethod"
-      v-loadmore="load"
-    >
-      <el-table-column
-        label="客户名称"
-        align="center"
-        prop="khmch"
-        min-width="150px"
-        :show-overflow-tooltip="true"
-      />
-      <el-table-column label="订单号" align="center" prop="ddh" min-width="120px" />
-      <el-table-column
-        label="订单重量（KG）"
-        align="center"
-        prop="ddzlTotal"
-        :show-overflow-tooltip="true"
-      />
-      <el-table-column label="订单金额（元）" align="center" prop="ddjeTotal" min-width="100px" />
-      <el-table-column label="所属办事处" align="center" prop="ywb" :show-overflow-tooltip="true" />
-      <el-table-column label="客服经理" align="center" prop="zbr" :show-overflow-tooltip="true" />
-      <el-table-column label="业务员" align="center" prop="ywy" :show-overflow-tooltip="true" />
-      <el-table-column
-        label="付款方式"
-        align="center"
-        prop="fktj"
-        min-width="100px"
-        :show-overflow-tooltip="true"
-      />
-      <el-table-column label="发货单号" align="center" prop="fhdh" min-width="150px" />
-      <el-table-column
-        label="发货日期"
-        align="center"
-        prop="kdrq"
-        min-width="110px"
-        :show-overflow-tooltip="true"
-      />
-      <el-table-column
-        label="开发单号"
-        align="center"
-        prop="bh"
-        min-width="100px"
-        :show-overflow-tooltip="true"
-      />
-      <el-table-column
-        label="缸号"
-        align="center"
-        prop="lzkh"
-        min-width="130px"
-        :show-overflow-tooltip="true"
-      />
-      <el-table-column
-        label="发货重量（KG）"
-        align="center"
-        prop="fhzl"
-        :show-overflow-tooltip="true"
-      />
-      <el-table-column
-        label="发货金额（元）"
-        align="center"
-        prop="fhje"
-        :show-overflow-tooltip="true"
-      />
-      <el-table-column
-        label="赔款金额（元）"
-        align="center"
-        prop="pkje"
-        :show-overflow-tooltip="true"
-      />
-      <el-table-column
-        label="收款到期日"
-        align="center"
-        prop="skdqr"
-        min-width="100px"
-        :show-overflow-tooltip="true"
-      />
-      <el-table-column
-        label="收款日期"
-        align="center"
-        prop="hrrq"
-        min-width="110px"
-        :show-overflow-tooltip="true"
-      />
-      <el-table-column
-        label="开票日期"
-        align="center"
-        prop="fprq"
-        min-width="110px"
-        :show-overflow-tooltip="true"
-      />
-      <el-table-column
-        label="发票号码"
-        align="center"
-        prop="fph"
-        min-width="130px"
-        :show-overflow-tooltip="true"
-      />
-      <el-table-column label="累计欠款金额" align="center">
+    <div class="card-box">
+      <!-- 搜索框 -->
+      <el-row>
+        <el-col :span="21">
+          <el-form
+            :model="queryParams"
+            ref="queryForm"
+            label-width="90px"
+            :inline="true"
+            size="mini"
+          >
+            <el-form-item label="发货日期">
+              <el-date-picker
+                v-model="dateRange"
+                size="small"
+                style="width: 240px"
+                value-format="yyyy-MM-dd"
+                type="daterange"
+                range-separator="-"
+                start-placeholder="开始日期"
+                end-placeholder="结束日期"
+                :picker-options="pickerOptions"
+              ></el-date-picker>
+            </el-form-item>
+            <el-form-item label="客户名称">
+              <el-input v-model="queryParams.company"></el-input>
+            </el-form-item>
+            <el-form-item label="订单号">
+              <el-input v-model="queryParams.orderNum"></el-input>
+            </el-form-item>
+            <el-form-item label="业务员">
+              <el-input v-model="queryParams.salesman"></el-input>
+            </el-form-item>
+            <el-form-item label="所属办事处">
+              <el-input v-model="queryParams.department"></el-input>
+            </el-form-item>
+            <el-form-item label="客服经理">
+              <el-input v-model="queryParams.manager"></el-input>
+            </el-form-item>
+            <el-form-item label="付款方式">
+              <el-input v-model="queryParams.payWay"></el-input>
+            </el-form-item>
+            <el-form-item label="发货单号">
+              <el-input v-model="queryParams.sendOutNum"></el-input>
+            </el-form-item>
+            <el-form-item label="缸号">
+              <el-input v-model="queryParams.gangNum"></el-input>
+            </el-form-item>
+            <el-form-item label="开发单号">
+              <el-input v-model="queryParams.developNum"></el-input>
+            </el-form-item>
+            <el-form-item label="发票号码">
+              <el-input v-model="queryParams.invoiceNum"></el-input>
+            </el-form-item>
+            <el-form-item label="是否欠款">
+              <el-select v-model="queryParams.arrearsFlag" placeholder="请选择">
+                <el-option label="全部" value=""></el-option>
+                <el-option
+                  v-for="(dict, index) in arrearsFlagList"
+                  :key="index"
+                  :label="dict.label"
+                  :value="dict.key"
+                ></el-option>
+              </el-select>
+            </el-form-item>
+          </el-form>
+        </el-col>
+        <el-col :span="3">
+          <el-button type="primary" @click="getList">查询</el-button>
+          <el-button type="" @click="resetQuery">重置</el-button>
+        </el-col>
+      </el-row>
+    </div>
+    <div class="card-box">
+      <el-row class="mb8">
+        <el-col>
+          <el-button
+            plain
+            size="mini"
+            icon="el-icon-tickets"
+            :loading="downloadLoading"
+            @click="exportReport"
+            >导出报表</el-button
+          >
+        </el-col>
+      </el-row>
+      <el-table
+        ref="tableData"
+        :data="listData"
+        v-loading="loading"
+        :show-summary="true"
+        :summary-method="tableSummaries"
+        :max-height="500"
+        style="width: 100%"
+        :span-method="arraySpanMethod"
+        v-loadmore="load"
+      >
         <el-table-column
-          label="已开票金额（元）"
+          label="客户名称"
           align="center"
-          prop="ykpje"
+          prop="khmch"
+          min-width="150px"
+          :show-overflow-tooltip="true"
+        />
+        <el-table-column label="订单号" align="center" prop="ddh" min-width="120px" />
+        <el-table-column
+          label="订单重量（KG）"
+          align="center"
+          prop="ddzlTotal"
+          :show-overflow-tooltip="true"
+        />
+        <el-table-column label="订单金额（元）" align="center" prop="ddjeTotal" min-width="100px" />
+        <el-table-column
+          label="所属办事处"
+          align="center"
+          prop="ywb"
+          :show-overflow-tooltip="true"
+        />
+        <el-table-column label="客服经理" align="center" prop="zbr" :show-overflow-tooltip="true" />
+        <el-table-column label="业务员" align="center" prop="ywy" :show-overflow-tooltip="true" />
+        <el-table-column
+          label="付款方式"
+          align="center"
+          prop="fktj"
+          min-width="100px"
+          :show-overflow-tooltip="true"
+        />
+        <el-table-column label="发货单号" align="center" prop="fhdh" min-width="150px" />
+        <el-table-column
+          label="发货日期"
+          align="center"
+          prop="kdrq"
+          min-width="110px"
+          :show-overflow-tooltip="true"
+        />
+        <el-table-column
+          label="开发单号"
+          align="center"
+          prop="bh"
           min-width="100px"
           :show-overflow-tooltip="true"
         />
         <el-table-column
-          label="未开票金额（元）"
+          label="缸号"
           align="center"
-          prop="wkpje"
+          prop="lzkh"
+          min-width="130px"
+          :show-overflow-tooltip="true"
+        />
+        <el-table-column
+          label="发货重量（KG）"
+          align="center"
+          prop="fhzl"
+          :show-overflow-tooltip="true"
+        />
+        <el-table-column
+          label="发货金额（元）"
+          align="center"
+          prop="fhje"
+          :show-overflow-tooltip="true"
+        />
+        <el-table-column
+          label="赔款金额（元）"
+          align="center"
+          prop="pkje"
+          :show-overflow-tooltip="true"
+        />
+        <el-table-column
+          label="收款到期日"
+          align="center"
+          prop="skdqr"
           min-width="100px"
           :show-overflow-tooltip="true"
         />
         <el-table-column
-          label="总计金额（元）"
+          label="收款日期"
           align="center"
-          prop="zjje"
+          prop="hrrq"
+          min-width="110px"
+          :show-overflow-tooltip="true"
+        />
+        <el-table-column
+          label="开票日期"
+          align="center"
+          prop="fprq"
+          min-width="110px"
+          :show-overflow-tooltip="true"
+        />
+        <el-table-column
+          label="发票号码"
+          align="center"
+          prop="fph"
+          min-width="130px"
+          :show-overflow-tooltip="true"
+        />
+        <el-table-column label="累计欠款金额" align="center">
+          <el-table-column
+            label="已开票金额（元）"
+            align="center"
+            prop="ykpje"
+            min-width="100px"
+            :show-overflow-tooltip="true"
+          />
+          <el-table-column
+            label="未开票金额（元）"
+            align="center"
+            prop="wkpje"
+            min-width="100px"
+            :show-overflow-tooltip="true"
+          />
+          <el-table-column
+            label="总计金额（元）"
+            align="center"
+            prop="zjje"
+            min-width="100px"
+            :show-overflow-tooltip="true"
+          />
+        </el-table-column>
+        <el-table-column
+          label="超期天数"
+          align="center"
+          prop="cqts"
+          min-width="60px"
+          :show-overflow-tooltip="true"
+        />
+        <el-table-column
+          label="超期日利率"
+          align="center"
+          prop="cqrll"
           min-width="100px"
           :show-overflow-tooltip="true"
         />
-      </el-table-column>
-      <el-table-column
-        label="超期天数"
-        align="center"
-        prop="cqts"
-        min-width="60px"
-        :show-overflow-tooltip="true"
-      />
-      <el-table-column
-        label="超期日利率"
-        align="center"
-        prop="cqrll"
-        min-width="100px"
-        :show-overflow-tooltip="true"
-      />
-      <el-table-column
-        label="超期利息（元）"
-        align="center"
-        prop="cqlx"
-        min-width="100px"
-        :show-overflow-tooltip="true"
-      />
-      <el-table-column label="备注" align="center" prop="bz" :show-overflow-tooltip="true" />
-    </el-table>
+        <el-table-column
+          label="超期利息（元）"
+          align="center"
+          prop="cqlx"
+          min-width="100px"
+          :show-overflow-tooltip="true"
+        />
+        <el-table-column label="备注" align="center" prop="bz" :show-overflow-tooltip="true" />
+      </el-table>
+    </div>
   </div>
 </template>
 <script>
@@ -245,7 +260,7 @@ export default {
           label: '否',
         },
       ],
-      tableHeight: window.innerHeight - 255,
+      // tableHeight: window.innerHeight - 255,
       // queryParams: {
       //   company: '',
       //   salesman: '',

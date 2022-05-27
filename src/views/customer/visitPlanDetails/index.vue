@@ -1,32 +1,33 @@
 <!-- 拜访计划新增、编辑页面 -->
 <template>
   <div class="app-container">
-    <el-form
-      class="visitForm"
-      :model="formInline"
-      :inline="true"
-      ref="visitForm"
-      :rules="rules"
-      label-width="90px"
-      :label-position="labelPosition"
-    >
-      <el-form-item label="客户名称" prop="customerName">
-        <!-- 搜索框 -->
-        <el-autocomplete
-          v-model="formInline.customerName"
-          :fetch-suggestions="queryName"
-          placeholder="请输入内容"
-          :clearable="type == 'detail' ? false : true"
-          :disabled="type == 'detail' ? true : false"
-          :class="[type == 'detail' ? 'input-detail' : '']"
-          @select="handleSelect"
-        >
-          <template slot-scope="{ item }">
-            <div>{{ item.customerName }}</div>
-          </template>
-        </el-autocomplete>
-      </el-form-item>
-      <!-- <el-form-item label="客户区域" prop="customerArea">
+    <div class="card-box">
+      <el-form
+        class="visitForm"
+        :model="formInline"
+        :inline="true"
+        ref="visitForm"
+        :rules="rules"
+        label-width="90px"
+        :label-position="labelPosition"
+      >
+        <el-form-item label="客户名称" prop="customerName">
+          <!-- 搜索框 -->
+          <el-autocomplete
+            v-model="formInline.customerName"
+            :fetch-suggestions="queryName"
+            placeholder="请输入内容"
+            :clearable="type == 'detail' ? false : true"
+            :disabled="type == 'detail' ? true : false"
+            :class="[type == 'detail' ? 'input-detail' : '']"
+            @select="handleSelect"
+          >
+            <template slot-scope="{ item }">
+              <div>{{ item.customerName }}</div>
+            </template>
+          </el-autocomplete>
+        </el-form-item>
+        <!-- <el-form-item label="客户区域" prop="customerArea">
         <el-input
           v-model="formInline.customerArea"
           disabled
@@ -34,22 +35,22 @@
           :class="[type == 'detail' ? 'input-detail' : '']"
         ></el-input>
       </el-form-item> -->
-      <el-form-item label="品牌名称" prop="brandName">
-        <el-select
-          v-model="formInline.brandName"
-          placeholder="请选择"
-          :disabled="type == 'detail' ? true : false"
-          :class="[type == 'detail' ? 'select-detail' : '']"
-        >
-          <el-option
-            v-for="item in brandList"
-            :key="item.id"
-            :label="item.brandName"
-            :value="item.brandName"
-          ></el-option>
-        </el-select>
-      </el-form-item>
-      <!-- <el-form-item label="业务员" prop="salesman">
+        <el-form-item label="品牌名称" prop="brandName">
+          <el-select
+            v-model="formInline.brandName"
+            placeholder="请选择"
+            :disabled="type == 'detail' ? true : false"
+            :class="[type == 'detail' ? 'select-detail' : '']"
+          >
+            <el-option
+              v-for="item in brandList"
+              :key="item.id"
+              :label="item.brandName"
+              :value="item.brandName"
+            ></el-option>
+          </el-select>
+        </el-form-item>
+        <!-- <el-form-item label="业务员" prop="salesman">
         <el-input
           v-model="formInline.salesman"
           :disabled="true"
@@ -57,25 +58,25 @@
           :class="[type == 'detail' ? 'input-detail' : '']"
         ></el-input>
       </el-form-item> -->
-      <el-form-item label="拜访对象" prop="visitObject">
-        <el-input
-          v-model="formInline.visitObject"
-          :clearable="type == 'detail' ? false : true"
-          :disabled="type == 'detail' ? true : false"
-          :class="[type == 'detail' ? 'input-detail' : '']"
-          placeholder="请输入对象"
-        ></el-input>
-      </el-form-item>
-      <el-form-item label="职位" prop="position">
-        <el-input
-          v-model="formInline.position"
-          :clearable="type == 'detail' ? false : true"
-          :disabled="type == 'detail' ? true : false"
-          :class="[type == 'detail' ? 'input-detail' : '']"
-          placeholder="请输入职位"
-        ></el-input>
-      </el-form-item>
-      <!-- <el-form-item label="拜访目的" prop="visitPurpose">
+        <el-form-item label="拜访对象" prop="visitObject">
+          <el-input
+            v-model="formInline.visitObject"
+            :clearable="type == 'detail' ? false : true"
+            :disabled="type == 'detail' ? true : false"
+            :class="[type == 'detail' ? 'input-detail' : '']"
+            placeholder="请输入对象"
+          ></el-input>
+        </el-form-item>
+        <el-form-item label="职位" prop="position">
+          <el-input
+            v-model="formInline.position"
+            :clearable="type == 'detail' ? false : true"
+            :disabled="type == 'detail' ? true : false"
+            :class="[type == 'detail' ? 'input-detail' : '']"
+            placeholder="请输入职位"
+          ></el-input>
+        </el-form-item>
+        <!-- <el-form-item label="拜访目的" prop="visitPurpose">
         <el-select
           v-model="formInline.visitPurpose"
           placeholder="请选择"
@@ -90,39 +91,39 @@
           ></el-option>
         </el-select>
       </el-form-item> -->
-      <el-form-item label="标题" prop="titleName">
-        <el-input
-          v-model="formInline.titleName"
-          placeholder="请输入标题"
-          :clearable="type == 'detail' ? false : true"
-          :disabled="type == 'detail' ? true : false"
-          :class="[type == 'detail' ? 'input-detail input-customer-name' : '']"
-          maxlength="15"
-          show-word-limit
-        ></el-input>
-      </el-form-item>
-      <el-form-item label="拜访时间" prop="planStartTime">
-        <span v-if="type == 'detail'" style="color: #666; padding-left: 15px">
-          {{ formInline.planStartTime }} - {{ formInline.planEndTime }}
-        </span>
-        <el-date-picker
-          v-if="type !== 'detail'"
-          v-model="datePickerTime"
-          value-format="yyyy-MM-dd HH:mm:ss"
-          type="datetimerange"
-          range-separator="-"
-          start-placeholder="开始日期"
-          end-placeholder="结束日期"
-          :default-time="['00:00:00', '23:59:59']"
-          :picker-options="pickerOptions"
-          @change="pickTime"
-          :clearable="type == 'detail' ? false : true"
-          :disabled="type == 'detail' ? true : false"
-          :class="[type == 'detail' ? 'input-detail' : '']"
-        >
-        </el-date-picker>
-      </el-form-item>
-      <!-- <el-form-item label="联系方式" prop="contactInfo">
+        <el-form-item label="标题" prop="titleName">
+          <el-input
+            v-model="formInline.titleName"
+            placeholder="请输入标题"
+            :clearable="type == 'detail' ? false : true"
+            :disabled="type == 'detail' ? true : false"
+            :class="[type == 'detail' ? 'input-detail input-customer-name' : '']"
+            maxlength="15"
+            show-word-limit
+          ></el-input>
+        </el-form-item>
+        <el-form-item label="拜访时间" prop="planStartTime">
+          <span v-if="type == 'detail'" style="color: #666; padding-left: 15px">
+            {{ formInline.planStartTime }} - {{ formInline.planEndTime }}
+          </span>
+          <el-date-picker
+            v-if="type !== 'detail'"
+            v-model="datePickerTime"
+            value-format="yyyy-MM-dd HH:mm:ss"
+            type="datetimerange"
+            range-separator="-"
+            start-placeholder="开始日期"
+            end-placeholder="结束日期"
+            :default-time="['00:00:00', '23:59:59']"
+            :picker-options="pickerOptions"
+            @change="pickTime"
+            :clearable="type == 'detail' ? false : true"
+            :disabled="type == 'detail' ? true : false"
+            :class="[type == 'detail' ? 'input-detail' : '']"
+          >
+          </el-date-picker>
+        </el-form-item>
+        <!-- <el-form-item label="联系方式" prop="contactInfo">
         <el-input
           v-model="formInline.contactInfo"
           maxlength="11"
@@ -131,35 +132,36 @@
           :class="[type == 'detail' ? 'input-detail' : '']"
         ></el-input>
       </el-form-item> -->
-    </el-form>
-    <el-form
-      class="visitForm"
-      ref="baseInfoForm"
-      :model="formInline"
-      :inline="true"
-      :rules="rules"
-      :label-position="'right'"
-      label-width="90px"
-    >
-      <el-form-item class="fullWidth" label="计划目标" prop="objectivePlan">
-        <p v-if="type == 'detail'" class="unit-detail">{{ formInline.objectivePlan }}</p>
-        <el-input
-          placeholder="请输入计划目标"
-          v-if="type !== 'detail'"
-          type="textarea"
-          v-model="formInline.objectivePlan"
-          :clearable="type == 'detail' ? false : true"
-          :disabled="type == 'detail' ? true : false"
-          :class="[type == 'detail' ? 'input-textarea-detail' : '']"
-        ></el-input>
-      </el-form-item>
-      <el-form-item class="btn-group" v-if="type !== 'detail'">
-        <el-button @click="cancel">取消</el-button>
-        <el-button type="primary" @click="submit" v-hasPermi="['customer:visit:edit']"
-          >保存</el-button
-        >
-      </el-form-item>
-    </el-form>
+      </el-form>
+      <el-form
+        class="visitForm"
+        ref="baseInfoForm"
+        :model="formInline"
+        :inline="true"
+        :rules="rules"
+        :label-position="'right'"
+        label-width="90px"
+      >
+        <el-form-item class="fullWidth" label="计划目标" prop="objectivePlan">
+          <p v-if="type == 'detail'" class="unit-detail">{{ formInline.objectivePlan }}</p>
+          <el-input
+            placeholder="请输入计划目标"
+            v-if="type !== 'detail'"
+            type="textarea"
+            v-model="formInline.objectivePlan"
+            :clearable="type == 'detail' ? false : true"
+            :disabled="type == 'detail' ? true : false"
+            :class="[type == 'detail' ? 'input-textarea-detail' : '']"
+          ></el-input>
+        </el-form-item>
+        <el-form-item class="btn-group" v-if="type !== 'detail'">
+          <el-button @click="cancel">取消</el-button>
+          <el-button type="primary" @click="submit" v-hasPermi="['customer:visit:edit']"
+            >保存</el-button
+          >
+        </el-form-item>
+      </el-form>
+    </div>
   </div>
 </template>
 <script>
