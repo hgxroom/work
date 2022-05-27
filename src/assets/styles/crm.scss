@@ -286,6 +286,7 @@ h6 {
 }
 /*分块样式 */
 .app-container {
+  
   // margin: 24px;
   .card-box {
     position: relative;
@@ -312,4 +313,9 @@ h6 {
       // }
     }
   }
+
 }
+  /*白色背景 */
+  .bg-color-fff{
+    background-color: #fff;
+  }
