@@ -3,8 +3,14 @@
     <div class="card-box">
       <!-- 搜索栏 -->
       <el-row>
-        <el-col :span="20">
-          <el-form :model="queryParams" ref="queryForm" label-width="90px" :inline="true">
+        <el-col class="search-col-from">
+          <el-form
+            :model="queryParams"
+            ref="queryForm"
+            class="search-form"
+            label-width="90px"
+            :inline="true"
+          >
             <el-form-item label="部门">
               <el-select v-model="queryParams.deptId">
                 <el-option label="全部" value=""></el-option>
@@ -29,11 +35,11 @@
               >
               </el-date-picker>
             </el-form-item>
-            <el-form-item>
-              <el-button type="primary" @click="handleQueryBtn">查询</el-button>
-            </el-form-item>
-            <el-button icon="el-icon-refresh" @click="resetQuery">重置</el-button>
           </el-form>
+        </el-col>
+        <el-col class="search-col-btn">
+          <el-button type="primary" @click="handleQueryBtn">查询</el-button>
+          <el-button icon="el-icon-refresh" @click="resetQuery">重置</el-button>
         </el-col>
       </el-row>
     </div>

@@ -9,41 +9,6 @@
 					"label": ""
 				}
 			]
-		},
-		{
-			"path": "src/assets/styles/crm.scss",
-			"bookmarks": [
-				{
-					"line": 244,
-					"column": 1,
-					"label": ""
-				},
-				{
-					"line": 285,
-					"column": 1,
-					"label": ""
-				}
-			]
-		},
-		{
-			"path": "src/views/report/order/index.vue",
-			"bookmarks": [
-				{
-					"line": 83,
-					"column": 33,
-					"label": ""
-				},
-				{
-					"line": 111,
-					"column": 37,
-					"label": ""
-				},
-				{
-					"line": 150,
-					"column": 10,
-					"label": ""
-				}
-			]
 		}
 	]
 }

@@ -2,8 +2,14 @@
   <div class="app-container">
     <div class="card-box">
       <el-row>
-        <el-col :span="22">
-          <el-form :model="queryParams" ref="queryForm" label-width="90px" :inline="true">
+        <el-col class="search-col-from">
+          <el-form
+            class="search-form"
+            :model="queryParams"
+            ref="queryForm"
+            label-width="90px"
+            :inline="true"
+          >
             <el-form-item label="客户名称">
               <el-input
                 v-model="queryParams.customerName"
@@ -44,12 +50,8 @@
             </el-form-item>
           </el-form>
         </el-col>
-        <el-col :span="2">
-          <el-form>
-            <el-form-item>
-              <el-button type="primary" @click="handleQueryBtn">查询</el-button>
-            </el-form-item>
-          </el-form>
+        <el-col class="search-col-btn">
+          <el-button type="primary" @click="handleQueryBtn">查询</el-button>
         </el-col>
       </el-row>
     </div>

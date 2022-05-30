@@ -447,15 +447,19 @@ export default {
     margin-bottom: 24px;
     border-radius: 8px;
     background-color: #fff;
+    .el-form-item {
+      margin-bottom: 20px;
+    }
+    padding-bottom: 0px;
   }
   .add-btn {
-    margin: 16px 0;
+    // margin: 16px 0;
     background-color: #00a870;
     border-color: #00a870;
     padding: 8px 15px;
   }
   .right-btn {
-    margin: 16px 0 16px 16px;
+    // margin: 16px 0 16px 16px;
     padding: 8px 15px;
   }
   margin: 0px 0 24px 0;

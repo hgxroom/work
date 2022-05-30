@@ -1,42 +1,51 @@
 <template>
   <div class="app-container">
     <div class="card-box">
-      <!-- 搜索栏 -->
-      <el-form :model="queryParams" ref="queryForm" label-width="90px" :inline="true">
-        <el-form-item label="客户名称" prop="">
-          <el-input
-            v-model="queryParams.customerName"
-            placeholder="请输入客户名称"
-            clearable
-            size="small"
-          ></el-input>
-        </el-form-item>
-        <el-form-item label="业务员" v-hasRole="['admin']">
-          <el-input
-            v-model="queryParams.salesman"
-            placeholder="请输入业务员"
-            clearable
-            size="small"
-          ></el-input>
-        </el-form-item>
-        <el-form-item label="搜索区间">
-          <el-date-picker
-            v-model="queryParams.dateTimePicker"
-            type="datetimerange"
-            value-format="yyyy-MM-dd HH:mm:ss"
-            range-separator="-"
-            start-placeholder="开始日期"
-            end-placeholder="结束日期"
-            :default-time="['00:00:00', '23:59:59']"
+      <el-row>
+        <el-col class="search-col-from">
+          <!-- 搜索栏 -->
+          <el-form
+            :model="queryParams"
+            class="search-form"
+            ref="queryForm"
+            label-width="90px"
+            :inline="true"
           >
-          </el-date-picker>
-        </el-form-item>
-        <el-form-item>
+            <el-form-item label="客户名称" prop="">
+              <el-input
+                v-model="queryParams.customerName"
+                placeholder="请输入客户名称"
+                clearable
+                size="small"
+              ></el-input>
+            </el-form-item>
+            <el-form-item label="业务员" v-hasRole="['admin']">
+              <el-input
+                v-model="queryParams.salesman"
+                placeholder="请输入业务员"
+                clearable
+                size="small"
+              ></el-input>
+            </el-form-item>
+            <el-form-item label="搜索区间">
+              <el-date-picker
+                v-model="queryParams.dateTimePicker"
+                type="datetimerange"
+                value-format="yyyy-MM-dd HH:mm:ss"
+                range-separator="-"
+                start-placeholder="开始日期"
+                end-placeholder="结束日期"
+                :default-time="['00:00:00', '23:59:59']"
+              >
+              </el-date-picker>
+            </el-form-item>
+          </el-form>
+        </el-col>
+        <el-col class="search-col-btn">
           <el-button type="primary" @click="handleQueryBtn">查询</el-button>
-        </el-form-item>
-      </el-form>
+        </el-col>
+      </el-row>
     </div>
-
     <div class="card-box">
       <el-row :gutter="10" class="mb8">
         <el-col :span="1.5"
@@ -242,7 +251,7 @@ export default {
   },
 }
 </script>
-<style>
+<style lang="scss" scoped>
 .content-colum {
   overflow: hidden;
   white-space: nowrap;

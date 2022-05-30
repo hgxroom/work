@@ -5,9 +5,9 @@
       <el-row>
         <el-col class="search-col-from">
           <el-form
-            class="search-form"
-            label-width="90px"
             :model="queryParams"
+            label-width="90px"
+            class="search-form"
             ref="queryForm"
             :inline="true"
           >
@@ -197,7 +197,7 @@
   </div>
 </template>
 <script>
-import { getExternalOrderList, externalExport } from '@/api/ordertest/testreport'
+import { getExternalOrderListKJ, externalExport } from '@/api/ordertest/testreport'
 export default {
   data() {
     return {
@@ -282,7 +282,7 @@ export default {
         ys,
       }
 
-      getExternalOrderList(data)
+      getExternalOrderListKJ(data)
         .finally(() => {
           this.loading = false
         })

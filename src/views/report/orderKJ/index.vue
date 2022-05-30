@@ -72,7 +72,7 @@
         </el-col>
       </el-row>
     </div>
-    <div class="card-box">
+    <div class="card-box pb-16">
       <el-row class="mb8">
         <el-col>
           <el-button
@@ -91,7 +91,7 @@
         v-loading="loading"
         :show-summary="true"
         :summary-method="tableSummaries"
-        :height="tableHeight"
+        :height="550"
         style="width: 100%"
         :span-method="arraySpanMethod"
         v-loadmore="load"
@@ -605,3 +605,16 @@ export default {
   },
 }
 </script>
+<style lang="scss" scoped>
+.app-container {
+  .card-box {
+    padding-bottom: 0px;
+    .el-form-item {
+      margin-bottom: 20px;
+    }
+  }
+}
+.pb-16 {
+  padding-bottom: 16px !important;
+}
+</style>
