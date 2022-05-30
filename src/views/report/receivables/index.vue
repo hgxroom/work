@@ -3,8 +3,14 @@
     <div class="card-box">
       <!-- 搜索框 -->
       <el-row>
-        <el-col>
-          <el-form :model="queryParams" ref="queryForm" :inline="true">
+        <el-col class="search-col-from">
+          <el-form
+            class="search-form"
+            :model="queryParams"
+            ref="queryForm"
+            :inline="true"
+            label-width="100px"
+          >
             <el-form-item label="单位名称">
               <el-input v-model="queryParams.company" size="mini" clearble></el-input>
             </el-form-item>
@@ -25,11 +31,11 @@
                 ></el-option>
               </el-select>
             </el-form-item>
-            <el-form-item>
-              <el-button type="primary" @click="getList">查询</el-button>
-            </el-form-item>
-            <el-button icon="el-icon-refresh" @click="resetQuery">重置</el-button>
           </el-form>
+        </el-col>
+        <el-col class="search-col-btn">
+          <el-button type="primary" @click="getList">查询</el-button>
+          <el-button icon="el-icon-refresh" @click="resetQuery">重置</el-button>
         </el-col>
       </el-row>
     </div>
@@ -54,7 +60,6 @@
         :summary-method="tableSummaries"
         :height="tableHeight"
         style="width: 100%"
-        max-height="580px"
       >
         <el-table-column
           label="单位名称"
@@ -252,3 +257,8 @@ export default {
   },
 }
 </script>
+<style lang="scss" scoped>
+::v-deep .search-form .el-form-item__content {
+  width: calc(100% - 100px);
+}
+</style>

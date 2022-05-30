@@ -319,3 +319,30 @@ h6 {
   .bg-color-fff{
     background-color: #fff;
   }
+/* 列表搜索条件框样式 */
+.search-form {
+  display: flex;
+  flex-wrap: wrap;
+
+  .el-form-item {
+    min-width: 180px;
+    width: calc(25% - 40px);
+    margin-right: 40px;
+  }
+  .el-form-item__content {
+    width: calc(100% - 90px);
+  }
+
+   .el-range-editor.el-input__inner {
+    width: 100%;
+  }
+   .el-select {
+    width: 100%;
+  }
+}
+.search-col-from {
+  width: calc(100% - 224px);
+}
+.search-col-btn {
+  width: 224px;
+}
