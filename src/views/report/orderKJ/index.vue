@@ -235,7 +235,7 @@
   </div>
 </template>
 <script>
-import { getOrderlist, exportOrderDetail } from '@/api/report/order'
+import { getOrderlist, exportOrderDetail } from '@/api/report/orderKJ'
 // import { getExternalOrderList, externalExport } from '@/api/test/testapi'
 export default {
   data() {

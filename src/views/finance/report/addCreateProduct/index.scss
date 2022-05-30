@@ -1,0 +1,134 @@
+.base-form {
+  display: flex;
+  flex-wrap: wrap;
+  .el-form-item {
+    min-width: 180px;
+    width: calc(25% - 40px);
+    margin-right: 40px;
+  }
+  ::v-deep .el-form-item__content{
+     width: calc(100% - 90px);
+  }
+}
+.tab-btn-box {
+  position: relative;
+  height: 40px;
+  margin: 0 0 15px;
+  padding: 6px 0 0 6px;
+  > div {
+    width: 66px;
+    margin: auto;
+  }
+  ::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    height: 2px;
+    background-color: #dfe4ed;
+    z-index: 1;
+  }
+}
+.tab-btn-box-noline {
+  position: relative;
+  height: 40px;
+  margin: 0 0 15px;
+  padding: 6px 0 0 6px;
+  > div {
+    width: 66px;
+    margin: auto;
+  }
+}
+.form-table {
+  // margin-right: 110px;
+  .table-title {
+    float: left;
+    font-size: 15px;
+    font-weight: 700;
+    color: #1890ff;
+    line-height: 28px;
+    margin-bottom: 0px;
+    height: 40px;
+    width: 100%;
+  }
+  .table-btn {
+    float: right;
+    margin-bottom: 6px;
+  }
+}
+.btn-box {
+  width: 200px;
+  margin: 40px auto 0;
+  display: flex;
+  justify-content: center;
+}
+.el-select {
+  width: 100%;
+}
+.brand-form {
+  .el-form-item {
+    min-width: 180px;
+    width: calc(33.33% - 100px);
+    margin-right: 100px;
+  }
+}
+.textarea-detail {
+  width: 100% !important;
+  margin-right: 0 !important;
+  ::v-deep .el-form-item__content {
+    width: calc(100% - 90px);
+  }
+  ::v-deep .el-textarea__inner {
+    border: 1px solid transparent;
+    background: transparent;
+    color: #666;
+    background: transparent;
+    cursor: auto;
+  }
+  ::v-deep .el-textarea__inner {
+    border-color: transparent;
+  }
+}
+.select-detail {
+  ::v-deep .el-input__inner {
+    border: 1px solid transparent;
+    background: transparent;
+    color: #666;
+  }
+  ::v-deep .el-input.is-disabled .el-input__inner {
+    cursor: auto;
+  }
+  ::v-deep .el-input.is-disabled .el-input__inner:hover {
+    border-color: transparent;
+  }
+  ::v-deep .el-input__suffix {
+    display: none;
+  }
+}
+.unit-detail {
+  color: #666;
+  padding-left: 15px;
+}
+.multiple-detail {
+  ::v-deep .el-form-item__content {
+    width: calc(100% - 90px);
+  }
+}
+.input-detail {
+  ::v-deep .el-input__inner {
+    border: 1px solid transparent;
+    background: transparent;
+    cursor: auto;
+    color: #666;
+    overflow:hidden; //超出的文本隐藏
+    text-overflow:ellipsis; //用省略号显示
+    white-space:nowrap; //不换行
+  }
+  ::v-deep .el-input-group__append {
+    margin: 0;
+    padding: 0;
+    border-color: transparent;
+    background: transparent;
+  }
+}
