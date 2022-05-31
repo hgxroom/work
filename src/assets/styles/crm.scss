@@ -351,3 +351,17 @@ h6 {
   width: 224px;
   text-align: right;
 }
+/* tab切换样式 */
+.tab_head {
+  border-bottom: 1px solid #f3f3f3;
+  width: 100%;
+  display: flex;
+}
+.tab_box {
+  font-size: 14px;
+  padding: 16px 14px;
+  cursor: pointer;
+}
+.tab_checked {
+  border-bottom: 2px solid #0052d9;
+}
