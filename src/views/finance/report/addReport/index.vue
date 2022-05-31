@@ -806,6 +806,13 @@ export default {
         })
         return
       }
+      let index = this.baseInfo.productList.findIndex(
+        (item) => item.clothNo === this.productInfo.clothNo,
+      )
+      if (index > -1) {
+        this.$message.error('不能添加重复布号')
+        return
+      }
       this.baseInfo.productList.push(JSON.parse(JSON.stringify(this.productInfo)))
       this.formData.data = this.baseInfo.productList
       // console.log('this.formData.data', this.baseInfo.productList)
@@ -884,7 +891,9 @@ export default {
 <style lang="scss" scoped>
 .app-main {
   background: rgba(245, 247, 250, 1);
-  margin-bottom: 80px;
+  padding-bottom: 80px;
+  height: 100%;
+  overflow-y: scroll;
 }
 .container {
   margin: 24px;
