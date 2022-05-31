@@ -3,8 +3,8 @@
     <div class="card-box">
       <!-- 搜索框 -->
       <el-row>
-        <el-col>
-          <el-form :model="queryParams" ref="queryForm" :inline="true">
+        <el-col class="search-col-from">
+          <el-form class="search-form" :model="queryParams" ref="queryForm" :inline="true">
             <el-form-item label="业务员">
               <el-input v-model="queryParams.ywgdy" size="mini" clearble></el-input>
             </el-form-item>
@@ -21,11 +21,11 @@
               >
               </el-date-picker>
             </el-form-item>
-            <el-form-item>
-              <el-button type="primary" @click="getList">查询</el-button>
-            </el-form-item>
-            <el-button icon="el-icon-refresh" @click="resetQuery">重置</el-button>
           </el-form>
+        </el-col>
+        <el-col class="search-col-btn">
+          <el-button type="primary" @click="getList">查询</el-button>
+          <el-button icon="el-icon-refresh" @click="resetQuery">重置</el-button>
         </el-col>
       </el-row>
     </div>

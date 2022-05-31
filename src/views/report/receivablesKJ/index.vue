@@ -58,7 +58,7 @@
         v-loading="loading"
         :show-summary="true"
         :summary-method="tableSummaries"
-        :height="tableHeight"
+        :height="550"
         style="width: 100%"
       >
         <el-table-column
