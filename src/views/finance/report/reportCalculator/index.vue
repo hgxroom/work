@@ -386,6 +386,38 @@
           <el-button @click="addFunction">添加功能性承诺</el-button>
         </div>
       </div>
+      <!-- 综合成本 -->
+      <div class="card-box">
+        <p class="title">综合成本</p>
+        <el-table
+          size="small"
+          :data="compositeCost"
+          style="width: 100%; font-size: 14px; color: #242424; border-color: #000"
+          header-row-class-name="tableHeader"
+        >
+          <el-table-column
+            label="运费(元)"
+            align="left"
+            prop="freight"
+            :show-overflow-tooltip="true"
+          >
+          </el-table-column>
+          <el-table-column
+            label="其他费用(元)"
+            align="left"
+            prop="otherExpenses"
+            :show-overflow-tooltip="true"
+          >
+          </el-table-column>
+          <el-table-column
+            label="浮动利润率(%)"
+            align="left"
+            prop="floatingProfitMargin"
+            :show-overflow-tooltip="true"
+          >
+          </el-table-column>
+        </el-table>
+      </div>
       <!-- 最终成本报价 -->
       <div class="card-box" v-if="type == 'edit'">
         <p class="title">最终报价</p>
@@ -472,6 +504,13 @@ export default {
   ],
   data() {
     return {
+      compositeCost: [
+        {
+          otherExpenses: 0, //其他费用
+          freight: 0, //运费
+          floatingProfitMargin: 0, //浮动利润率
+        },
+      ], //综合成本
       settlementMethod: '', //结算方式
       remark: '', //备注
       historyYarnNo: '',
@@ -907,8 +946,11 @@ export default {
         this.functionCostTotal = res.data.functionCostVo.functionCostTotal
         this.finalQuotedList = res.data.finalQuotedList
         this.settlementMethod = this.finalQuotedList[0].settlementMethod
+        this.compositeCost[0].floatingProfitMargin = res.data.floatingProfitMargin
+        this.compositeCost[0].freight = res.data.freight
+        this.compositeCost[0].otherExpenses = res.data.otherExpenses
+        console.log(this.compositeCost)
       })
-      console.log('this.weavingCostList', this.weavingCostList)
     },
 
     // 确定

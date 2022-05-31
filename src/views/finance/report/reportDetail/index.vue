@@ -489,7 +489,7 @@
           >提交</el-button
         >
       </div>
-      <!-- <div class="footer" v-if="baseInfo.orderStatus == 2">
+      <div class="footer" v-if="baseInfo.orderStatus == 2">
         <el-button @click="cancel()" class="save-btn" v-if="baseInfo.roleType == 2">取消</el-button>
         <el-button
           @click="submit()"
@@ -501,7 +501,7 @@
           class="sub-btn"
           >提交</el-button
         >
-      </div> -->
+      </div>
     </div>
   </div>
 </template>

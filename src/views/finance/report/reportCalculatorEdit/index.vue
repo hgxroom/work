@@ -882,31 +882,6 @@ export default {
       this.dyeingCostList.forEach((item, index) => {
         this.finalQuotedList.forEach((val) => {
           if (item.colorName == val.colorName) {
-            console.log(
-              'Number(this.weavingCostList[0].blankCost)',
-              Number(this.weavingCostList[0].blankCost),
-            )
-            console.log(
-              'this.dyeingCostList[index].dyeingFee',
-              this.dyeingCostList[index].dyeingFee,
-            )
-            console.log('this.functionCostTotal', this.functionCostTotal)
-            console.log('this.extraWholeCost', this.extraWholeCost)
-            console.log('this.freight', this.freight)
-            console.log(
-              'this.otherExpenses',
-              this.otherExpenses,
-              [
-                (Number(this.weavingCostList[0].blankCost) +
-                  this.dyeingCostList[index].dyeingFee +
-                  Number(this.functionCostTotal) +
-                  Number(this.extraWholeCost) +
-                  Number(this.otherExpenses)) *
-                  (1 + this.extraWholeLoss / 100 + this.dyeingCostList[index].dyeingLoss / 100) +
-                  Number(this.freight),
-              ] *
-                (1 + this.floatingProfitMargin / 100),
-            )
             val.costPrice =
               [
                 (Number(this.weavingCostList[0].blankCost) +
@@ -1235,8 +1210,6 @@ export default {
         this.floatingProfitMargin = res.data.floatingProfitMargin
         this.freight = res.data.freight
         this.otherExpenses = res.data.otherExpenses
-        console.log('this.weavingCostList', this.dyeingCostList)
-        this.$set(this.dyeingCostList)
       })
     },
 
