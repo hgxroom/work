@@ -1,6 +1,11 @@
 <template>
   <div class="dashboard-editor-container">
-    <div>引鹿客户信息管理系统</div>
+    <div class="title">欢迎使用引鹿</div>
+    <div class="home-logo">
+      <p class="sub-title">引领纺织服装产业数字化及智能化升级，实现产供销高效协同</p>
+      <img src="http://luyou-platform.oss-cn-qingdao.aliyuncs.com/images/home.png" />
+    </div>
+    <p class="site-info">Copyright @ 2019-2022 TextilesFuture. All Rights Reserved</p>
   </div>
 </template>
 
@@ -54,14 +59,41 @@ export default {
 
 <style lang="scss" scoped>
 .dashboard-editor-container {
-  padding: 32px;
-  background-color: rgb(240, 242, 245);
   position: relative;
-
+  margin: 24px;
+  padding: 21px 16px;
+  background-color: #fff;
+  position: relative;
+  // height: 98%;
+  border-radius: 8px;
+  .title {
+    font-size: 16px;
+    color: #242424;
+    font-weight: bold;
+  }
+  .home-logo {
+    text-align: center;
+    padding-bottom: 80px;
+    .sub-title {
+      font-size: 24px;
+      color: #5e5e5e;
+      margin: 80px 0 46px 0;
+    }
+  }
   .chart-wrapper {
     background: #fff;
     padding: 16px 16px 0;
     margin-bottom: 32px;
+  }
+  .site-info {
+    position: fixed;
+    left: 50%;
+    bottom: 5px;
+    width: 320px;
+    text-align: center;
+    margin-left: -60px;
+    font-size: 12px;
+    color: rgba(0, 0, 0, 0.4);
   }
 }
 

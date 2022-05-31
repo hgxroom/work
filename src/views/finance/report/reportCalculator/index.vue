@@ -932,7 +932,9 @@ export default {
 <style lang="scss" scoped>
 .app-main {
   background: rgba(245, 247, 250, 1);
-  margin-bottom: 80px;
+  padding-bottom: 24px;
+  height: 100%;
+  overflow-y: scroll;
   .title-box {
     position: relative;
     background-color: #fff;

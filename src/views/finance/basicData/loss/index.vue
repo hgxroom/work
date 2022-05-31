@@ -113,7 +113,7 @@
               class="numrule"
               type="number"
               v-model="form.whiteColor"
-              placeholder="请输入白色"
+              placeholder="请输入白色损耗"
             />
           </el-form-item>
           <el-form-item label="浅色(%)" prop="lightColor">
@@ -121,7 +121,7 @@
               class="numrule"
               type="number"
               v-model="form.lightColor"
-              placeholder="请输入浅色"
+              placeholder="请输入浅色损耗"
             />
           </el-form-item>
           <el-form-item label="中色(%)" prop="mediumColor">
@@ -129,7 +129,7 @@
               class="numrule"
               type="number"
               v-model="form.mediumColor"
-              placeholder="请输入中色"
+              placeholder="请输入中色损耗"
             />
           </el-form-item>
           <el-form-item label="深色(%)" prop="darkColor">
@@ -137,7 +137,7 @@
               class="numrule"
               type="number"
               v-model="form.darkColor"
-              placeholder="请输入深色"
+              placeholder="请输入深色损耗"
             />
           </el-form-item>
           <el-form-item label="特深(%)" prop="extraDarkColor">
@@ -145,7 +145,7 @@
               class="numrule"
               type="number"
               v-model="form.extraDarkColor"
-              placeholder="请输入特深"
+              placeholder="请输入特深损耗"
             />
           </el-form-item>
           <el-form-item label="色纺(%)" prop="colorSpinning">
@@ -153,7 +153,7 @@
               class="numrule"
               type="number"
               v-model="form.colorSpinning"
-              placeholder="请输入色纺"
+              placeholder="请输入色纺损耗"
             />
           </el-form-item>
           <el-form-item label="色织(%)" prop="yarnDyedFabric">
@@ -161,7 +161,7 @@
               class="numrule"
               type="number"
               v-model="form.yarnDyedFabric"
-              placeholder="请输入色织"
+              placeholder="请输入色织损耗"
             />
           </el-form-item>
         </el-form>

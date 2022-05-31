@@ -494,7 +494,40 @@
           <el-table-column label="提交人" prop="createBy"></el-table-column>
         </el-table>
       </div>
-
+      <div class="card-box">
+        <p class="title">历史订单信息</p>
+        <el-table
+          size="small"
+          :data="formHistoryOrderData.data"
+          style="width: 100%; font-size: 14px; color: #242424; bordercolor: #000"
+          highlight-current-row
+          header-row-class-name="tableHeader"
+        >
+          <el-table-column label="序号" type="index" align="center" width="100px"></el-table-column>
+          <el-table-column
+            v-for="(item, index) in formHistoryOrderData.columns"
+            :key="index"
+            :label="item.label"
+            :prop="item.prop"
+            :width="item.width"
+            :align="item.align"
+          >
+            <template v-slot="scope">
+              <el-popover
+                trigger="hover"
+                placement="top"
+                popper-class="popper-class"
+                :visible-arrow="false"
+              >
+                <p style="max-width: 400px; margin: 0">{{ scope.row[item.prop] }}</p>
+                <div slot="reference" :class="item.prop == 'pm' ? 'content-colum' : ''">
+                  {{ scope.row[item.prop] }}
+                </div>
+              </el-popover>
+            </template>
+          </el-table-column>
+        </el-table>
+      </div>
       <div class="footer" v-if="type == 'edit'">
         <el-button @click="cancel" class="save-btn">取消</el-button>
         <el-button @click="submit" :disabled="reportBtn" class="sub-btn">确认报价</el-button>
@@ -563,7 +596,7 @@ import {
   getDyeingFeeDataByJobStatus,
   getHistoricalQuoted,
   getQuotedListByNewClothNo,
-  findFabricQuotationByBh,
+  findProductOrderDetailByBh,
 } from '@/api/finance/report'
 export default {
   dicts: [
@@ -642,6 +675,80 @@ export default {
             align: 'left',
             type: 'text',
             prop: 'blankCost',
+          },
+        ],
+        data: [],
+      },
+      // 历史订单信息
+      formHistoryOrderData: {
+        sel: null, // 选中行
+        columns: [
+          {
+            label: '订单时间',
+            align: 'left',
+            type: 'text',
+            prop: 'bzhrq',
+            width: 150,
+          },
+          {
+            label: '订单号',
+            align: 'left',
+            type: 'text',
+            prop: 'ddh',
+          },
+          {
+            label: '布号',
+            align: 'left',
+            type: 'text',
+            prop: 'bh',
+          },
+          {
+            label: '品名',
+            align: 'left',
+            type: 'text',
+            prop: 'pm',
+          },
+          {
+            label: '色号',
+            align: 'left',
+            type: 'text',
+            prop: 'sh',
+          },
+          {
+            label: '色称',
+            align: 'left',
+            type: 'text',
+            prop: 'sc',
+          },
+          {
+            label: '单价',
+            align: 'left',
+            type: 'text',
+            prop: 'price',
+          },
+          {
+            label: '结算单位',
+            align: 'left',
+            type: 'text',
+            prop: 'jsdw',
+          },
+          {
+            label: '成品重量',
+            align: 'left',
+            type: 'text',
+            prop: 'cpzl',
+          },
+          {
+            label: '客户',
+            align: 'left',
+            type: 'text',
+            prop: 'khmch',
+          },
+          {
+            label: '业务员',
+            align: 'left',
+            type: 'text',
+            prop: 'ywy',
           },
         ],
         data: [],
@@ -732,6 +839,7 @@ export default {
     this.getCheckList()
     this.getHistory()
     this.getInfo()
+    this.getHistoryOrder()
   },
   methods: {
     //获取基本信息
@@ -1147,6 +1255,14 @@ export default {
     handleClose(done) {
       this.productDialogVisible = false
     },
+    // 历史订单信息
+    getHistoryOrder() {
+      const { clothNo } = this
+      findProductOrderDetailByBh(clothNo).then((res) => {
+        this.formHistoryOrderData.data = res.data
+        // console.log(res)
+      })
+    },
   },
 }
 </script>
@@ -1163,9 +1279,9 @@ export default {
 }
 .app-main {
   background: rgba(245, 247, 250, 1);
-  height: calc(100vh - 160px) !important;
-  overflow: auto;
-  margin-bottom: 80px;
+  padding-bottom: 90px;
+  height: 100%;
+  overflow-y: scroll;
   .title-box {
     position: relative;
     background-color: #fff;
