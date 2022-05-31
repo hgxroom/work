@@ -70,6 +70,7 @@ export default {
     font-size: 16px;
     color: #242424;
     font-weight: bold;
+    text-align: left;
   }
   .home-logo {
     text-align: center;
