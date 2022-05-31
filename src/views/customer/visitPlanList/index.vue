@@ -193,6 +193,7 @@ import {
   getCustomerVisitPlan,
   editCustomerVisitPlan,
   getPlanVisitDeptList,
+  getStateList,
 } from '@/api/customer/visitPlanList'
 export default {
   data() {
@@ -210,7 +211,7 @@ export default {
       listData: [],
       pageNum: 1,
       pageSize: 30,
-
+      showFlag: false,
       selectionList: [], //多选选择数据
       deptsList: [],
       //类型标签
@@ -251,6 +252,21 @@ export default {
   },
 
   methods: {
+    //获取状态数量
+    getState(val) {
+      delete val.visitState
+      delete val.pageNum
+      delete val.pageSize
+      getStateList(val).then((res) => {
+        this.listTypes[0].num = res.data.all
+        this.listTypes[1].num = res.data.unStarted
+        this.listTypes[2].num = res.data.Starting
+        this.listTypes[3].num = res.data.unComplete
+        this.listTypes[4].num = res.data.complete
+        this.listTypes[5].num = res.data.cancel
+        this.listTypes[6].num = res.data.reschedule
+      })
+    },
     /**
      * 点击页签发起请求
      * @param {object} item 点击的页签数据项
@@ -270,6 +286,7 @@ export default {
     getDeptList() {
       getPlanVisitDeptList().then((res) => {
         this.deptsList = res.data.secondarySector
+        this.showFlag = res.data.showFlag
       })
     },
     resetQuery() {
@@ -304,41 +321,8 @@ export default {
           pageSize,
         }
       }
-      console.log(data)
       getCustomerVisitPlan(data).then((res) => {
-        if (visitState === '') {
-          this.listTypes.forEach((item) => {
-            item.num = 0
-          })
-          res.rows.forEach((element) => {
-            const state = element.visitState
-            this.listTypes[0].num += 1
-            switch (state) {
-              case '未开始':
-                //待提交
-                this.listTypes[1].num += 1
-                break
-              case '进行中':
-                this.listTypes[2].num += 1
-                break
-              case '未完成':
-                this.listTypes[3].num += 1
-                break
-              case '已完成':
-                this.listTypes[4].num += 1
-                break
-              case '已取消':
-                this.listTypes[5].num += 1
-                break
-              case '已改期':
-                this.listTypes[6].num += 1
-                break
-
-              default:
-                break
-            }
-          })
-        }
+        this.getState(data)
         this.total = res.total
         this.listData = res.rows
       })
@@ -354,16 +338,18 @@ export default {
       if (type == 'detail') {
         this.$router.push({ path: url, query: { type } })
       } else {
-        this.$confirm('是否要将该记录延期？', '提示', {
+        this.$confirm('是否要将该计划延期？', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning',
         })
           .then(() => {
             scope.row.visitState = '已改期'
-            editCustomerVisitPlan(scope.row).then((res) => {
-              this.$router.push({ path: url, query: { type } })
-            })
+
+            this.$router.push({ path: url, query: { type: type, data: JSON.stringify(scope.row) } })
+            // editCustomerVisitPlan(scope.row).then((res) => {
+
+            // })
           })
           .catch(() => {})
       }

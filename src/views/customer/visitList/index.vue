@@ -157,7 +157,7 @@
   </div>
 </template>
 <script>
-import { getVisitList, visitExport } from '@/api/customer/visit'
+import { getVisitList, visitExport, getStateList } from '@/api/customer/visit'
 export default {
   data() {
     return {
