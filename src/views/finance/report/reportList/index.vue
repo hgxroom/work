@@ -473,7 +473,7 @@ export default {
   flex-wrap: wrap;
   .el-form-item {
     min-width: 180px;
-    width: calc(30% - 40px);
+    width: calc(25% - 40px);
     margin-right: 40px;
   }
   ::v-deep .el-form-item__content {

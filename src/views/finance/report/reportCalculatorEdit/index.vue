@@ -5,13 +5,62 @@
       <!-- <div class="tit">{{ type == 'edit' ? '成本报价计算' : '报价详情' }}</div> -->
       <div class="tit-info">
         <span>布号：{{ clothNo }}</span>
-        <span> 品名：{{ yarnName }} </span>
+        <!-- <span> 品名：{{ yarnName }} </span> -->
       </div>
-      <div class="tit-info2">
+      <!-- <div class="tit-info2">
         <span>备注：{{ remark }}</span>
-      </div>
+      </div> -->
     </div>
+
     <div class="container">
+      <div class="card-box">
+        <p class="title">基本信息</p>
+
+        <div class="info-box">
+          <div class="box-row">
+            <div class="box-head mr-40">
+              <div class="box-left">品名</div>
+              <div class="box-right">
+                {{ yarnName }}
+              </div>
+            </div>
+            <div class="box-head">
+              <div class="box-left">面料成分</div>
+              <div class="box-right">
+                {{ component }}
+              </div>
+            </div>
+          </div>
+          <div class="box-row">
+            <div class="box-head mr-40">
+              <div class="box-left">备注</div>
+              <div class="box-right">
+                {{ remark || '无' }}
+              </div>
+            </div>
+            <div class="box-head">
+              <div class="box-left">工艺路线</div>
+              <div class="box-right">
+                {{ baseinfo.sclc || '无' }}
+              </div>
+            </div>
+          </div>
+          <div class="box-row">
+            <div class="box-head mr-40">
+              <div class="box-left">工艺要求</div>
+              <div class="box-right">
+                {{ baseinfo.gyyq || '无' }}
+              </div>
+            </div>
+            <div class="box-head">
+              <div class="box-left">助剂名称</div>
+              <div class="box-right">
+                {{ baseinfo.zjmch || '无' }}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
       <!-- 纱线成本 -->
       <div class="card-box">
         <p class="title">纱线成本</p>
@@ -88,81 +137,178 @@
       </div>
       <div>
         <el-row class="card-box" style="display: flex">
-          <el-col :span="8">
-            <p class="title">纱线成本</p>
+          <el-col :span="15">
+            <p class="title">综合成本</p>
             <el-form class="base-form" ref="queryForm" label-width="90px" :inline="true">
-              <el-form-item label="织费">
-                <el-input
-                  v-model="weavingCostList[0].weavingFee"
-                  :disabled="weavingFeeBtn"
-                  :class="[type == 'detail' ? 'input-detail' : '']"
-                  size="small"
-                  type="number"
-                  class="numrule"
-                  placeholder="请输入内容"
-                  @change="handleweaving($event)"
-                >
-                </el-input>
-              </el-form-item>
-              <el-form-item label="作业类型">
-                <el-select
-                  v-model="dyeingCostList[0].jobType"
-                  placeholder="请选择"
-                  style="width: 100%"
-                  :disabled="type == 'detail' ? true : false"
-                  :class="[type == 'detail' ? 'select-detail' : '']"
-                  @change="handleJob($event)"
-                >
-                  <el-option
-                    v-for="(dicts, index) in dict.type.job_type"
-                    :key="index"
-                    :label="dicts.label"
-                    :value="dicts.label"
-                  ></el-option>
-                </el-select>
-              </el-form-item>
-              <el-form-item label="工艺">
-                <el-select
-                  v-model="splList"
-                  multiple
-                  :disabled="type == 'detail' ? true : false"
-                  :class="[type == 'detail' ? 'select-detail' : '']"
-                  placeholder="请选择"
-                  style="width: 100%"
-                  @change="handleType($event)"
-                >
-                  <el-option
-                    v-for="(dict, index) in specialList"
-                    :key="index"
-                    :label="dict.processName"
-                    :value="dict.processName"
-                  ></el-option>
-                </el-select>
-              </el-form-item>
-              <el-form-item label="功能性承诺">
-                <el-select
-                  v-model="funList"
-                  multiple
-                  :disabled="type == 'detail' ? true : false"
-                  :class="[type == 'detail' ? 'select-detail' : '']"
-                  placeholder="请选择"
-                  style="width: 100%"
-                  @change="handleFunc($event)"
-                >
-                  <el-option
-                    v-for="(dict, index) in functionList"
-                    :key="index"
-                    :label="dict.commitmentName"
-                    :value="dict.commitmentName"
-                  ></el-option>
-                </el-select>
-              </el-form-item>
+              <div style="width: calc(50% - 40px); margin-right: 40px">
+                <el-row>
+                  <el-col :span="13">
+                    <el-form-item label="织费">
+                      <el-input
+                        v-model="weavingCostList[0].weavingFee"
+                        :disabled="weavingFeeBtn"
+                        :class="[type == 'detail' ? 'input-detail' : '']"
+                        size="small"
+                        type="number"
+                        class="numrule"
+                        placeholder="请输入内容"
+                        @change="handleweaving($event)"
+                      >
+                      </el-input>
+                    </el-form-item>
+                  </el-col>
+                  <el-col :span="11">
+                    <el-form-item label="织损">
+                      <el-input
+                        v-model="weavingCostList[0].weavingLoss"
+                        :disabled="weavingFeeBtn"
+                        :class="[type == 'detail' ? 'input-detail' : '']"
+                        size="mini"
+                        type="number"
+                        class="numrule"
+                        placeholder="请输入内容"
+                        @change="handleweaving($event)"
+                      >
+                        <template slot="append">%</template>
+                      </el-input>
+                    </el-form-item>
+                  </el-col>
+                </el-row>
+
+                <el-form-item label="工艺">
+                  <el-select
+                    v-model="splList"
+                    multiple
+                    :disabled="type == 'detail' ? true : false"
+                    :class="[type == 'detail' ? 'select-detail' : '']"
+                    size="small"
+                    placeholder="请选择"
+                    style="width: 100%"
+                    @change="handleType($event)"
+                  >
+                    <el-option
+                      v-for="(dict, index) in specialList"
+                      :key="index"
+                      :label="dict.processName"
+                      :value="dict.processName"
+                    ></el-option>
+                  </el-select>
+                </el-form-item>
+                <el-form-item label="功能性承诺">
+                  <el-select
+                    v-model="funList"
+                    multiple
+                    size="small"
+                    :disabled="type == 'detail' ? true : false"
+                    :class="[type == 'detail' ? 'select-detail' : '']"
+                    placeholder="请选择"
+                    style="width: 100%"
+                    @change="handleFunc($event)"
+                  >
+                    <el-option
+                      v-for="(dict, index) in functionList"
+                      :key="index"
+                      :label="dict.commitmentName"
+                      :value="dict.commitmentName"
+                    ></el-option>
+                  </el-select>
+                </el-form-item>
+                <el-form-item label="运费">
+                  <el-input
+                    v-model="freight"
+                    :class="[type == 'detail' ? 'input-detail' : '']"
+                    size="small"
+                    type="number"
+                    class="numrule"
+                    placeholder="请输入运费"
+                    @change="reportBtn = true"
+                  >
+                  </el-input>
+                </el-form-item>
+                <el-form-item label="其他费用">
+                  <el-input
+                    v-model="otherExpenses"
+                    :class="[type == 'detail' ? 'input-detail' : '']"
+                    size="small"
+                    type="number"
+                    class="numrule"
+                    placeholder="请输入其他费用"
+                    @change="reportBtn = true"
+                  >
+                  </el-input>
+                </el-form-item>
+                <el-form-item label="浮动利润率">
+                  <el-input
+                    v-model="floatingProfitMargin"
+                    :class="[type == 'detail' ? 'input-detail' : '']"
+                    size="small"
+                    type="number"
+                    class="numrule"
+                    placeholder="请输入浮动利润率"
+                    @change="reportBtn = true"
+                  >
+                    <template slot="append">%</template>
+                  </el-input>
+                </el-form-item>
+              </div>
+              <div style="width: 50%">
+                <el-form-item label="作业类型">
+                  <el-select
+                    v-model="dyeingCostList[0].jobType"
+                    placeholder="请选择"
+                    size="small"
+                    style="width: 100%"
+                    :disabled="type == 'detail' ? true : false"
+                    :class="[type == 'detail' ? 'select-detail' : '']"
+                    @change="handleJob($event)"
+                  >
+                    <el-option
+                      v-for="(dicts, index) in dict.type.job_type"
+                      :key="index"
+                      :label="dicts.label"
+                      :value="dicts.label"
+                    ></el-option>
+                  </el-select>
+                </el-form-item>
+                <el-row type="flex" v-for="(item, index) in dyeingCostList" :key="index">
+                  <el-col class="jobtype-item">{{ item.colorName }}</el-col>
+                  <el-col class="label-fz-12" :span="10">
+                    <el-form-item label="染损">
+                      <el-input
+                        v-model="item.dyeingLoss"
+                        :class="[type == 'detail' ? 'input-detail' : '']"
+                        size="mini"
+                        type="number"
+                        class="numrule"
+                        placeholder="请输入内容"
+                        @change="reportBtn = true"
+                      >
+                        <template slot="append">%</template>
+                      </el-input>
+                    </el-form-item>
+                  </el-col>
+                  <el-col class="label-fz-12" :span="10">
+                    <el-form-item label="染费">
+                      <el-input
+                        v-model="item.dyeingFee"
+                        :class="[type == 'detail' ? 'input-detail' : '']"
+                        size="mini"
+                        type="number"
+                        class="numrule"
+                        placeholder="请输入内容"
+                        @change="reportBtn = true"
+                      >
+                      </el-input>
+                    </el-form-item>
+                  </el-col>
+                </el-row>
+              </div>
             </el-form>
           </el-col>
           <el-col :span="1" style="display: flex; justify-content: center">
-            <div style="border-left: 18px solid #f5f7fa"></div>
+            <div style="border-left: 1px solid #f5f7fa"></div>
           </el-col>
-          <el-col :span="15" style="">
+          <el-col :span="8" style="">
             <p class="title">最终报价</p>
             <div class="computed">
               <p class="computed-item" v-for="(item, index) in finalQuotedList" :key="index">
@@ -417,6 +563,7 @@ import {
   getDyeingFeeDataByJobStatus,
   getHistoricalQuoted,
   getQuotedListByNewClothNo,
+  findFabricQuotationByBh,
 } from '@/api/finance/report'
 export default {
   dicts: [
@@ -424,6 +571,10 @@ export default {
   ],
   data() {
     return {
+      otherExpenses: 0, //其他费用
+      freight: 0, //运费
+      floatingProfitMargin: 0, //浮动利润率
+      baseinfo: {}, //基本信息
       weavingFeeBtn: true, //织费输入框
       remark: '', //备注
       jobTypeList: [], //选中作业类型
@@ -461,6 +612,8 @@ export default {
         {
           jobType: '',
           colorName: '',
+          dyeingFee: 10,
+          dyeingLoss: 9,
         },
       ],
       //纱线成本数据
@@ -578,8 +731,16 @@ export default {
     this.getlist()
     this.getCheckList()
     this.getHistory()
+    this.getInfo()
   },
   methods: {
+    //获取基本信息
+    getInfo() {
+      findFabricQuotationByBh(this.clothNo).then((res) => {
+        console.log(res)
+        this.baseinfo = res.data
+      })
+    },
     // 历史报价
     getHistory() {
       const { clothNo } = this
@@ -613,12 +774,42 @@ export default {
       this.dyeingCostList.forEach((item, index) => {
         this.finalQuotedList.forEach((val) => {
           if (item.colorName == val.colorName) {
+            console.log(
+              'Number(this.weavingCostList[0].blankCost)',
+              Number(this.weavingCostList[0].blankCost),
+            )
+            console.log(
+              'this.dyeingCostList[index].dyeingFee',
+              this.dyeingCostList[index].dyeingFee,
+            )
+            console.log('this.functionCostTotal', this.functionCostTotal)
+            console.log('this.extraWholeCost', this.extraWholeCost)
+            console.log('this.freight', this.freight)
+            console.log(
+              'this.otherExpenses',
+              this.otherExpenses,
+              [
+                (Number(this.weavingCostList[0].blankCost) +
+                  this.dyeingCostList[index].dyeingFee +
+                  Number(this.functionCostTotal) +
+                  Number(this.extraWholeCost) +
+                  Number(this.otherExpenses)) *
+                  (1 + this.extraWholeLoss / 100 + this.dyeingCostList[index].dyeingLoss / 100) +
+                  Number(this.freight),
+              ] *
+                (1 + this.floatingProfitMargin / 100),
+            )
             val.costPrice =
-              (Number(this.weavingCostList[0].blankCost) +
-                this.dyeingCostList[index].dyeingFee +
-                this.functionCostTotal +
-                this.extraWholeCost) *
-              (1 + this.extraWholeLoss / 100 + this.dyeingCostList[index].dyeingLoss / 100)
+              [
+                (Number(this.weavingCostList[0].blankCost) +
+                  this.dyeingCostList[index].dyeingFee +
+                  Number(this.functionCostTotal) +
+                  Number(this.extraWholeCost) +
+                  Number(this.otherExpenses)) *
+                  (1 + this.extraWholeLoss / 100 + this.dyeingCostList[index].dyeingLoss / 100) +
+                  Number(this.freight),
+              ] *
+              (1 + this.floatingProfitMargin / 100)
             val.costPrice = Number(val.costPrice).toFixed(4)
           }
         })
@@ -674,6 +865,9 @@ export default {
       data.weavingCostDtoList = this.weavingCostList
       data.yarnCostDtoList = this.yarnCostList
       data.yarnCostTotal = this.yarnCostTotal
+      data.otherExpenses = this.otherExpenses
+      data.floatingProfitMargin = this.floatingProfitMargin
+      data.freight = this.freight
       console.log(data)
       calcQuotedPrice(data).then((res) => {
         let quotedOrderNo = this.$route.query.quotedOrderNo
@@ -930,8 +1124,12 @@ export default {
 
         this.functionCostTotal = res.data.functionCostVo.functionCostTotal
         this.finalQuotedList = res.data.finalQuotedList
+        this.floatingProfitMargin = res.data.floatingProfitMargin
+        this.freight = res.data.freight
+        this.otherExpenses = res.data.otherExpenses
+        console.log('this.weavingCostList', this.dyeingCostList)
+        this.$set(this.dyeingCostList)
       })
-      console.log('this.weavingCostList', this.weavingCostList)
     },
 
     // 确定
@@ -953,8 +1151,20 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
+.jobtype-item {
+  height: 36px;
+  line-height: 36px;
+  width: 90px;
+  padding-right: 12px;
+  font-weight: 500;
+  color: #242424;
+  text-align: right;
+  font-size: 14px;
+}
 .app-main {
   background: rgba(245, 247, 250, 1);
+  height: calc(100vh - 160px) !important;
+  overflow: auto;
   margin-bottom: 80px;
   .title-box {
     position: relative;
@@ -1003,6 +1213,21 @@ export default {
         width: 80%;
       }
     }
+    .label-fz-12 {
+      ::v-deep .el-form-item__label {
+        font-size: 12px;
+      }
+    }
+
+    .el-input--mini {
+      ::v-deep .el-input__inner {
+        background-color: #f3f3f3 !important;
+        border: 0px;
+      }
+    }
+    .el-input-group {
+      vertical-align: middle;
+    }
     .delete-btn {
       .el-button {
         height: 36px;
@@ -1033,7 +1258,7 @@ export default {
     .computed {
       position: relative;
       .computed-item {
-        width: 25%;
+        width: 50%;
         display: inline-block;
         font-size: 22px;
         color: rgba(237, 123, 47, 1);
@@ -1048,6 +1273,9 @@ export default {
           padding-top: 1px;
         }
       }
+    }
+    .el-form-item {
+      margin-bottom: 10px;
     }
     .btn-box {
       margin-top: 24px;
@@ -1346,10 +1574,44 @@ export default {
   text-overflow: ellipsis;
   -o-text-overflow: ellipsis; /* for Opera */
 }
-</style>
-<style>
+.info-box {
+  .box-row {
+    display: flex;
+    margin-bottom: 16px;
+  }
+  .box-head {
+    width: calc(50% - 40px);
+    display: flex;
+  }
+  .mr-40 {
+    margin-right: 40px;
+  }
+  .box-left {
+    color: #8b8b8b;
+    font-size: 14px;
+    width: 70px;
+    text-align: right;
+    margin-right: 24px;
+  }
+  .box-right {
+    width: calc(100% - 94px);
+  }
+}
 .popper-class {
   background-color: rgba(48, 49, 51, 0.95);
   color: #fff;
+}
+::v-deep .el-input-group__append,
+.el-input-group__prepend {
+  background-color: #f3f3f3;
+  color: #909399;
+  vertical-align: middle;
+  display: table-cell;
+  position: relative;
+  border: 0px solid #dcdfe6;
+  border-radius: 4px;
+  padding: 0 12px;
+  width: 1px;
+  white-space: nowrap;
 }
 </style>
