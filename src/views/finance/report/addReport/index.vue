@@ -21,6 +21,7 @@
               placeholder="请输入关键词"
               :remote-method="remoteMethod"
               :loading="loading"
+              class="auto-prop"
             >
               <el-option
                 v-for="item in options"
@@ -745,7 +746,7 @@ export default {
           return
         }
         if (!isLt10M) {
-          this.$message.error('上传头像图片大小不能超过 10MB!')
+          this.$message.error('图片大小不能超过 10MB!')
           fileList.pop()
           return
         }

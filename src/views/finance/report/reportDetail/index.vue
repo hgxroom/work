@@ -56,6 +56,7 @@
               disabled
               :clearable="type == 'detail' ? false : true"
               :class="[type == 'detail' ? 'input-detail' : '']"
+              class="auto-prop"
             ></el-input>
           </el-form-item>
           <el-form-item label="最终客户">
@@ -921,8 +922,9 @@ export default {
 <style lang="scss" scoped>
 .app-main {
   background: rgba(245, 247, 250, 1);
+  padding-bottom: 90px;
   height: 100%;
-  overflow: scroll;
+  overflow-y: scroll;
   .title-box {
     position: relative;
     background-color: #fff;
@@ -1225,6 +1227,20 @@ export default {
   white-space: nowrap;
   text-overflow: ellipsis;
   -o-text-overflow: ellipsis; /* for Opera */
+}
+.auto-prop {
+  ::v-deep .el-input {
+    .el-input__inner {
+      width: 250px;
+      padding-right: 0;
+    }
+  }
+}
+.auto-prop {
+  ::v-deep .el-input__inner {
+    width: 250px;
+    padding-right: 0;
+  }
 }
 </style>
 <style>
