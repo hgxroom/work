@@ -319,3 +319,13 @@ export default {
   },
 }
 </script>
+<style lang="scss" scoped>
+.app-container {
+  .card-box {
+    padding-bottom: 0px;
+    .el-form-item {
+      margin-bottom: 20px;
+    }
+  }
+}
+</style>
