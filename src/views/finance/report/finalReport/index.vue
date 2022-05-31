@@ -652,8 +652,16 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
+// .hasTagsView .app-main {
+//   overflow: auto;
+//   height: 100%;
+//   min-height: calc(100vh - 84px);
+// }
 .app-main {
   background: rgba(245, 247, 250, 1);
+  padding-bottom: 90px;
+  height: 100%;
+  overflow-y: scroll;
   margin-bottom: 80px;
   .title-box {
     position: relative;
