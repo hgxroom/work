@@ -157,10 +157,10 @@
           >
             <template v-slot="scope">
               <div v-if="baseInfo.orderStatus > 1 && baseInfo.roleType !== 1">
-                <div v-for="(item, index) in scope.row.costPrice" :key="index">{{ item }}</div>
+                <div>{{ scope.row.freight }}</div>
               </div>
               <div v-if="baseInfo.orderStatus == 1 || baseInfo.roleType == 1">
-                <div v-for="(item, index) in scope.row.costPrice" :key="index">{{ item }}</div>
+                <div>{{ scope.row.freight }}</div>
               </div>
             </template>
           </el-table-column>
@@ -171,10 +171,10 @@
           >
             <template v-slot="scope">
               <div v-if="baseInfo.orderStatus > 1 && baseInfo.roleType !== 1">
-                <div v-for="(item, index) in scope.row.costPrice" :key="index">{{ item }}</div>
+                <div>{{ scope.row.otherExpenses }}</div>
               </div>
               <div v-if="baseInfo.orderStatus == 1 || baseInfo.roleType == 1">
-                <div v-for="(item, index) in scope.row.costPrice" :key="index">{{ item }}</div>
+                <div>{{ scope.row.otherExpenses }}</div>
               </div>
             </template>
           </el-table-column>
@@ -185,10 +185,10 @@
           >
             <template v-slot="scope">
               <div v-if="baseInfo.orderStatus > 1 && baseInfo.roleType !== 1">
-                <div v-for="(item, index) in scope.row.costPrice" :key="index">{{ item }}</div>
+                <div>{{ scope.row.floatingProfitMargin }}</div>
               </div>
               <div v-if="baseInfo.orderStatus == 1 || baseInfo.roleType == 1">
-                <div v-for="(item, index) in scope.row.costPrice" :key="index">{{ item }}</div>
+                <div>{{ scope.row.floatingProfitMargin }}</div>
               </div>
             </template>
           </el-table-column>
