@@ -14,8 +14,8 @@
         >提交人：{{ baseInfo.createBy }} 创建时间：{{ baseInfo.createTime }}</el-col
       >
     </el-row>
-    <div class="container">
-      <div class="card-box">
+    <div class="app-container">
+      <div class="card-box item-mb-16">
         <el-form
           class="base-form"
           :model="baseInfo"
@@ -190,7 +190,7 @@
           </el-form-item>
         </el-form>
       </div>
-      <div class="card-box">
+      <div class="card-box item-mb-16">
         <el-row>
           <p class="font_h1">纱支信息</p>
           <el-form :model="formData" class="shazhi-form" :rules="formData.rules" ref="formRef">
@@ -987,28 +987,7 @@ export default {
 }
 .container {
   margin: 24px;
-  .card-box {
-    position: relative;
-    padding: 16px 16px 24px 16px;
-    margin-bottom: 24px;
-    border-radius: 8px;
-    background-color: #fff;
-    .title {
-      color: rgba(0, 0, 0, 0.85);
-      margin: 0 0 16px 0;
-      font-weight: 600;
-      text-align: left;
-    }
-    .btn-box {
-      margin-top: 24px;
-      text-align: center;
-      .el-button {
-        border: 1px dashed rgba(38, 111, 232, 1);
-        border-color: rgba(38, 111, 232, 1);
-        color: rgba(38, 111, 232, 1);
-      }
-    }
-  }
+
   .upload-img {
     display: flex;
     font-size: 14px;
