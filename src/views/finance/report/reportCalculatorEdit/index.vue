@@ -597,6 +597,7 @@ import {
   getHistoricalQuoted,
   getQuotedListByNewClothNo,
   findProductOrderDetailByBh,
+  findFabricQuotationByBh,
 } from '@/api/finance/report'
 export default {
   dicts: [
@@ -845,7 +846,6 @@ export default {
     //获取基本信息
     getInfo() {
       findFabricQuotationByBh(this.clothNo).then((res) => {
-        console.log(res)
         this.baseinfo = res.data
       })
     },

@@ -12,27 +12,28 @@
           label-width="90px"
           :label-position="labelPosition"
         >
-          <el-form-item label="客户" prop="customerName">
-            <el-select
-              v-model="baseInfo.customerName"
-              filterable
-              remote
-              reserve-keyword
-              placeholder="请输入关键词"
-              :remote-method="remoteMethod"
-              :loading="loading"
-              class="auto-prop"
-            >
-              <el-option
-                v-for="item in options"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
+          <div class="search-form" style="width: 100%">
+            <el-form-item label="客户" prop="customerName">
+              <el-select
+                v-model="baseInfo.customerName"
+                filterable
+                remote
+                reserve-keyword
+                placeholder="请输入关键词"
+                :remote-method="remoteMethod"
+                :loading="loading"
+                class="auto-prop"
               >
-              </el-option>
-            </el-select>
-            <!-- 搜索框 -->
-            <!-- <el-autocomplete
+                <el-option
+                  v-for="item in options"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value"
+                >
+                </el-option>
+              </el-select>
+              <!-- 搜索框 -->
+              <!-- <el-autocomplete
               v-model.trim="baseInfo.customerName"
               :fetch-suggestions="queryName"
               placeholder="请输入客户名称"
@@ -45,34 +46,36 @@
                 <div>{{ item.khmch }}</div>
               </template>
             </el-autocomplete> -->
-          </el-form-item>
-          <el-form-item label="最终客户" prop="finalCustomerName">
-            <el-input
-              v-model="baseInfo.finalCustomerName"
-              placeholder="请输入最终客户"
-              :clearable="type == 'detail' ? false : true"
-              :class="[type == 'detail' ? 'input-detail' : '']"
-            ></el-input>
-          </el-form-item>
-          <el-form-item label="结算方式" prop="settlementMethod">
-            <el-select v-model="baseInfo.settlementMethod" clearable placeholder="请选择">
-              <el-option
-                v-for="(dict, index) in dict.type.pay_ways"
-                :key="index"
-                :label="dict.label"
-                :value="dict.label"
-              ></el-option>
-            </el-select>
-          </el-form-item>
-          <el-form-item label="成品用途">
-            <el-input
-              v-model="baseInfo.productApplication"
-              placeholder="请输入成品用途"
-              :clearable="type == 'detail' ? false : true"
-              class="auto-prop"
-              :class="[type == 'detail' ? 'input-detail' : '']"
-            ></el-input>
-          </el-form-item>
+            </el-form-item>
+            <el-form-item label="最终客户" prop="finalCustomerName">
+              <el-input
+                v-model="baseInfo.finalCustomerName"
+                placeholder="请输入最终客户"
+                :clearable="type == 'detail' ? false : true"
+                :class="[type == 'detail' ? 'input-detail' : '']"
+              ></el-input>
+            </el-form-item>
+            <el-form-item label="结算方式" prop="settlementMethod">
+              <el-select v-model="baseInfo.settlementMethod" clearable placeholder="请选择">
+                <el-option
+                  v-for="(dict, index) in dict.type.pay_ways"
+                  :key="index"
+                  :label="dict.label"
+                  :value="dict.label"
+                ></el-option>
+              </el-select>
+            </el-form-item>
+            <el-form-item label="成品用途">
+              <el-input
+                v-model="baseInfo.productApplication"
+                placeholder="请输入成品用途"
+                :clearable="type == 'detail' ? false : true"
+                class="auto-prop"
+                :class="[type == 'detail' ? 'input-detail' : '']"
+              ></el-input>
+            </el-form-item>
+          </div>
+
           <el-form-item
             label="备注"
             :class="['mark-textarea', type == 'detail' ? 'textarea-detail' : '']"
@@ -890,6 +893,11 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
+.search-form .el-form-item {
+  min-width: 180px;
+  width: calc(25% - 10px);
+  margin-right: 10px;
+}
 .app-main {
   background: rgba(245, 247, 250, 1);
   padding-bottom: 80px;
@@ -1052,7 +1060,7 @@ export default {
   .box {
     position: relative;
     ::v-deep.el-form-item {
-      width: calc(25% - 10px);
+      // width: calc(25% - 10px);
       .el-form-item__label {
         font-weight: normal !important;
         color: rgba(36, 36, 36, 1);
@@ -1137,7 +1145,7 @@ export default {
   border-right: 1px solid #f3f3f3;
 }
 ::v-deep.el-form-item {
-  width: calc(25% - 10px);
+  // width: calc(25% - 10px);
   .el-form-item__label {
     font-weight: normal !important;
     color: rgba(36, 36, 36, 1);
@@ -1168,18 +1176,18 @@ export default {
   text-overflow: ellipsis;
   -o-text-overflow: ellipsis; /* for Opera */
 }
-.auto-prop {
-  ::v-deep .el-input {
-    .el-input__inner {
-      width: 250px;
-    }
-  }
-}
-.auto-prop {
-  ::v-deep .el-input__inner {
-    width: 250px;
-  }
-}
+// .auto-prop {
+//   ::v-deep .el-input {
+//     .el-input__inner {
+//       width: 250px;
+//     }
+//   }
+// }
+// .auto-prop {
+//   ::v-deep .el-input__inner {
+//     width: 250px;
+//   }
+// }
 </style>
 <style>
 .popper-class {

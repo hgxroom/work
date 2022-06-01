@@ -511,7 +511,7 @@ export default {
     }
     this.type = this.$route.query.type
     const obj = Object.assign({}, this.$route, {
-      title: `自建产品`,
+      title: `新增自建产品`,
     })
     console.log(obj)
     if (this.type == 'detail') {

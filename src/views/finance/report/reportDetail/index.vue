@@ -1022,7 +1022,7 @@ export default {
     width: 100%;
   }
   .mark-textarea {
-    width: calc(25% + 308px) !important;
+    width: calc(50% - 10px) !important;
     margin-right: 0 !important;
     ::v-deep .el-form-item__content {
       width: calc(100% - 90px);

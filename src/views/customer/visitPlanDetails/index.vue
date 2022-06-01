@@ -1,7 +1,7 @@
 <!-- 拜访计划新增、编辑页面 -->
 <template>
   <div class="app-container">
-    <div class="card-box">
+    <div class="card-box item-mb-16">
       <el-form
         class="visitForm"
         :model="formInline"

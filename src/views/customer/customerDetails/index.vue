@@ -1,6 +1,6 @@
 <template>
   <div class="app-container">
-    <div class="card-box">
+    <div class="card-box item-mb-16">
       <!-- 客户基础信息 -->
       <el-form
         class="base-form"
@@ -103,7 +103,7 @@
         </el-form-item>
       </el-form>
     </div>
-    <div class="card-box">
+    <div class="card-box item-mb-16">
       <!-- 标签 -->
       <el-row>
         <el-col :span="22">
@@ -526,9 +526,9 @@
         </el-col>
       </el-row>
     </div>
-    <div class="card-box">
+    <div class="card-box" v-if="type !== 'detail'">
       <!-- 操作按钮 -->
-      <el-row type="flex" v-if="type !== 'detail'">
+      <el-row type="flex">
         <el-col>
           <div class="btn-box">
             <el-button @click="cancel">取消</el-button>

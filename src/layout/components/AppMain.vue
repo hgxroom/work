@@ -45,6 +45,7 @@ export default {
     height: 100vh;
     padding-top: 84px;
     background-color: #f5f7fa;
+    overflow: auto;
   }
 }
 </style>

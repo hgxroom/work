@@ -1175,6 +1175,7 @@ export default {
     border: 1px solid transparent;
     background: transparent;
     color: #666;
+    padding-left: 0px;
   }
   ::v-deep .el-input.is-disabled .el-input__inner {
     cursor: auto;

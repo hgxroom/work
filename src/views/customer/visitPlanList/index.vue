@@ -48,14 +48,26 @@
       <!-- 列表状态 -->
       <!-- 列表状态 -->
       <el-row class="tab_head">
-        <div
-          @click="handleStateTag(item)"
-          class="tab_box"
-          :class="item.value == queryParams.visitState ? 'tab_checked' : ''"
-          v-for="(item, index) in listTypes"
-          :key="item.name"
-        >
-          {{ item.name }} ({{ item.num }})
+        <div style="display: flex">
+          <div
+            @click="handleStateTag(item)"
+            class="tab_box"
+            :class="item.value == queryParams.visitState ? 'tab_checked' : ''"
+            v-for="(item, index) in listTypes"
+            :key="item.name"
+          >
+            {{ item.name }} ({{ item.num }})
+          </div>
+        </div>
+
+        <div>
+          <el-button
+            type="primary"
+            size="small"
+            @click="handleCreate"
+            v-hasPermi="['customer:plan:add']"
+            >新增</el-button
+          >
         </div>
       </el-row>
 
