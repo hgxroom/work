@@ -229,16 +229,15 @@
           </template>
         </el-table-column>
       </el-table>
+      <!-- 分页 -->
+      <pagination
+        v-show="total > 0"
+        :total="total"
+        :page.sync="pageNum"
+        :limit.sync="pageSize"
+        @pagination="getList"
+      />
     </div>
-
-    <!-- 分页 -->
-    <pagination
-      v-show="total > 0"
-      :total="total"
-      :page.sync="pageNum"
-      :limit.sync="pageSize"
-      @pagination="getList"
-    />
   </div>
 </template>
 <script>
@@ -398,6 +397,8 @@ export default {
 </script>
 <style lang="scss" scoped>
 .app-container {
+  height: 100%;
+  overflow-y: scroll;
   .add-btn {
     margin-bottom: 16px;
     background-color: #00a870;

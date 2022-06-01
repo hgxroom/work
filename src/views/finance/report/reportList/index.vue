@@ -62,7 +62,7 @@
           </el-col>
         </el-row>
       </div>
-      <div class="card-box">
+      <div class="card-box" style="padding-bottom: 24px">
         <el-row>
           <el-col :span="12">
             <el-button type="primary" class="add-btn" @click="addRepot()">新增</el-button>
@@ -438,7 +438,9 @@ export default {
 <style lang="scss" scoped>
 .app-main {
   background: rgba(245, 247, 250, 1);
-  // padding-bottom: 80px;
+  padding-bottom: 0px;
+  height: 100%;
+  overflow-y: scroll;
 }
 .app-container {
   .card-box {

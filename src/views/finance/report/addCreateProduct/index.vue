@@ -23,6 +23,7 @@
           ref="baseInfoForm"
           label-width="90px"
           :label-position="labelPosition"
+          :class="[type == 'detail' ? 'prod-detail' : '']"
         >
           <el-form-item label="参考布号" prop="referenceClothNo">
             <!-- 搜索框 -->
@@ -140,15 +141,7 @@
           </template>
           <el-form-item label="成分" prop="component" required>
             <div v-if="type == 'detail'">
-              <el-input
-                readonly
-                :disabled="type == 'detail' ? true : false"
-                :class="[type == 'detail' ? 'input-detail' : '']"
-                v-model="baseInfo.component"
-                placeholder="请输入成分"
-                style="width: 100%"
-                :title="type == 'detail' ? baseInfo.component : ''"
-              ></el-input>
+              <div class="unit-detail2">{{ baseInfo.component }}</div>
             </div>
             <div v-else @click="componentDialogVisible = true">
               <el-input
@@ -1084,13 +1077,34 @@ export default {
   text-align: right;
   margin-right: 24px;
 }
+.prod-detail {
+  ::v-deep .el-form-item {
+    .el-form-item__label {
+      color: #8b8b8b;
+    }
+  }
+}
+.input-detail {
+  ::v-deep .el-input__inner {
+    border: 1px solid transparent;
+    background: transparent;
+    cursor: auto;
+    color: #242424;
+  }
+  ::v-deep .el-input-group__append {
+    margin: 0;
+    padding: 0;
+    border-color: transparent;
+    background: transparent;
+  }
+}
 .unit-detail {
-  color: #666;
+  color: #242424;
   padding-left: 15px;
   line-height: 29px;
 }
 .unit-detail2 {
-  color: #666;
+  color: #242424;
   padding-left: 15px;
 }
 .el-table td.el-table__cell div {
