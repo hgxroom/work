@@ -78,42 +78,42 @@
 
             <el-table-column
               label="客户名称"
-              align="center"
+              align="left"
               prop="customerName"
               :show-overflow-tooltip="true"
             />
             <el-table-column
               label="品牌名称"
-              align="center"
+              align="left"
               prop="brandName"
               :show-overflow-tooltip="true"
             />
             <el-table-column
               label="业务员"
-              align="center"
+              align="left"
               prop="salesman"
               :show-overflow-tooltip="true"
             />
             <el-table-column
               label="标题名称"
-              align="center"
+              align="left"
               prop="titleName"
               :show-overflow-tooltip="true"
             />
             <el-table-column
               label="拜访对象"
-              align="center"
+              align="left"
               prop="visitObject"
               :show-overflow-tooltip="false"
             />
             <el-table-column
               label="职位"
-              align="center"
+              align="left"
               prop="position"
               :show-overflow-tooltip="false"
             />
 
-            <el-table-column label="拜访时间" align="center" :show-overflow-tooltip="true">
+            <el-table-column label="拜访时间" align="left" :show-overflow-tooltip="true">
               <template slot-scope="scope">
                 <span>{{ scope.row.planStartTime }}</span> -
                 <span>{{ scope.row.planEndTime.slice(10, 19) }}</span>
