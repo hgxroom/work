@@ -76,7 +76,8 @@
     .submenu-title-noDropdown,
     .el-submenu__title {
       &:hover {
-        background-color: rgba(0, 0, 0, 0.06) !important;
+        // background-color: rgba(0, 0, 0, 0.06) !important;
+        background-color: #ECF2FE !important;
       }
     }
 
@@ -89,7 +90,8 @@
       min-width: $base-sidebar-width !important;
 
       &:hover {
-        background-color: rgba(0, 0, 0, 0.06) !important;
+        // background-color: rgba(0, 0, 0, 0.06) !important;
+        background-color: #ECF2FE !important;
       }
     }
 

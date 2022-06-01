@@ -1,339 +1,344 @@
 <template>
   <div class="app-container">
-    <!-- 客户基础信息 -->
-    <el-form
-      class="base-form"
-      :model="baseInfo"
-      :rules="rules"
-      ref="baseInfoForm"
-      :inline="true"
-      label-width="90px"
-      :label-position="labelPosition"
-    >
-      <el-form-item label="客户编号">
-        <el-input
-          v-model="baseInfo.customerNo"
-          placeholder="无需填写"
-          :clearable="type == 'detail' ? false : true"
-          disabled
-          :class="[type == 'detail' ? 'input-detail' : '']"
-        ></el-input>
-      </el-form-item>
-      <el-form-item label="业务员" prop="salesman">
-        <el-input
-          v-model="baseInfo.salesman"
-          placeholder="无需输入"
-          :clearable="type == 'detail' ? false : true"
-          disabled
-          :class="[type == 'detail' ? 'input-detail' : '']"
-        ></el-input>
-      </el-form-item>
-      <el-form-item label="客户名称" prop="customerName">
-        <el-input
-          v-model="baseInfo.customerName"
-          placeholder="请输入客户名称"
-          :clearable="type == 'detail' ? false : true"
-          :disabled="type == 'detail' ? true : false"
-          :class="[type == 'detail' ? 'input-detail input-customer-name' : '']"
-          maxlength="20"
-          show-word-limit
-        ></el-input>
-      </el-form-item>
-      <el-form-item label="创建时间">
-        <el-input
-          v-model="baseInfo.createTime"
-          placeholder="无需填写"
-          :clearable="type == 'detail' ? false : true"
-          disabled
-          :class="[type == 'detail' ? 'input-detail' : '']"
-        ></el-input>
-      </el-form-item>
-      <el-form-item label="客户区域" prop="customerArea">
-        <el-select
-          v-model="baseInfo.customerArea"
-          placeholder="请选择"
-          :disabled="type == 'detail' ? true : false"
-          :class="[type == 'detail' ? 'select-detail' : '']"
-        >
-          <el-option
-            v-for="(dict, index) in dict.type.customer_area"
-            :key="index"
-            :label="dict.label"
-            :value="dict.label"
-          ></el-option>
-        </el-select>
-      </el-form-item>
-      <template>
+    <div class="card-box item-mb-16">
+      <!-- 客户基础信息 -->
+      <el-form
+        class="base-form"
+        :model="baseInfo"
+        :rules="rules"
+        ref="baseInfoForm"
+        :inline="true"
+        label-width="90px"
+        :label-position="labelPosition"
+      >
+        <el-form-item label="客户编号">
+          <el-input
+            v-model="baseInfo.customerNo"
+            placeholder="无需填写"
+            :clearable="type == 'detail' ? false : true"
+            disabled
+            :class="[type == 'detail' ? 'input-detail' : '']"
+          ></el-input>
+        </el-form-item>
+        <el-form-item label="业务员" prop="salesman">
+          <el-input
+            v-model="baseInfo.salesman"
+            placeholder="无需输入"
+            :clearable="type == 'detail' ? false : true"
+            disabled
+            :class="[type == 'detail' ? 'input-detail' : '']"
+          ></el-input>
+        </el-form-item>
+        <el-form-item label="客户名称" prop="customerName">
+          <el-input
+            v-model="baseInfo.customerName"
+            placeholder="请输入客户名称"
+            :clearable="type == 'detail' ? false : true"
+            :disabled="type == 'detail' ? true : false"
+            :class="[type == 'detail' ? 'input-detail input-customer-name' : '']"
+            maxlength="20"
+            show-word-limit
+          ></el-input>
+        </el-form-item>
+        <el-form-item label="创建时间">
+          <el-input
+            v-model="baseInfo.createTime"
+            placeholder="无需填写"
+            :clearable="type == 'detail' ? false : true"
+            disabled
+            :class="[type == 'detail' ? 'input-detail' : '']"
+          ></el-input>
+        </el-form-item>
+        <el-form-item label="客户区域" prop="customerArea">
+          <el-select
+            v-model="baseInfo.customerArea"
+            placeholder="请选择"
+            :disabled="type == 'detail' ? true : false"
+            :class="[type == 'detail' ? 'select-detail' : '']"
+          >
+            <el-option
+              v-for="(dict, index) in dict.type.customer_area"
+              :key="index"
+              :label="dict.label"
+              :value="dict.label"
+            ></el-option>
+          </el-select>
+        </el-form-item>
+        <template>
+          <el-form-item label="营收规模" prop="revenueScale">
+            <template v-if="type !== 'detail'">
+              <el-input
+                v-model.number="baseInfo.revenueScale"
+                placeholder="请输入营收规模"
+                :clearable="type == 'detail' ? false : true"
+                :disabled="type == 'detail' ? true : false"
+                :class="[type == 'detail' ? 'input-detail' : '']"
+              >
+                <template slot="append">万元</template>
+              </el-input>
+            </template>
+            <template v-else>
+              <div class="unit-detail">{{ baseInfo.revenueScale }}万元</div>
+            </template>
+          </el-form-item>
+        </template>
+        <el-form-item label="状态" prop="customerState">
+          <span v-if="type == 'detail'" class="unit-detail">{{
+            baseInfo.customerState || '-'
+          }}</span>
+          <el-select
+            v-if="type !== 'detail'"
+            v-model="baseInfo.customerState"
+            placeholder="请选择"
+            :disabled="type == 'detail' ? true : false"
+            :class="[type == 'detail' ? 'select-detail' : '']"
+          >
+            <el-option
+              v-for="(dict, index) in dict.type.customer_state"
+              :key="index"
+              :label="dict.label"
+              :value="dict.label"
+            ></el-option>
+          </el-select>
+        </el-form-item>
+      </el-form>
+    </div>
+    <div class="card-box item-mb-16">
+      <!-- 标签 -->
+      <el-row>
+        <el-col :span="22">
+          <el-tabs v-model="tabActiveName" :before-leave="beforeTabsChange">
+            <el-tab-pane v-for="(item, index) in brandList" :key="item.id" :name="item.id">
+              <span slot="label">{{ item.brandName }}</span>
+            </el-tab-pane>
+          </el-tabs>
+          <div v-if="noBrand">暂无品牌信息，请从右边按钮点击添加</div>
+        </el-col>
+        <el-col :span="2">
+          <!-- 右侧按钮 -->
+          <div
+            v-if="type !== 'detail'"
+            :class="{
+              'tab-btn-box': !noBrand,
+              'tab-btn-box-noline': noBrand,
+            }"
+          >
+            <div>
+              <el-button
+                type="primary"
+                size="mini"
+                icon="el-icon-plus"
+                circle
+                @click="handleCreateBrand"
+              ></el-button>
+              <el-button
+                :disabled="brandList.length === 0"
+                type="danger"
+                size="mini"
+                icon="el-icon-delete"
+                circle
+                @click="handleDelBrand"
+              ></el-button>
+            </div>
+          </div>
+        </el-col>
+      </el-row>
+      <!-- 品牌信息 -->
+      <el-form
+        v-if="!noBrand"
+        class="brand-form"
+        :model="brandInfo"
+        :rules="rules"
+        ref="brandInfoForm"
+        :inline="true"
+        label-width="90px"
+        :label-position="labelPosition"
+      >
+        <el-form-item label="品牌名称" prop="brandName">
+          <el-input
+            v-model="brandInfo.brandName"
+            placeholder="请输入品牌名称"
+            @input="inputBrandName"
+            :clearable="type == 'detail' ? false : true"
+            :disabled="type == 'detail' ? true : false"
+            :class="[type == 'detail' ? 'input-detail' : '']"
+          ></el-input>
+        </el-form-item>
         <el-form-item label="营收规模" prop="revenueScale">
           <template v-if="type !== 'detail'">
-            <el-input
-              v-model.number="baseInfo.revenueScale"
-              placeholder="请输入营收规模"
-              :clearable="type == 'detail' ? false : true"
-              :disabled="type == 'detail' ? true : false"
-              :class="[type == 'detail' ? 'input-detail' : '']"
+            <el-input v-model.number="brandInfo.revenueScale" placeholder="请输入营收规模">
+              <template slot="append">万元</template></el-input
             >
-              <template slot="append">万元</template>
+          </template>
+          <template v-else>
+            <div class="unit-detail">{{ brandInfo.revenueScale }}万元</div>
+          </template>
+        </el-form-item>
+        <el-form-item label="品牌分层" prop="brandGrade">
+          <el-select
+            v-model="brandInfo.brandGrade"
+            placeholder="请选择品牌分层"
+            :disabled="type == 'detail' ? true : false"
+            :class="[type == 'detail' ? 'select-detail' : '']"
+          >
+            <el-option
+              v-for="(dict, index) in dict.type.customer_brand_stratification"
+              :key="index"
+              :label="dict.label"
+              :value="dict.label"
+            ></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="联系人" prop="contacts">
+          <el-input
+            v-model="brandInfo.contacts"
+            maxlength="11"
+            placeholder="请输入联系人"
+            :clearable="type == 'detail' ? false : true"
+            :disabled="type == 'detail' ? true : false"
+            :class="[type == 'detail' ? 'input-detail' : '']"
+          ></el-input>
+        </el-form-item>
+        <el-form-item label="职位" prop="position">
+          <el-input
+            v-model="brandInfo.position"
+            placeholder="请输入职位"
+            :clearable="type == 'detail' ? false : true"
+            :disabled="type == 'detail' ? true : false"
+            :class="[type == 'detail' ? 'input-detail' : '']"
+          ></el-input>
+        </el-form-item>
+        <el-form-item label="联系方式" prop="contactInformation">
+          <el-input
+            v-model="brandInfo.contactInformation"
+            placeholder="请输入联系方式"
+            :clearable="type == 'detail' ? false : true"
+            :disabled="type == 'detail' ? true : false"
+            :class="[type == 'detail' ? 'input-detail' : '']"
+            maxlength="11"
+            show-word-limit
+          ></el-input>
+        </el-form-item>
+        <el-form-item label="人群圈层" prop="crowdCircle">
+          <el-select
+            v-model="brandInfo.crowdCircle"
+            multiple
+            placeholder="请选择"
+            :disabled="type == 'detail' ? true : false"
+            :class="[type == 'detail' ? 'select-detail' : '']"
+          >
+            <el-option
+              v-for="(dict, index) in dict.type.customer_crowd_circle"
+              :key="index"
+              :label="dict.label"
+              :value="dict.label"
+            ></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="运营模式" prop="operationModeAbility">
+          <el-select
+            v-model="brandInfo.operationModeAbility"
+            placeholder="请选择"
+            :disabled="type == 'detail' ? true : false"
+            :class="[type == 'detail' ? 'select-detail' : '']"
+          >
+            <el-option
+              v-for="(dict, index) in dict.type.customer_operation_mna"
+              :key="index"
+              :label="dict.label"
+              :value="dict.label"
+            ></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="时间节奏" prop="timeRhythm">
+          <el-select
+            v-model="brandInfo.timeRhythm"
+            placeholder="请选择"
+            :disabled="type == 'detail' ? true : false"
+            :class="[type == 'detail' ? 'select-detail' : '']"
+          >
+            <el-option
+              v-for="(dict, index) in dict.type.customer_time_rhythm"
+              :key="index"
+              :label="dict.label"
+              :value="dict.label"
+            ></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="决策链路" prop="decisionLink">
+          <el-input
+            v-model="brandInfo.decisionLink"
+            placeholder="请选择"
+            :clearable="type == 'detail' ? false : true"
+            :disabled="type == 'detail' ? true : false"
+            :class="[type == 'detail' ? 'input-detail' : '']"
+            maxlength="20"
+            show-word-limit
+          ></el-input>
+        </el-form-item>
+        <el-form-item
+          label="合作模式"
+          prop="cooperationMode"
+          :class="[type == 'detail' ? 'multiple-detail' : '']"
+        >
+          <el-select
+            v-model="brandInfo.cooperationMode"
+            multiple
+            placeholder="请选择"
+            :disabled="type == 'detail' ? true : false"
+            :class="[type == 'detail' ? 'select-detail' : '']"
+          >
+            <el-option
+              v-for="(dict, index) in dict.type.customer_cooperate_model"
+              :key="index"
+              :label="dict.label"
+              :value="dict.label"
+            ></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="生意目标" prop="businessTarget">
+          <el-select
+            v-model="brandInfo.businessTarget"
+            placeholder="请选择"
+            :disabled="type == 'detail' ? true : false"
+            :class="[type == 'detail' ? 'select-detail' : '']"
+          >
+            <el-option
+              v-for="(dict, index) in dict.type.customer_business_goals"
+              :key="index"
+              :label="dict.label"
+              :value="dict.label"
+            ></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="品牌占比" prop="brandProportion">
+          <template v-if="type !== 'detail'">
+            <el-input v-model="brandInfo.brandProportion" placeholder="请输入占比" clearable>
+              <template slot="append">%</template>
             </el-input>
           </template>
           <template v-else>
-            <div class="unit-detail">{{ baseInfo.revenueScale }}万元</div>
+            <div class="unit-detail">{{ brandInfo.brandProportion || 0 }}%</div>
           </template>
         </el-form-item>
-      </template>
-      <el-form-item label="状态" prop="customerState">
-        <span v-if="type == 'detail'" class="unit-detail">{{ baseInfo.customerState || '-' }}</span>
-        <el-select
-          v-if="type !== 'detail'"
-          v-model="baseInfo.customerState"
-          placeholder="请选择"
-          :disabled="type == 'detail' ? true : false"
-          :class="[type == 'detail' ? 'select-detail' : '']"
-        >
-          <el-option
-            v-for="(dict, index) in dict.type.customer_state"
-            :key="index"
-            :label="dict.label"
-            :value="dict.label"
-          ></el-option>
-        </el-select>
-      </el-form-item>
-    </el-form>
-    <!-- 标签 -->
-    <el-row>
-      <el-col :span="22">
-        <el-tabs v-model="tabActiveName" :before-leave="beforeTabsChange">
-          <el-tab-pane v-for="(item, index) in brandList" :key="item.id" :name="item.id">
-            <span slot="label">{{ item.brandName }}</span>
-          </el-tab-pane>
-        </el-tabs>
-        <div v-if="noBrand">暂无品牌信息，请从右边按钮点击添加</div>
-      </el-col>
-      <el-col :span="2">
-        <!-- 右侧按钮 -->
-        <div
-          v-if="type !== 'detail'"
-          :class="{
-            'tab-btn-box': !noBrand,
-            'tab-btn-box-noline': noBrand,
-          }"
-        >
-          <div>
-            <el-button
-              type="primary"
-              size="mini"
-              icon="el-icon-plus"
-              circle
-              @click="handleCreateBrand"
-            ></el-button>
-            <el-button
-              :disabled="brandList.length === 0"
-              type="danger"
-              size="mini"
-              icon="el-icon-delete"
-              circle
-              @click="handleDelBrand"
-            ></el-button>
-          </div>
-        </div>
-      </el-col>
-    </el-row>
-    <!-- 品牌信息 -->
-    <el-form
-      v-if="!noBrand"
-      class="brand-form"
-      :model="brandInfo"
-      :rules="rules"
-      ref="brandInfoForm"
-      :inline="true"
-      label-width="90px"
-      :label-position="labelPosition"
-    >
-      <el-form-item label="品牌名称" prop="brandName">
-        <el-input
-          v-model="brandInfo.brandName"
-          placeholder="请输入品牌名称"
-          @input="inputBrandName"
-          :clearable="type == 'detail' ? false : true"
-          :disabled="type == 'detail' ? true : false"
-          :class="[type == 'detail' ? 'input-detail' : '']"
-        ></el-input>
-      </el-form-item>
-      <el-form-item label="营收规模" prop="revenueScale">
-        <template v-if="type !== 'detail'">
-          <el-input v-model.number="brandInfo.revenueScale" placeholder="请输入营收规模">
-            <template slot="append">万元</template></el-input
+        <el-form-item label="合作意向" prop="cooperationIntention">
+          <el-select
+            v-model="brandInfo.cooperationIntention"
+            placeholder="请选择合作意向"
+            :disabled="type == 'detail' ? true : false"
+            :class="[type == 'detail' ? 'select-detail' : '']"
           >
-        </template>
-        <template v-else>
-          <div class="unit-detail">{{ brandInfo.revenueScale }}万元</div>
-        </template>
-      </el-form-item>
-      <el-form-item label="品牌分层" prop="brandGrade">
-        <el-select
-          v-model="brandInfo.brandGrade"
-          placeholder="请选择品牌分层"
-          :disabled="type == 'detail' ? true : false"
-          :class="[type == 'detail' ? 'select-detail' : '']"
-        >
-          <el-option
-            v-for="(dict, index) in dict.type.customer_brand_stratification"
-            :key="index"
-            :label="dict.label"
-            :value="dict.label"
-          ></el-option>
-        </el-select>
-      </el-form-item>
-      <el-form-item label="联系人" prop="contacts">
-        <el-input
-          v-model="brandInfo.contacts"
-          maxlength="11"
-          placeholder="请输入联系人"
-          :clearable="type == 'detail' ? false : true"
-          :disabled="type == 'detail' ? true : false"
-          :class="[type == 'detail' ? 'input-detail' : '']"
-        ></el-input>
-      </el-form-item>
-      <el-form-item label="职位" prop="position">
-        <el-input
-          v-model="brandInfo.position"
-          placeholder="请输入职位"
-          :clearable="type == 'detail' ? false : true"
-          :disabled="type == 'detail' ? true : false"
-          :class="[type == 'detail' ? 'input-detail' : '']"
-        ></el-input>
-      </el-form-item>
-      <el-form-item label="联系方式" prop="contactInformation">
-        <el-input
-          v-model="brandInfo.contactInformation"
-          placeholder="请输入联系方式"
-          :clearable="type == 'detail' ? false : true"
-          :disabled="type == 'detail' ? true : false"
-          :class="[type == 'detail' ? 'input-detail' : '']"
-          maxlength="11"
-          show-word-limit
-        ></el-input>
-      </el-form-item>
-      <el-form-item label="人群圈层" prop="crowdCircle">
-        <el-select
-          v-model="brandInfo.crowdCircle"
-          multiple
-          placeholder="请选择"
-          :disabled="type == 'detail' ? true : false"
-          :class="[type == 'detail' ? 'select-detail' : '']"
-        >
-          <el-option
-            v-for="(dict, index) in dict.type.customer_crowd_circle"
-            :key="index"
-            :label="dict.label"
-            :value="dict.label"
-          ></el-option>
-        </el-select>
-      </el-form-item>
-      <el-form-item label="运营模式" prop="operationModeAbility">
-        <el-select
-          v-model="brandInfo.operationModeAbility"
-          placeholder="请选择"
-          :disabled="type == 'detail' ? true : false"
-          :class="[type == 'detail' ? 'select-detail' : '']"
-        >
-          <el-option
-            v-for="(dict, index) in dict.type.customer_operation_mna"
-            :key="index"
-            :label="dict.label"
-            :value="dict.label"
-          ></el-option>
-        </el-select>
-      </el-form-item>
-      <el-form-item label="时间节奏" prop="timeRhythm">
-        <el-select
-          v-model="brandInfo.timeRhythm"
-          placeholder="请选择"
-          :disabled="type == 'detail' ? true : false"
-          :class="[type == 'detail' ? 'select-detail' : '']"
-        >
-          <el-option
-            v-for="(dict, index) in dict.type.customer_time_rhythm"
-            :key="index"
-            :label="dict.label"
-            :value="dict.label"
-          ></el-option>
-        </el-select>
-      </el-form-item>
-      <el-form-item label="决策链路" prop="decisionLink">
-        <el-input
-          v-model="brandInfo.decisionLink"
-          placeholder="请选择"
-          :clearable="type == 'detail' ? false : true"
-          :disabled="type == 'detail' ? true : false"
-          :class="[type == 'detail' ? 'input-detail' : '']"
-          maxlength="20"
-          show-word-limit
-        ></el-input>
-      </el-form-item>
-      <el-form-item
-        label="合作模式"
-        prop="cooperationMode"
-        :class="[type == 'detail' ? 'multiple-detail' : '']"
-      >
-        <el-select
-          v-model="brandInfo.cooperationMode"
-          multiple
-          placeholder="请选择"
-          :disabled="type == 'detail' ? true : false"
-          :class="[type == 'detail' ? 'select-detail' : '']"
-        >
-          <el-option
-            v-for="(dict, index) in dict.type.customer_cooperate_model"
-            :key="index"
-            :label="dict.label"
-            :value="dict.label"
-          ></el-option>
-        </el-select>
-      </el-form-item>
-      <el-form-item label="生意目标" prop="businessTarget">
-        <el-select
-          v-model="brandInfo.businessTarget"
-          placeholder="请选择"
-          :disabled="type == 'detail' ? true : false"
-          :class="[type == 'detail' ? 'select-detail' : '']"
-        >
-          <el-option
-            v-for="(dict, index) in dict.type.customer_business_goals"
-            :key="index"
-            :label="dict.label"
-            :value="dict.label"
-          ></el-option>
-        </el-select>
-      </el-form-item>
-      <el-form-item label="品牌占比" prop="brandProportion">
-        <template v-if="type !== 'detail'">
-          <el-input v-model="brandInfo.brandProportion" placeholder="请输入占比" clearable>
-            <template slot="append">%</template>
-          </el-input>
-        </template>
-        <template v-else>
-          <div class="unit-detail">{{ brandInfo.brandProportion || 0 }}%</div>
-        </template>
-      </el-form-item>
-      <el-form-item label="合作意向" prop="cooperationIntention">
-        <el-select
-          v-model="brandInfo.cooperationIntention"
-          placeholder="请选择合作意向"
-          :disabled="type == 'detail' ? true : false"
-          :class="[type == 'detail' ? 'select-detail' : '']"
-        >
-          <el-option
-            v-for="(dict, index) in dict.type.customer_cooperation_intention"
-            :key="index"
-            :label="dict.label"
-            :value="dict.label"
-          ></el-option>
-        </el-select>
-      </el-form-item>
-      <el-form-item label="销售渠道" prop="distributionChannelList">
-        <!-- checkbox形式改 select形式 -->
-        <!-- <el-checkbox-group v-model="brandInfo.distributionChannelList">
+            <el-option
+              v-for="(dict, index) in dict.type.customer_cooperation_intention"
+              :key="index"
+              :label="dict.label"
+              :value="dict.label"
+            ></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="销售渠道" prop="distributionChannelList">
+          <!-- checkbox形式改 select形式 -->
+          <!-- <el-checkbox-group v-model="brandInfo.distributionChannelList">
           <el-checkbox
             v-for="(dict, index) in dict.type.customer_sales_channel"
             :key="index"
@@ -342,191 +347,198 @@
             >{{ dict.label }}</el-checkbox
           >
         </el-checkbox-group> -->
-        <el-select
-          v-model="brandInfo.distributionChannelList"
-          multiple
-          placeholder="请选择"
-          :disabled="type == 'detail' ? true : false"
-          :class="[type == 'detail' ? 'select-detail' : '']"
+          <el-select
+            v-model="brandInfo.distributionChannelList"
+            multiple
+            placeholder="请选择"
+            :disabled="type == 'detail' ? true : false"
+            :class="[type == 'detail' ? 'select-detail' : '']"
+          >
+            <el-option
+              v-for="(dict, index) in dict.type.customer_sales_channel"
+              :key="index"
+              :label="dict.label"
+              :value="dict.label"
+            ></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item
+          label="备注"
+          prop="brandRemark"
+          :class="['mark-textarea', type == 'detail' ? 'textarea-detail' : '']"
         >
-          <el-option
-            v-for="(dict, index) in dict.type.customer_sales_channel"
-            :key="index"
-            :label="dict.label"
-            :value="dict.label"
-          ></el-option>
-        </el-select>
-      </el-form-item>
-      <el-form-item
-        label="备注"
-        prop="brandRemark"
-        :class="['mark-textarea', type == 'detail' ? 'textarea-detail' : '']"
-      >
-        <el-input
-          maxlength="200"
-          v-model="brandInfo.brandRemark"
-          rows="2"
-          type="textarea"
-          :disabled="type == 'detail' ? true : false"
-          placeholder="请输入备注"
-        />
-      </el-form-item>
-    </el-form>
-    <!-- 两表格 -->
-    <el-row :gutter="20" type="flex" v-if="!noBrand">
-      <el-col :span="10" class="form-table">
-        <div class="table-title">覆盖品类及价格带</div>
-        <div class="table-btn" v-if="type !== 'detail'">
-          <el-button
-            size="mini"
-            type="primary"
-            icon="el-icon-plus"
-            circle
-            @click="dialogCategoryVisible = true"
-          ></el-button>
-        </div>
-        <el-table :data="brandInfo.categoryList">
-          <el-table-column property="categoryName" label="覆盖品类"></el-table-column>
-          <el-table-column property="priceSection" label="价格带"></el-table-column>
-          <el-table-column label="操作" v-if="type !== 'detail'">
-            <template slot-scope="scope">
-              <el-button
-                size="mini"
-                type="danger"
-                icon="el-icon-delete"
-                circle
-                @click.native.prevent="handleDialogCategoryDel(scope, brandInfo.categoryList)"
-              ></el-button>
-            </template>
-          </el-table-column>
-        </el-table>
-        <!-- 品类和价格带弹框 -->
-        <el-dialog title="品类和价格" :visible.sync="dialogCategoryVisible" width="40%">
-          <el-form :model="dialogCategory" label-width="90px" :label-position="'right'">
-            <el-form-item label="覆盖品类">
-              <el-select v-model="dialogCategory.categoryName" placeholder="请选择">
-                <el-option
-                  v-for="(dict, index) in dict.type.customer_category_coverage"
-                  :key="index"
-                  :label="dict.label"
-                  :value="dict.label"
-                ></el-option>
-              </el-select>
-            </el-form-item>
-            <el-form-item label="价格带">
-              <el-input
-                v-model="dialogCategory.priceSection"
-                maxlength="12"
-                show-word-limit
-              ></el-input>
-            </el-form-item>
-          </el-form>
-          <span slot="footer" class="dialog-footer">
-            <el-button @click="dialogCategoryVisible = false">取 消</el-button>
-            <el-button type="primary" @click="handleDialogCategoryCreate">确 定</el-button>
-          </span>
-        </el-dialog>
-      </el-col>
-      <el-col :span="14" class="form-table">
-        <div class="table-title">供应商结构</div>
-        <div class="table-btn" v-if="type !== 'detail'">
-          <el-button
-            size="mini"
-            type="primary"
-            icon="el-icon-plus"
-            circle
-            @click="dialogSupplierVisible = true"
-          ></el-button>
-        </div>
-        <el-table :data="brandInfo.supplierList" highlight-current-row>
-          <el-table-column property="supplierName" label="供应商名称"></el-table-column>
-          <el-table-column property="distributionCategory" label="分配品类"></el-table-column>
-          <el-table-column property="shareProportion" label="份额占比"></el-table-column>
-          <el-table-column label="操作" v-if="type !== 'detail'">
-            <template slot-scope="scope">
-              <el-button
-                size="mini"
-                type="danger"
-                icon="el-icon-delete"
-                circle
-                @click.native.prevent="handleDialogSupplierDel(scope, brandInfo.supplierList)"
-              ></el-button>
-            </template>
-          </el-table-column>
-        </el-table>
+          <el-input
+            maxlength="200"
+            v-model="brandInfo.brandRemark"
+            rows="2"
+            type="textarea"
+            :disabled="type == 'detail' ? true : false"
+            placeholder="请输入备注"
+          />
+        </el-form-item>
+      </el-form>
+    </div>
+    <div class="card-box" v-if="!noBrand">
+      <!-- 两表格 -->
+      <el-row :gutter="20" type="flex">
+        <el-col :span="10" class="form-table">
+          <div class="table-title">覆盖品类及价格带</div>
+          <div class="table-btn" v-if="type !== 'detail'">
+            <el-button
+              size="mini"
+              type="primary"
+              icon="el-icon-plus"
+              circle
+              @click="dialogCategoryVisible = true"
+            ></el-button>
+          </div>
+          <el-table :data="brandInfo.categoryList">
+            <el-table-column property="categoryName" label="覆盖品类"></el-table-column>
+            <el-table-column property="priceSection" label="价格带"></el-table-column>
+            <el-table-column label="操作" v-if="type !== 'detail'">
+              <template slot-scope="scope">
+                <el-button
+                  size="mini"
+                  type="danger"
+                  icon="el-icon-delete"
+                  circle
+                  @click.native.prevent="handleDialogCategoryDel(scope, brandInfo.categoryList)"
+                ></el-button>
+              </template>
+            </el-table-column>
+          </el-table>
+          <!-- 品类和价格带弹框 -->
+          <el-dialog title="品类和价格" :visible.sync="dialogCategoryVisible" width="40%">
+            <el-form :model="dialogCategory" label-width="90px" :label-position="'right'">
+              <el-form-item label="覆盖品类">
+                <el-select v-model="dialogCategory.categoryName" placeholder="请选择">
+                  <el-option
+                    v-for="(dict, index) in dict.type.customer_category_coverage"
+                    :key="index"
+                    :label="dict.label"
+                    :value="dict.label"
+                  ></el-option>
+                </el-select>
+              </el-form-item>
+              <el-form-item label="价格带">
+                <el-input
+                  v-model="dialogCategory.priceSection"
+                  maxlength="12"
+                  show-word-limit
+                ></el-input>
+              </el-form-item>
+            </el-form>
+            <span slot="footer" class="dialog-footer">
+              <el-button @click="dialogCategoryVisible = false">取 消</el-button>
+              <el-button type="primary" @click="handleDialogCategoryCreate">确 定</el-button>
+            </span>
+          </el-dialog>
+        </el-col>
+        <el-col :span="14" class="form-table">
+          <div class="table-title">供应商结构</div>
+          <div class="table-btn" v-if="type !== 'detail'">
+            <el-button
+              size="mini"
+              type="primary"
+              icon="el-icon-plus"
+              circle
+              @click="dialogSupplierVisible = true"
+            ></el-button>
+          </div>
+          <el-table :data="brandInfo.supplierList" highlight-current-row>
+            <el-table-column property="supplierName" label="供应商名称"></el-table-column>
+            <el-table-column property="distributionCategory" label="分配品类"></el-table-column>
+            <el-table-column property="shareProportion" label="份额占比"></el-table-column>
+            <el-table-column label="操作" v-if="type !== 'detail'">
+              <template slot-scope="scope">
+                <el-button
+                  size="mini"
+                  type="danger"
+                  icon="el-icon-delete"
+                  circle
+                  @click.native.prevent="handleDialogSupplierDel(scope, brandInfo.supplierList)"
+                ></el-button>
+              </template>
+            </el-table-column>
+          </el-table>
 
-        <!-- 供应商弹框 -->
-        <el-dialog title="品类和价格" :visible.sync="dialogSupplierVisible" width="40%">
-          <el-form :model="dialogSupplier" label-width="90px" :label-position="'right'">
-            <el-form-item label="供应商名称">
-              <el-input v-model="dialogSupplier.name" maxlength="20" show-word-limit></el-input>
-            </el-form-item>
-            <el-form-item label="分配品类">
-              <el-input
-                v-model="dialogSupplier.categories"
-                maxlength="15"
-                show-word-limit
-              ></el-input>
-            </el-form-item>
-            <el-form-item label="份额占比">
-              <el-input v-model="dialogSupplier.proportion"></el-input>
-            </el-form-item>
-          </el-form>
-          <span slot="footer" class="dialog-footer">
-            <el-button @click="dialogSupplierVisible = false">取 消</el-button>
-            <el-button type="primary" @click="handleDialogSupplierCreate">确 定</el-button>
-          </span>
-        </el-dialog>
-      </el-col>
-    </el-row>
-    <!-- 拜访记录 -->
-    <el-row :gutter="20" v-if="type == 'detail'" style="margin-top: 30px; flex-wrap: wrap">
-      <el-col class="visitCard" v-for="(item, index) in visitDetailVoList" :key="index">
-        <el-card>
-          <el-form label-position="right" label-width="90px" size="mini">
-            <el-form-item label="拜访时间">
-              <span class="unit-detail">{{ item.visitTime }}</span> -
-              <span class="unit-detail" style="padding-left: 0">{{ item.visitEndTime }}</span>
-            </el-form-item>
-            <el-form-item label="拜访对象">
-              <span class="unit-detail">{{ item.visitObject }}</span>
-            </el-form-item>
-            <el-form-item label="职位">
-              <span class="unit-detail">{{ item.position }}</span>
-            </el-form-item>
-            <el-form-item label="联系方式">
-              <span class="unit-detail">{{ item.contactInformation }}</span>
-            </el-form-item>
-            <el-form-item label="内容">
-              <span class="unit-detail">{{ item.visitContent }}</span>
-            </el-form-item>
-          </el-form>
-          <el-button
-            class="cardBtn"
-            @click="
-              () => {
-                readVisit('detail', item.id)
-              }
-            "
-            type="primary"
-            size="mini"
-            plain
-            >查看详情</el-button
-          >
-        </el-card>
-      </el-col>
-    </el-row>
-    <!-- 操作按钮 -->
-    <el-row type="flex" v-if="type !== 'detail'">
-      <el-col>
-        <div class="btn-box">
-          <el-button @click="cancel">取消</el-button>
-          <el-button @click="submit" v-hasPermi="['customer:customer:edit']" type="primary"
-            >保存</el-button
-          >
-        </div>
-      </el-col>
-    </el-row>
+          <!-- 供应商弹框 -->
+          <el-dialog title="品类和价格" :visible.sync="dialogSupplierVisible" width="40%">
+            <el-form :model="dialogSupplier" label-width="90px" :label-position="'right'">
+              <el-form-item label="供应商名称">
+                <el-input v-model="dialogSupplier.name" maxlength="20" show-word-limit></el-input>
+              </el-form-item>
+              <el-form-item label="分配品类">
+                <el-input
+                  v-model="dialogSupplier.categories"
+                  maxlength="15"
+                  show-word-limit
+                ></el-input>
+              </el-form-item>
+              <el-form-item label="份额占比">
+                <el-input v-model="dialogSupplier.proportion"></el-input>
+              </el-form-item>
+            </el-form>
+            <span slot="footer" class="dialog-footer">
+              <el-button @click="dialogSupplierVisible = false">取 消</el-button>
+              <el-button type="primary" @click="handleDialogSupplierCreate">确 定</el-button>
+            </span>
+          </el-dialog>
+        </el-col>
+      </el-row>
+    </div>
+    <div class="card-box" id="12" v-if="type == 'detail' && visitDetailVoList.length > 0">
+      <!-- 拜访记录 -->
+      <el-row :gutter="20" style="margin-top: 30px; flex-wrap: wrap">
+        <el-col class="visitCard" v-for="(item, index) in visitDetailVoList" :key="index">
+          <el-card>
+            <el-form label-position="right" label-width="90px" size="mini">
+              <el-form-item label="拜访时间">
+                <span class="unit-detail">{{ item.visitTime }}</span> -
+                <span class="unit-detail" style="padding-left: 0">{{ item.visitEndTime }}</span>
+              </el-form-item>
+              <el-form-item label="拜访对象">
+                <span class="unit-detail">{{ item.visitObject }}</span>
+              </el-form-item>
+              <el-form-item label="职位">
+                <span class="unit-detail">{{ item.position }}</span>
+              </el-form-item>
+              <el-form-item label="联系方式">
+                <span class="unit-detail">{{ item.contactInformation }}</span>
+              </el-form-item>
+              <el-form-item label="内容">
+                <span class="unit-detail">{{ item.visitContent }}</span>
+              </el-form-item>
+            </el-form>
+            <el-button
+              class="cardBtn"
+              @click="
+                () => {
+                  readVisit('detail', item.id)
+                }
+              "
+              type="primary"
+              size="mini"
+              plain
+              >查看详情</el-button
+            >
+          </el-card>
+        </el-col>
+      </el-row>
+    </div>
+    <div class="card-box" v-if="type !== 'detail'">
+      <!-- 操作按钮 -->
+      <el-row type="flex">
+        <el-col>
+          <div class="btn-box">
+            <el-button @click="cancel">取消</el-button>
+            <el-button @click="submit" v-hasPermi="['customer:customer:edit']" type="primary"
+              >保存</el-button
+            >
+          </div>
+        </el-col>
+      </el-row>
+    </div>
   </div>
 </template>
 <script>
@@ -681,7 +693,10 @@ export default {
           customerState,
         }
         this.brandList = brandList
-        this.visitDetailVoList = visitDetailVoList
+        if (visitDetailVoList) {
+          this.visitDetailVoList = visitDetailVoList
+        }
+
         console.log('brandList', this.brandList)
         if (brandList.length > 0) {
           this.tabActiveName = brandList[0].id
@@ -1018,6 +1033,9 @@ export default {
 
 <style lang="scss" scoped>
 @import './index';
+.fixed-header + .app-main {
+  overflow: auto;
+}
 .input-detail {
   ::v-deep .el-input__inner {
     border: 1px solid transparent;

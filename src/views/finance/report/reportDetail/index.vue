@@ -56,6 +56,7 @@
               disabled
               :clearable="type == 'detail' ? false : true"
               :class="[type == 'detail' ? 'input-detail' : '']"
+              class="auto-prop"
             ></el-input>
           </el-form-item>
           <el-form-item label="最终客户">
@@ -101,7 +102,9 @@
           </el-form-item>
         </el-form>
         <div class="upload-img" v-if="baseInfo.enclosureAddress">
-          <div style="width: 90px; text-align: right; padding-right: 12px">附件</div>
+          <div style="width: 90px; text-align: right; padding-right: 12px; color: #8b8b8b">
+            附件
+          </div>
           <div class="flex">
             <span v-for="item in this.imgList" :key="item" style="padding-right: 15px">
               <el-image
@@ -126,7 +129,7 @@
           header-row-class-name="tableHeader"
         >
           <el-table-column label="布号" prop="clothNo" width="100" fixed="left"></el-table-column>
-          <el-table-column label="颜色" width="120" fixed="left">
+          <el-table-column label="颜色" width="90" fixed="left">
             <template v-slot="scope">
               <div v-for="(item, index) in scope.row.colorName" :key="index">
                 {{ item }}
@@ -145,6 +148,48 @@
               </div>
               <div v-if="baseInfo.orderStatus == 1 || baseInfo.roleType == 1">
                 <div v-for="(item, index) in scope.row.costPrice" :key="index">{{ item }}</div>
+              </div>
+            </template>
+          </el-table-column>
+          <el-table-column
+            label="运费(元)"
+            width="140"
+            v-if="baseInfo.roleType == 1 || baseInfo.roleType == 2"
+          >
+            <template v-slot="scope">
+              <div v-if="baseInfo.orderStatus > 1 && baseInfo.roleType !== 1">
+                <div>{{ scope.row.freight }}</div>
+              </div>
+              <div v-if="baseInfo.orderStatus == 1 || baseInfo.roleType == 1">
+                <div>{{ scope.row.freight }}</div>
+              </div>
+            </template>
+          </el-table-column>
+          <el-table-column
+            label="其他费用(元)"
+            width="140"
+            v-if="baseInfo.roleType == 1 || baseInfo.roleType == 2"
+          >
+            <template v-slot="scope">
+              <div v-if="baseInfo.orderStatus > 1 && baseInfo.roleType !== 1">
+                <div>{{ scope.row.otherExpenses }}</div>
+              </div>
+              <div v-if="baseInfo.orderStatus == 1 || baseInfo.roleType == 1">
+                <div>{{ scope.row.otherExpenses }}</div>
+              </div>
+            </template>
+          </el-table-column>
+          <el-table-column
+            label="浮动利润率(%)"
+            width="140"
+            v-if="baseInfo.roleType == 1 || baseInfo.roleType == 2"
+          >
+            <template v-slot="scope">
+              <div v-if="baseInfo.orderStatus > 1 && baseInfo.roleType !== 1">
+                <div>{{ scope.row.floatingProfitMargin }}</div>
+              </div>
+              <div v-if="baseInfo.orderStatus == 1 || baseInfo.roleType == 1">
+                <div>{{ scope.row.floatingProfitMargin }}</div>
               </div>
             </template>
           </el-table-column>
@@ -877,7 +922,9 @@ export default {
 <style lang="scss" scoped>
 .app-main {
   background: rgba(245, 247, 250, 1);
-  padding-bottom: 80px;
+  padding-bottom: 90px;
+  height: 100%;
+  overflow-y: scroll;
   .title-box {
     position: relative;
     background-color: #fff;
@@ -926,8 +973,10 @@ export default {
   .upload-img {
     display: flex;
     font-size: 14px;
+    margin: 10px 0 0 0;
     .flex {
       flex: 1;
+      margin-left: 14px;
     }
   }
   .img-tips {
@@ -973,7 +1022,7 @@ export default {
     width: 100%;
   }
   .mark-textarea {
-    width: calc(25% + 308px) !important;
+    width: calc(50% - 10px) !important;
     margin-right: 0 !important;
     ::v-deep .el-form-item__content {
       width: calc(100% - 90px);
@@ -1000,7 +1049,7 @@ export default {
     border: 1px solid transparent;
     background: transparent;
     cursor: auto;
-    color: #666;
+    color: #242424;
   }
   ::v-deep .el-input-group__append {
     margin: 0;
@@ -1013,7 +1062,7 @@ export default {
   ::v-deep .el-input__inner {
     border: 1px solid transparent;
     background: transparent;
-    color: #666;
+    color: #242424;
   }
   ::v-deep .el-input.is-disabled .el-input__inner {
     cursor: auto;
@@ -1026,7 +1075,7 @@ export default {
   }
 }
 .unit-detail {
-  color: #666;
+  color: #242424;
   padding-left: 15px;
 }
 .multiple-detail {
@@ -1044,8 +1093,10 @@ export default {
 }
 .textarea-detail {
   span {
-    color: #666;
-    padding-left: 15px;
+    color: #242424;
+    padding: 8px 0 0 15px;
+    display: inline-block;
+    line-height: 1.5;
   }
 }
 // 弹框样式
@@ -1125,7 +1176,8 @@ export default {
   height: 48px;
 }
 ::v-deep .el-table th.is-leaf {
-  border-color: transparent;
+  border-right-color: #e7e7e7;
+  border-bottom-color: transparent;
 }
 ::v-deep .el-table td {
   border-bottom: 1px solid #f3f3f3;
@@ -1146,9 +1198,10 @@ export default {
 }
 ::v-deep.el-form-item {
   width: calc(25% - 10px);
+  margin-bottom: 0;
   .el-form-item__label {
     font-weight: normal !important;
-    color: rgba(36, 36, 36, 1);
+    color: #8b8b8b;
   }
 }
 .tab-div {
@@ -1175,6 +1228,20 @@ export default {
   white-space: nowrap;
   text-overflow: ellipsis;
   -o-text-overflow: ellipsis; /* for Opera */
+}
+.auto-prop {
+  ::v-deep .el-input {
+    .el-input__inner {
+      width: 250px;
+      padding-right: 0;
+    }
+  }
+}
+.auto-prop {
+  ::v-deep .el-input__inner {
+    width: 250px;
+    padding-right: 0;
+  }
 }
 </style>
 <style>
