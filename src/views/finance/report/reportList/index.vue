@@ -5,7 +5,7 @@
       <div class="card-box">
         <!-- 搜索和筛选栏 -->
         <el-row>
-          <el-col style="width: calc(100% - 224px)">
+          <el-col class="search-col-from">
             <el-form
               class="base-form"
               :model="queryParams"
@@ -56,7 +56,7 @@
                 <el-input v-model="queryParams.clothNo" placeholder="请输入布号"></el-input>
               </el-form-item> </el-form
           ></el-col>
-          <el-col style="width: 224px">
+          <el-col class="search-col-btn">
             <el-button type="primary" @click="handleQuery">查询</el-button>
             <el-button type="" @click="resetQuery">重置</el-button>
           </el-col>
@@ -488,18 +488,5 @@ export default {
   ::v-deep .el-select {
     width: 100%;
   }
-}
-.tab_head {
-  border-bottom: 1px solid #f3f3f3;
-  width: 100%;
-  display: flex;
-}
-.tab_box {
-  font-size: 14px;
-  padding: 16px 14px;
-  cursor: pointer;
-}
-.tab_checked {
-  border-bottom: 2px solid #0052d9;
 }
 </style>

@@ -24,7 +24,6 @@
               <el-date-picker
                 v-model="dateRange"
                 size="small"
-                style="width: 240px"
                 value-format="yyyy-MM-dd"
                 type="daterange"
                 range-separator="-"

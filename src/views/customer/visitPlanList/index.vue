@@ -46,30 +46,17 @@
 
     <div class="card-box">
       <!-- 列表状态 -->
-      <el-row class="mb18">
-        <el-col :span="22">
-          <el-button
-            class="mr20"
-            v-for="item in listTypes"
-            :key="item.label"
-            :type="item.type"
-            :plain="item.isActive ? false : true"
-            size="small"
-            @click="handleStateTag(item)"
-          >
-            {{ item.label }}
-            {{ item.num }}
-          </el-button>
-        </el-col>
-        <el-col :span="2">
-          <el-button
-            type="primary"
-            size="small"
-            @click="handleCreate"
-            v-hasPermi="['customer:plan:add']"
-            >新增</el-button
-          ></el-col
+      <!-- 列表状态 -->
+      <el-row class="tab_head">
+        <div
+          @click="handleStateTag(item)"
+          class="tab_box"
+          :class="item.value == queryParams.visitState ? 'tab_checked' : ''"
+          v-for="(item, index) in listTypes"
+          :key="item.name"
         >
+          {{ item.name }} ({{ item.num }})
+        </div>
       </el-row>
 
       <!-- 列表 -->
@@ -214,34 +201,35 @@ export default {
       showFlag: false,
       selectionList: [], //多选选择数据
       deptsList: [],
+
       //类型标签
       listTypes: [
-        { label: '全部', num: 0, isActive: true, type: 'primary', value: '' },
+        { name: '全部', num: 0, isActive: true, type: 'primary', value: '' },
         {
-          label: '未开始',
+          name: '未开始',
           num: 0,
           isActive: false,
           type: 'success',
           value: '未开始',
         },
-        { label: '进行中', num: 0, isActive: false, type: 'info', value: '进行中' },
-        { label: '未完成', num: 0, isActive: false, type: 'danger', value: '未完成' },
+        { name: '进行中', num: 0, isActive: false, type: 'info', value: '进行中' },
+        { name: '未完成', num: 0, isActive: false, type: 'danger', value: '未完成' },
         {
-          label: '已完成',
+          name: '已完成',
           num: 0,
           isActive: false,
           type: 'warning',
           value: '已完成',
         },
         {
-          label: '已取消',
+          name: '已取消',
           num: 0,
           isActive: false,
           type: 'info',
           value: '已取消',
         },
         {
-          label: '已改期',
+          name: '已改期',
           num: 0,
           isActive: false,
           type: 'danger',
