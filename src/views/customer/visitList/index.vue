@@ -1,5 +1,5 @@
 <template>
-  <div class="app-container">
+  <div class="app-container wrapper">
     <div class="card-box">
       <el-row>
         <el-col class="search-col-from">
@@ -144,16 +144,15 @@
           </template>
         </el-table-column>
       </el-table>
+      <!-- 分页 -->
+      <pagination
+        v-show="total > 0"
+        :total="total"
+        :page.sync="pageNum"
+        :limit.sync="pageSize"
+        @pagination="getList"
+      />
     </div>
-
-    <!-- 分页 -->
-    <pagination
-      v-show="total > 0"
-      :total="total"
-      :page.sync="pageNum"
-      :limit.sync="pageSize"
-      @pagination="getList"
-    />
   </div>
 </template>
 <script>

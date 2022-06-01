@@ -1,6 +1,6 @@
 <!-- 报价单列表 -->
 <template>
-  <div class="app-main">
+  <div class="wrapper">
     <div class="app-container">
       <div class="card-box">
         <!-- 搜索和筛选栏 -->
@@ -62,7 +62,7 @@
           </el-col>
         </el-row>
       </div>
-      <div class="card-box">
+      <div class="card-box" style="padding-bottom: 24px">
         <el-row>
           <el-col :span="12">
             <el-button type="primary" class="add-btn" @click="addRepot()">新增</el-button>
@@ -436,10 +436,6 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-.app-main {
-  background: rgba(245, 247, 250, 1);
-  // padding-bottom: 80px;
-}
 .app-container {
   .card-box {
     position: relative;

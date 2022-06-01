@@ -1,5 +1,5 @@
 <template>
-  <div class="app-container">
+  <div class="app-container wrapper">
     <div class="card-box">
       <el-row>
         <el-col class="search-col-from">
