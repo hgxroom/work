@@ -1,5 +1,5 @@
 <template>
-  <div class="app-main">
+  <div class="wrapper">
     <div class="container">
       <el-row>
         <el-col :span="12">
@@ -324,6 +324,7 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
+@import '../../../../assets/styles/index';
 ::v-deep .tableHeader th {
   background-color: #f5f7fa;
   color: #8b8b8b;
@@ -356,7 +357,7 @@ export default {
 ::v-deep.numrule input[type='number'] {
   -moz-appearance: textfield;
 }
-.app-main {
+.wrapper {
   background: rgba(245, 247, 250, 1);
 }
 .container {

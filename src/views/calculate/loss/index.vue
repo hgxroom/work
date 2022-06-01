@@ -1,165 +1,167 @@
 <template>
   <div class="app-container">
-    <el-row :gutter="10">
-      <el-col :span="12">
-        <div class="search-group">
-          <el-form :inline="true">
-            <el-form-item label="输入布号">
-              <el-input v-model="searchValue"></el-input>
-            </el-form-item>
-            <el-form-item>
-              <el-button type="primary" :loading="searchOption.loading" @click="handleSearch">{{
-                searchOption.showText
-              }}</el-button>
-            </el-form-item>
-          </el-form>
-        </div>
-        <div class="info-group" v-if="fabricInfo">
-          <div class="base-info">
-            <div class="info-item">
-              <span class="info-label">织造损耗：</span>
-              <el-tag class="info-value">{{ fabricInfo.textileLossResult }}%</el-tag>
-            </div>
-            <div class="info-item">
-              <span class="info-label">染整损耗：</span>
-              <el-tag class="info-value">{{ fabricInfo.dyeingLossResult }}%</el-tag>
-            </div>
-            <div class="info-item">
-              <span class="info-label">布号：</span>
-              <el-tag class="info-value">{{ fabricInfo.clothNo }}</el-tag>
-            </div>
-            <div class="info-item">
-              <span class="info-label">有效门幅：</span>
-              <el-tag class="info-value">{{ fabricInfo.doorWidth }}</el-tag>
-            </div>
+    <div class="card-box">
+      <el-row :gutter="10">
+        <el-col :span="12">
+          <div class="search-group">
+            <el-form :inline="true">
+              <el-form-item label="输入布号">
+                <el-input v-model="searchValue"></el-input>
+              </el-form-item>
+              <el-form-item>
+                <el-button type="primary" :loading="searchOption.loading" @click="handleSearch">{{
+                  searchOption.showText
+                }}</el-button>
+              </el-form-item>
+            </el-form>
           </div>
-          <div class="yarn-list">
-            <el-table :data="fabricInfo.rawYarnVoList">
-              <el-table-column
-                label="物料编号（纱支编号）"
-                align="center"
-                prop="wlbh"
-                :show-overflow-tooltip="true"
-              />
-              <el-table-column
-                label="纱支成分"
-                align="center"
-                prop="wlmch"
-                :show-overflow-tooltip="false"
-              />
-              <el-table-column
-                label="纱支比例"
-                align="center"
-                prop="bl"
-                :show-overflow-tooltip="true"
-              >
-                <template slot-scope="scope"> {{ scope.row.bl }}% </template></el-table-column
-              >
-            </el-table>
-            <!-- <div class="yarn-list--nodata">无纱支信息，请在右边计算</div> -->
-          </div>
-          <div class="route-info">工艺路线：{{ fabricInfo.workmanshipRoute }}</div>
-        </div>
-      </el-col>
-      <div class="divider"></div>
-      <el-col :span="12">
-        <el-collapse v-model="showCollapse" style="margin-bottom: 10px">
-          <el-collapse-item title="计算输入(可折叠)">
-            <div class="check-box">
-              <div class="fabric-proportion">
-                纱支比例
-                <el-input v-model="fabricProportion" class="check-input" size="mini">
-                  <template slot="append">%</template>
-                </el-input>
+          <div class="info-group" v-if="fabricInfo">
+            <div class="base-info">
+              <div class="info-item">
+                <span class="info-label">织造损耗：</span>
+                <el-tag class="info-value">{{ fabricInfo.textileLossResult }}%</el-tag>
               </div>
-              <div class="check-item" v-for="(item, index) in fabricLoss" :key="index">
-                <div class="check-title">{{ item.component }}</div>
-                <el-input v-model="item.value" class="check-input" size="mini"
-                  ><template slot="append">%</template></el-input
+              <div class="info-item">
+                <span class="info-label">染整损耗：</span>
+                <el-tag class="info-value">{{ fabricInfo.dyeingLossResult }}%</el-tag>
+              </div>
+              <div class="info-item">
+                <span class="info-label">布号：</span>
+                <el-tag class="info-value">{{ fabricInfo.clothNo }}</el-tag>
+              </div>
+              <div class="info-item">
+                <span class="info-label">有效门幅：</span>
+                <el-tag class="info-value">{{ fabricInfo.doorWidth }}</el-tag>
+              </div>
+            </div>
+            <div class="yarn-list">
+              <el-table :data="fabricInfo.rawYarnVoList">
+                <el-table-column
+                  label="物料编号（纱支编号）"
+                  align="center"
+                  prop="wlbh"
+                  :show-overflow-tooltip="true"
+                />
+                <el-table-column
+                  label="纱支成分"
+                  align="center"
+                  prop="wlmch"
+                  :show-overflow-tooltip="false"
+                />
+                <el-table-column
+                  label="纱支比例"
+                  align="center"
+                  prop="bl"
+                  :show-overflow-tooltip="true"
                 >
+                  <template slot-scope="scope"> {{ scope.row.bl }}% </template></el-table-column
+                >
+              </el-table>
+              <!-- <div class="yarn-list--nodata">无纱支信息，请在右边计算</div> -->
+            </div>
+            <div class="route-info">工艺路线：{{ fabricInfo.workmanshipRoute }}</div>
+          </div>
+        </el-col>
+        <div class="divider"></div>
+        <el-col :span="12">
+          <el-collapse v-model="showCollapse" style="margin-bottom: 10px">
+            <el-collapse-item title="计算输入(可折叠)">
+              <div class="check-box">
+                <div class="fabric-proportion">
+                  纱支比例
+                  <el-input v-model="fabricProportion" class="check-input" size="mini">
+                    <template slot="append">%</template>
+                  </el-input>
+                </div>
+                <div class="check-item" v-for="(item, index) in fabricLoss" :key="index">
+                  <div class="check-title">{{ item.component }}</div>
+                  <el-input v-model="item.value" class="check-input" size="mini"
+                    ><template slot="append">%</template></el-input
+                  >
+                </div>
+              </div>
+              <div class="btn-group">
+                <el-button type="primary" @click="handleSaveInfo"> 保存信息 </el-button>
+              </div>
+            </el-collapse-item>
+          </el-collapse>
+
+          <div class="btn-group">
+            <el-button type="warning" v-if="calculateList.length !== 0" @click="resetCalculateList">
+              清空列表
+            </el-button>
+          </div>
+
+          <el-table :data="calculateList">
+            <el-table-column label="纱支成分" align="center" prop="showText" />
+            <el-table-column
+              label="纱支比例"
+              align="center"
+              prop="fabricProportion"
+              :show-overflow-tooltip="true"
+            >
+              <template slot-scope="scope"> {{ scope.row.fabricProportion }}% </template>
+            </el-table-column>
+            <el-table-column
+              label="织造损耗"
+              align="center"
+              prop="textileLossResult"
+              :show-overflow-tooltip="true"
+            >
+              <template slot-scope="scope"> {{ scope.row.textileLossResult }}% </template>
+            </el-table-column>
+            <el-table-column
+              label="染整损耗"
+              align="center"
+              prop="dyeingLossResult"
+              :show-overflow-tooltip="true"
+            >
+              <template slot-scope="scope"> {{ scope.row.dyeingLossResult }}% </template>
+            </el-table-column>
+            <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+              <template slot-scope="scope">
+                <el-button
+                  size="mini"
+                  type="text"
+                  icon="el-icon-delete"
+                  @click.native.prevent="handleListDel(scope)"
+                  >删除</el-button
+                >
+              </template>
+            </el-table-column>
+          </el-table>
+          <div class="special-group" v-if="calculateList.length !== 0">
+            <el-form>
+              <el-form-item label="有效门幅">
+                <el-input v-model="doorWidth">
+                  <template slot="append">cm</template>
+                </el-input>
+              </el-form-item>
+
+              <el-form-item label="特殊工艺">
+                <el-checkbox-group v-model="craftListCheck">
+                  <el-checkbox v-for="(item, index) in craftList" :key="index" :label="index">{{
+                    item.name
+                  }}</el-checkbox>
+                </el-checkbox-group>
+              </el-form-item>
+            </el-form>
+          </div>
+          <div class="info-group" v-if="calculateList.length !== 0">
+            <div class="base-info">
+              <div class="info-item">
+                <span class="info-label">织造损耗：</span>
+                <el-tag class="info-value">{{ SunTextileLoss }}%</el-tag>
+              </div>
+              <div class="info-item">
+                <span class="info-label">染整损耗：</span>
+                <el-tag class="info-value">{{ SunDyeingLoss }}%</el-tag>
               </div>
             </div>
-            <div class="btn-group">
-              <el-button type="primary" @click="handleSaveInfo"> 保存信息 </el-button>
-            </div>
-          </el-collapse-item>
-        </el-collapse>
-
-        <div class="btn-group">
-          <el-button type="warning" v-if="calculateList.length !== 0" @click="resetCalculateList">
-            清空列表
-          </el-button>
-        </div>
-
-        <el-table :data="calculateList">
-          <el-table-column label="纱支成分" align="center" prop="showText" />
-          <el-table-column
-            label="纱支比例"
-            align="center"
-            prop="fabricProportion"
-            :show-overflow-tooltip="true"
-          >
-            <template slot-scope="scope"> {{ scope.row.fabricProportion }}% </template>
-          </el-table-column>
-          <el-table-column
-            label="织造损耗"
-            align="center"
-            prop="textileLossResult"
-            :show-overflow-tooltip="true"
-          >
-            <template slot-scope="scope"> {{ scope.row.textileLossResult }}% </template>
-          </el-table-column>
-          <el-table-column
-            label="染整损耗"
-            align="center"
-            prop="dyeingLossResult"
-            :show-overflow-tooltip="true"
-          >
-            <template slot-scope="scope"> {{ scope.row.dyeingLossResult }}% </template>
-          </el-table-column>
-          <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
-            <template slot-scope="scope">
-              <el-button
-                size="mini"
-                type="text"
-                icon="el-icon-delete"
-                @click.native.prevent="handleListDel(scope)"
-                >删除</el-button
-              >
-            </template>
-          </el-table-column>
-        </el-table>
-        <div class="special-group" v-if="calculateList.length !== 0">
-          <el-form>
-            <el-form-item label="有效门幅">
-              <el-input v-model="doorWidth">
-                <template slot="append">cm</template>
-              </el-input>
-            </el-form-item>
-
-            <el-form-item label="特殊工艺">
-              <el-checkbox-group v-model="craftListCheck">
-                <el-checkbox v-for="(item, index) in craftList" :key="index" :label="index">{{
-                  item.name
-                }}</el-checkbox>
-              </el-checkbox-group>
-            </el-form-item>
-          </el-form>
-        </div>
-        <div class="info-group" v-if="calculateList.length !== 0">
-          <div class="base-info">
-            <div class="info-item">
-              <span class="info-label">织造损耗：</span>
-              <el-tag class="info-value">{{ SunTextileLoss }}%</el-tag>
-            </div>
-            <div class="info-item">
-              <span class="info-label">染整损耗：</span>
-              <el-tag class="info-value">{{ SunDyeingLoss }}%</el-tag>
-            </div>
           </div>
-        </div>
-      </el-col>
-    </el-row>
+        </el-col>
+      </el-row>
+    </div>
   </div>
 </template>
 <script>

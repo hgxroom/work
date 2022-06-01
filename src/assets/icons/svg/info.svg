@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>切片</title>
+    <g id="页面-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="报价管理——自建产品/新增" transform="translate(-1808.000000, -12.000000)">
+            <g id="03导航/顶部导航" transform="translate(200.000000, 0.000000)">
+                <g id="01基础组件/图标/其他图标/设置" transform="translate(1608.000000, 12.000000)">
+                    <path d="M3,0 L21,0 C22.6568542,-3.04359188e-16 24,1.34314575 24,3 L24,21 C24,22.6568542 22.6568542,24 21,24 L3,24 C1.34314575,24 2.02906125e-16,22.6568542 0,21 L0,3 C-2.02906125e-16,1.34314575 1.34314575,3.04359188e-16 3,0 Z" id="24"></path>
+                    <rect id="矩形" stroke-opacity="0.9" stroke="#000000" stroke-width="1.5" x="2.75" y="4.75" width="18.5" height="14.5" rx="2"></rect>
+                    <polyline id="路径" stroke-opacity="0.9" stroke="#000000" stroke-width="1.5" stroke-linejoin="round" transform="translate(12.000000, 9.000000) scale(1, -1) translate(-12.000000, -9.000000) " points="3 12 12 6 21 12"></polyline>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

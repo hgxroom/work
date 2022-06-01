@@ -1,4 +1,4 @@
-import request, { download } from "@/utils/request";
+import request, { download } from '@/utils/request'
 
 /**
  * 获取拜访列表
@@ -7,10 +7,10 @@ import request, { download } from "@/utils/request";
  */
 export function getVisitList(query = {}) {
   return request({
-    url: "system/customerVisit/list",
-    method: "get",
+    url: 'system/customerVisit/list',
+    method: 'get',
     params: query,
-  });
+  })
 }
 
 /**
@@ -21,8 +21,8 @@ export function getVisitList(query = {}) {
 export function getVisitById(params) {
   return request({
     url: `system/customerVisit/getById/${params}`,
-    method: "get",
-  });
+    method: 'get',
+  })
 }
 
 /**
@@ -32,10 +32,10 @@ export function getVisitById(params) {
  */
 export function createCustomerVisit(data) {
   return request({
-    url: "system/customerVisit",
-    method: "post",
+    url: 'system/customerVisit',
+    method: 'post',
     data,
-  });
+  })
 }
 
 /**
@@ -45,10 +45,10 @@ export function createCustomerVisit(data) {
  */
 export function editCustomerVisit(data) {
   return request({
-    url: "system/customerVisit",
-    method: "put",
+    url: 'system/customerVisit',
+    method: 'put',
     data,
-  });
+  })
 }
 
 /**
@@ -57,8 +57,8 @@ export function editCustomerVisit(data) {
 export function getCustomerInfoByName(name) {
   return request({
     url: `system/customerInfo/getCustomerInfoByName/${name}`,
-    method: "get",
-  });
+    method: 'get',
+  })
 }
 
 /**
@@ -70,5 +70,5 @@ export function visitExport() {
   //   url: `system/customerInfo/export`,
   //   method: "post",
   // });
-  return download(`system/customerVisit/export`, {}, "拜访信息列表.xls");
+  return download(`system/customerVisit/export`, {}, '拜访信息列表.xls')
 }

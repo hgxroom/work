@@ -12,26 +12,28 @@
           label-width="90px"
           :label-position="labelPosition"
         >
-          <el-form-item label="客户" prop="customerName">
-            <el-select
-              v-model="baseInfo.customerName"
-              filterable
-              remote
-              reserve-keyword
-              placeholder="请输入关键词"
-              :remote-method="remoteMethod"
-              :loading="loading"
-            >
-              <el-option
-                v-for="item in options"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
+          <div class="search-form" style="width: 100%">
+            <el-form-item label="客户" prop="customerName">
+              <el-select
+                v-model="baseInfo.customerName"
+                filterable
+                remote
+                reserve-keyword
+                placeholder="请输入关键词"
+                :remote-method="remoteMethod"
+                :loading="loading"
+                class="auto-prop"
               >
-              </el-option>
-            </el-select>
-            <!-- 搜索框 -->
-            <!-- <el-autocomplete
+                <el-option
+                  v-for="item in options"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value"
+                >
+                </el-option>
+              </el-select>
+              <!-- 搜索框 -->
+              <!-- <el-autocomplete
               v-model.trim="baseInfo.customerName"
               :fetch-suggestions="queryName"
               placeholder="请输入客户名称"
@@ -44,34 +46,36 @@
                 <div>{{ item.khmch }}</div>
               </template>
             </el-autocomplete> -->
-          </el-form-item>
-          <el-form-item label="最终客户" prop="finalCustomerName">
-            <el-input
-              v-model="baseInfo.finalCustomerName"
-              placeholder="请输入最终客户"
-              :clearable="type == 'detail' ? false : true"
-              :class="[type == 'detail' ? 'input-detail' : '']"
-            ></el-input>
-          </el-form-item>
-          <el-form-item label="结算方式" prop="settlementMethod">
-            <el-select v-model="baseInfo.settlementMethod" clearable placeholder="请选择">
-              <el-option
-                v-for="(dict, index) in dict.type.pay_ways"
-                :key="index"
-                :label="dict.label"
-                :value="dict.label"
-              ></el-option>
-            </el-select>
-          </el-form-item>
-          <el-form-item label="成品用途">
-            <el-input
-              v-model="baseInfo.productApplication"
-              placeholder="请输入成品用途"
-              :clearable="type == 'detail' ? false : true"
-              class="auto-prop"
-              :class="[type == 'detail' ? 'input-detail' : '']"
-            ></el-input>
-          </el-form-item>
+            </el-form-item>
+            <el-form-item label="最终客户" prop="finalCustomerName">
+              <el-input
+                v-model="baseInfo.finalCustomerName"
+                placeholder="请输入最终客户"
+                :clearable="type == 'detail' ? false : true"
+                :class="[type == 'detail' ? 'input-detail' : '']"
+              ></el-input>
+            </el-form-item>
+            <el-form-item label="结算方式" prop="settlementMethod">
+              <el-select v-model="baseInfo.settlementMethod" clearable placeholder="请选择">
+                <el-option
+                  v-for="(dict, index) in dict.type.pay_ways"
+                  :key="index"
+                  :label="dict.label"
+                  :value="dict.label"
+                ></el-option>
+              </el-select>
+            </el-form-item>
+            <el-form-item label="成品用途">
+              <el-input
+                v-model="baseInfo.productApplication"
+                placeholder="请输入成品用途"
+                :clearable="type == 'detail' ? false : true"
+                class="auto-prop"
+                :class="[type == 'detail' ? 'input-detail' : '']"
+              ></el-input>
+            </el-form-item>
+          </div>
+
           <el-form-item
             label="备注"
             :class="['mark-textarea', type == 'detail' ? 'textarea-detail' : '']"
@@ -214,7 +218,9 @@
             </template>
           </el-table-column>
         </el-table>
-        <div class="btn-box"><el-button @click="add" class="add-btn">添加产品</el-button></div>
+        <div class="btn-box">
+          <el-button @click="add" class="add-btn-dashed">添加产品</el-button>
+        </div>
       </div>
       <div class="footer">
         <el-button v-if="this.quotedOrderNo" @click="deleteQuoted()" class="save-btn">
@@ -239,7 +245,7 @@
           :rules="productRules"
           ref="productInfoForm"
           :inline="true"
-          label-width="100px"
+          label-width="90px"
           :label-position="labelPosition"
         >
           <el-form-item label="布号" prop="clothNo">
@@ -745,7 +751,7 @@ export default {
           return
         }
         if (!isLt10M) {
-          this.$message.error('上传头像图片大小不能超过 10MB!')
+          this.$message.error('图片大小不能超过 10MB!')
           fileList.pop()
           return
         }
@@ -804,6 +810,13 @@ export default {
           message: '存在必填信息没有填选的情况',
           type: 'error',
         })
+        return
+      }
+      let index = this.baseInfo.productList.findIndex(
+        (item) => item.clothNo === this.productInfo.clothNo,
+      )
+      if (index > -1) {
+        this.$message.error('不能添加重复布号')
         return
       }
       this.baseInfo.productList.push(JSON.parse(JSON.stringify(this.productInfo)))
@@ -882,9 +895,16 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
+.search-form .el-form-item {
+  min-width: 180px;
+  width: calc(25% - 40px);
+  margin-right: 40px;
+}
 .app-main {
   background: rgba(245, 247, 250, 1);
-  margin-bottom: 80px;
+  padding-bottom: 80px;
+  height: 100%;
+  overflow-y: scroll;
 }
 .container {
   margin: 24px;
@@ -903,10 +923,12 @@ export default {
     .btn-box {
       margin-top: 24px;
       text-align: center;
-      .el-button {
-        border: 1px dashed rgba(38, 111, 232, 1);
-        border-color: rgba(38, 111, 232, 1);
-        color: rgba(38, 111, 232, 1);
+      .add-btn-dashed {
+        background: #ffffff;
+        border-radius: 4px;
+        border: 1px #266fe8 dashed;
+        color: #266fe8;
+        padding: 10px 16px;
       }
     }
   }
@@ -960,7 +982,7 @@ export default {
     width: 100%;
   }
   .mark-textarea {
-    width: calc(25% + 308px) !important;
+    width: calc(50% - 40px) !important;
     margin-right: 0 !important;
     ::v-deep .el-form-item__content {
       width: calc(100% - 90px);
@@ -1042,7 +1064,7 @@ export default {
   .box {
     position: relative;
     ::v-deep.el-form-item {
-      width: calc(25% - 10px);
+      // width: calc(25% - 10px);
       .el-form-item__label {
         font-weight: normal !important;
         color: rgba(36, 36, 36, 1);
@@ -1053,6 +1075,9 @@ export default {
       .el-form-item__label {
         font-weight: normal !important;
         color: rgba(36, 36, 36, 1);
+      }
+      .el-form-item__content {
+        width: calc(100% - 90px);
       }
     }
     .basic-info {
@@ -1107,7 +1132,8 @@ export default {
   height: 48px;
 }
 ::v-deep .el-table th.is-leaf {
-  border-color: transparent;
+  border-right-color: #e7e7e7;
+  border-bottom-color: transparent;
 }
 ::v-deep .el-table td {
   border-bottom: 1px solid #f3f3f3;
@@ -1127,11 +1153,15 @@ export default {
   border-right: 1px solid #f3f3f3;
 }
 ::v-deep.el-form-item {
-  width: calc(25% - 10px);
+  // width: calc(25% - 10px);
   .el-form-item__label {
     font-weight: normal !important;
     color: rgba(36, 36, 36, 1);
   }
+}
+::v-deep .el-textarea__inner {
+  font-family: auto;
+  padding: 6px 15px;
 }
 .tab-div {
   border-bottom: 1px solid #f3f3f3;
@@ -1158,18 +1188,18 @@ export default {
   text-overflow: ellipsis;
   -o-text-overflow: ellipsis; /* for Opera */
 }
-.auto-prop {
-  ::v-deep .el-input {
-    .el-input__inner {
-      width: 250px;
-    }
-  }
-}
-.auto-prop {
-  ::v-deep .el-input__inner {
-    width: 250px;
-  }
-}
+// .auto-prop {
+//   ::v-deep .el-input {
+//     .el-input__inner {
+//       width: 250px;
+//     }
+//   }
+// }
+// .auto-prop {
+//   ::v-deep .el-input__inner {
+//     width: 250px;
+//   }
+// }
 </style>
 <style>
 .popper-class {

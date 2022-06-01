@@ -35,7 +35,7 @@ export function editCustomerVisitPlan(data) {
   return request({
     url: `/system/customerVisitPlan/edit`,
     method: 'put',
-    data: data,
+    data: JSON.stringify(data),
   })
 }
 /**
@@ -45,5 +45,15 @@ export function getPlanVisitDeptList() {
   return request({
     url: `/system/customerVisitPlan/deptList`,
     method: 'get',
+  })
+}
+/**
+ * 获取状态数量
+ */
+export function getStateList(params) {
+  return request({
+    url: `/system/customerVisitPlan/stateList`,
+    method: 'get',
+    params: params,
   })
 }
