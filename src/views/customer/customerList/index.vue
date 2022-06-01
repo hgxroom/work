@@ -117,31 +117,31 @@
         </el-table-column>
         <el-table-column
           label="客户编号"
-          align="center"
+          align="left"
           prop="customerNo"
           :show-overflow-tooltip="true"
         />
         <el-table-column
           label="客户名称"
-          align="center"
+          align="left"
           prop="customerName"
           :show-overflow-tooltip="true"
         />
         <el-table-column
           label="业务员"
-          align="center"
+          align="left"
           prop="salesman"
           :show-overflow-tooltip="true"
         />
         <el-table-column
           label="客户区域"
-          align="center"
+          align="left"
           prop="customerArea"
           :show-overflow-tooltip="true"
         />
         <el-table-column
           label="营收规模"
-          align="center"
+          align="left"
           prop="revenueScale"
           :show-overflow-tooltip="true"
         >
@@ -150,15 +150,15 @@
           </template>
         </el-table-column>
         <el-table-column
-          label="状态"
-          align="center"
-          prop="customerState"
+          label="创建时间"
+          align="left"
+          prop="createTime"
           :show-overflow-tooltip="true"
         />
         <el-table-column
-          label="创建时间"
+          label="状态"
           align="center"
-          prop="createTime"
+          prop="customerState"
           :show-overflow-tooltip="true"
         />
         <el-table-column label="操作" align="center" class-name="small-padding fixed-width">

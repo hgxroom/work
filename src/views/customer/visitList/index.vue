@@ -81,31 +81,31 @@
 
         <el-table-column
           label="客户名称"
-          align="center"
+          align="left"
           prop="customerName"
           :show-overflow-tooltip="true"
         />
         <el-table-column
           label="品牌名称"
-          align="center"
+          align="left"
           prop="brandName"
           :show-overflow-tooltip="true"
         />
         <el-table-column
           label="业务员"
-          align="center"
+          align="left"
           prop="salesman"
           :show-overflow-tooltip="true"
         />
         <el-table-column
           label="拜访对象"
-          align="center"
+          align="left"
           prop="visitObject"
           :show-overflow-tooltip="true"
         />
         <el-table-column
           label="拜访内容"
-          align="center"
+          align="left"
           prop="visitContent"
           :show-overflow-tooltip="false"
         >
@@ -118,7 +118,7 @@
             </el-popover>
           </template>
         </el-table-column>
-        <el-table-column label="拜访时间" align="center" :show-overflow-tooltip="true">
+        <el-table-column label="拜访时间" align="left" :show-overflow-tooltip="true">
           <template slot-scope="scope">
             <span>{{ scope.row.visitTime }}</span> -
             <span>{{ scope.row.visitEndTime.slice(10, 19) }}</span>
