@@ -158,7 +158,7 @@
                     </el-form-item>
                   </el-col>
                   <el-col :span="11">
-                    <el-form-item label="织损">
+                    <el-form-item class="label-fz-12" label="织损">
                       <el-input
                         v-model="weavingCostList[0].weavingLoss"
                         :disabled="weavingFeeBtn"
@@ -1513,6 +1513,7 @@ export default {
     position: relative;
     ::v-deep.el-form-item {
       width: calc(25% - 10px);
+
       .el-form-item__label {
         font-weight: normal !important;
         color: rgba(36, 36, 36, 1);
