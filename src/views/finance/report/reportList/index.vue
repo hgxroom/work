@@ -94,7 +94,7 @@
               </el-table-column>
               <el-table-column
                 label="报价单号"
-                align="center"
+                align="left"
                 prop="quotedOrderNo"
                 :show-overflow-tooltip="true"
               >
@@ -107,26 +107,26 @@
 
               <el-table-column
                 label="客户名称"
-                align="center"
+                align="left"
                 prop="customerName"
                 :show-overflow-tooltip="true"
               />
               <el-table-column
                 label="布号"
-                align="center"
+                align="left"
                 prop="clothNo"
                 :show-overflow-tooltip="true"
               />
               <el-table-column
                 label="提交人"
-                align="center"
+                align="left"
                 prop="createBy"
                 :show-overflow-tooltip="true"
               >
               </el-table-column>
               <el-table-column
                 label="部门"
-                align="center"
+                align="left"
                 prop="departmentName"
                 :show-overflow-tooltip="true"
               >
