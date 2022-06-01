@@ -1,6 +1,6 @@
 <!-- 报价单列表 -->
 <template>
-  <div class="app-main">
+  <div class="wrapper">
     <div class="app-container">
       <div class="card-box">
         <!-- 搜索和筛选栏 -->
@@ -436,12 +436,6 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-.app-main {
-  background: rgba(245, 247, 250, 1);
-  padding-bottom: 0px;
-  height: 100%;
-  overflow-y: scroll;
-}
 .app-container {
   .card-box {
     position: relative;

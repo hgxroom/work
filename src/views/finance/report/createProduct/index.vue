@@ -398,7 +398,7 @@ export default {
 <style lang="scss" scoped>
 .app-container {
   height: 100%;
-  overflow-y: scroll;
+  overflow-y: auto;
   .add-btn {
     margin-bottom: 16px;
     background-color: #00a870;

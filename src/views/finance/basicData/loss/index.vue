@@ -1,5 +1,5 @@
 <template>
-  <div class="app-main">
+  <div class="wrapper">
     <div class="container">
       <el-row>
         <el-col :span="12">
@@ -463,7 +463,7 @@ export default {
 ::v-deep.numrule input[type='number'] {
   -moz-appearance: textfield;
 }
-.app-main {
+.wrapper {
   background: rgba(245, 247, 250, 1);
 }
 .container {

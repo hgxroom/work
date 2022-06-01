@@ -365,3 +365,9 @@ h6 {
 .tab_checked {
   border-bottom: 2px solid #0052d9;
 }
+// 包装容器
+.wrapper {
+  background: rgba(245, 247, 250, 1);
+  height: 100%;
+  overflow-y: auto;
+}

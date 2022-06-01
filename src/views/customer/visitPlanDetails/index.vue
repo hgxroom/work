@@ -225,7 +225,6 @@ export default {
   },
 
   created() {
-    debugger
     this.type = this.$route.query.type
     if (this.$route.query.data) {
       this.visitPlanData = JSON.parse(this.$route.query.data)
