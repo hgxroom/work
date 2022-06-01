@@ -215,7 +215,9 @@
                 </el-select>
               </div>
               <div v-else>
-                <div>{{ dyeingCostList[scope.$index].jobType }}</div>
+                <div style="height: 36px; line-height: 36px">
+                  {{ dyeingCostList[scope.$index].jobType }}
+                </div>
               </div>
             </template>
           </el-table-column>

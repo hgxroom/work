@@ -487,7 +487,7 @@
         </el-col>
       </el-row>
     </div>
-    <div class="card-box" v-if="type == 'detail'">
+    <div class="card-box" id="12" v-if="type == 'detail' && visitDetailVoList.length > 0">
       <!-- 拜访记录 -->
       <el-row :gutter="20" style="margin-top: 30px; flex-wrap: wrap">
         <el-col class="visitCard" v-for="(item, index) in visitDetailVoList" :key="index">
@@ -693,7 +693,10 @@ export default {
           customerState,
         }
         this.brandList = brandList
-        this.visitDetailVoList = visitDetailVoList
+        if (visitDetailVoList) {
+          this.visitDetailVoList = visitDetailVoList
+        }
+
         console.log('brandList', this.brandList)
         if (brandList.length > 0) {
           this.tabActiveName = brandList[0].id

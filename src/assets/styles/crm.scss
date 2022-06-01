@@ -376,10 +376,13 @@ h6 {
 .tab_checked {
   border-bottom: 2px solid #0052d9;
 }
-
-.el-icon-arrow-right:before {
+//左侧tab箭头隐藏
+.el-submenu__title{
+  .el-icon-arrow-right:before {
     content: "";
 }
+}
+
 // 包装容器
 .wrapper {
   background: rgba(245, 247, 250, 1);
