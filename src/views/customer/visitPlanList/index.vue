@@ -45,7 +45,17 @@
     </div>
 
     <div class="card-box">
-      <!-- 列表状态 -->
+      <el-row>
+        <el-col :span="12">
+          <el-button
+            type="primary"
+            class="add-btn"
+            @click="handleCreate"
+            v-hasPermi="['customer:plan:add']"
+            >新增</el-button
+          >
+        </el-col>
+      </el-row>
       <!-- 列表状态 -->
       <el-row class="tab_head">
         <div style="display: flex">
@@ -58,16 +68,6 @@
           >
             {{ item.name }} ({{ item.num }})
           </div>
-        </div>
-
-        <div>
-          <el-button
-            type="primary"
-            size="small"
-            @click="handleCreate"
-            v-hasPermi="['customer:plan:add']"
-            >新增</el-button
-          >
         </div>
       </el-row>
 

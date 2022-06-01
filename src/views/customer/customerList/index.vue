@@ -57,28 +57,28 @@
     </div>
     <div class="card-box">
       <!-- 搜索栏 -->
-
-      <el-row :gutter="10" class="mb8">
-        <el-col>
+      <el-row class="mb16">
+        <el-col :span="12">
           <el-button
             type="primary"
-            plain
-            icon="el-icon-plus"
-            size="mini"
+            class="add-btn"
             @click="handleFromCustomer('add')"
             v-hasPermi="['customer:customer:add']"
-            >新增客户</el-button
-          >
-          <el-button
-            plain
-            size="mini"
-            icon="el-icon-tickets"
-            @click="handleExportBtn"
-            v-hasPermi="['customer:customer:export']"
-            >导出数据</el-button
+            >新增</el-button
           >
         </el-col>
+        <el-col :span="12" style="text-align: right">
+          <el-button
+            type="default"
+            @click="handleExportBtn"
+            class="right-btn"
+            v-hasPermi="['customer:customer:export']"
+          >
+            导出
+          </el-button>
+        </el-col>
       </el-row>
+
       <!-- 列表 -->
       <el-table
         :data="listData"

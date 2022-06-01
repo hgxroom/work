@@ -47,29 +47,17 @@
       </el-row>
     </div>
     <div class="card-box">
-      <el-row :gutter="10" class="mb8">
-        <el-col :span="1.5"
-          ><el-button
-            type="primary"
-            plain
-            icon="el-icon-plus"
-            size="mini"
-            @click="handleFromCustomer('add')"
-            v-hasPermi="['customer:visit:add']"
-            >新增拜访</el-button
+      <el-row class="mb16">
+        <el-col :span="12">
+          <el-button type="primary" class="add-btn" @click="handleFromCustomer('add')"
+            >新增</el-button
           >
         </el-col>
-        <el-col :span="1.5">
-          <el-button
-            plain
-            size="mini"
-            icon="el-icon-tickets"
-            @click="handleExportBtn"
-            v-hasPermi="['customer:visit:export']"
-            >导出数据</el-button
-          >
+        <el-col :span="12" style="text-align: right">
+          <el-button type="default" @click="handleExportBtn" class="right-btn"> 导出 </el-button>
         </el-col>
       </el-row>
+
       <!-- 列表 -->
       <el-table :data="listData" style="width: 100%">
         <!-- <el-table-column type="selection" width="55"> </el-table-column>
