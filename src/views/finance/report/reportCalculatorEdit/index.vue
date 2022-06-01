@@ -1684,6 +1684,7 @@ export default {
   }
   .box-right {
     width: calc(100% - 94px);
+    font-size: 14px;
   }
 }
 .popper-class {
@@ -1698,7 +1699,7 @@ export default {
   display: table-cell;
   position: relative;
   border: 0px solid #dcdfe6;
-  border-radius: 4px;
+  // border-radius: 4px;
   padding: 0 12px;
   width: 1px;
   white-space: nowrap;
