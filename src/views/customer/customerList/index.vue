@@ -26,16 +26,6 @@
                 size="small"
               ></el-input>
             </el-form-item>
-            <el-form-item label="状态">
-              <el-select v-model="queryParams.customerState" clearable placeholder="请选择">
-                <el-option
-                  v-for="(dict, index) in dict.type.customer_state"
-                  :key="index"
-                  :label="dict.label"
-                  :value="dict.label"
-                ></el-option>
-              </el-select>
-            </el-form-item>
             <el-form-item label="搜索区间">
               <el-date-picker
                 v-model="queryParams.dateTimePicker"
@@ -47,6 +37,16 @@
                 :default-time="['00:00:00', '23:59:59']"
               >
               </el-date-picker>
+            </el-form-item>
+            <el-form-item label="状态">
+              <el-select v-model="queryParams.customerState" clearable placeholder="请选择">
+                <el-option
+                  v-for="(dict, index) in dict.type.customer_state"
+                  :key="index"
+                  :label="dict.label"
+                  :value="dict.label"
+                ></el-option>
+              </el-select>
             </el-form-item>
           </el-form>
         </el-col>
