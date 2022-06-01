@@ -245,7 +245,7 @@
           :rules="productRules"
           ref="productInfoForm"
           :inline="true"
-          label-width="100px"
+          label-width="90px"
           :label-position="labelPosition"
         >
           <el-form-item label="布号" prop="clothNo">
@@ -1075,6 +1075,9 @@ export default {
       .el-form-item__label {
         font-weight: normal !important;
         color: rgba(36, 36, 36, 1);
+      }
+      .el-form-item__content {
+        width: calc(100% - 90px);
       }
     }
     .basic-info {
