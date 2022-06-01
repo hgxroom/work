@@ -218,7 +218,9 @@
             </template>
           </el-table-column>
         </el-table>
-        <div class="btn-box"><el-button @click="add" class="add-btn">添加产品</el-button></div>
+        <div class="btn-box">
+          <el-button @click="add" class="add-btn-dashed">添加产品</el-button>
+        </div>
       </div>
       <div class="footer">
         <el-button v-if="this.quotedOrderNo" @click="deleteQuoted()" class="save-btn">
@@ -895,8 +897,8 @@ export default {
 <style lang="scss" scoped>
 .search-form .el-form-item {
   min-width: 180px;
-  width: calc(25% - 10px);
-  margin-right: 10px;
+  width: calc(25% - 40px);
+  margin-right: 40px;
 }
 .app-main {
   background: rgba(245, 247, 250, 1);
@@ -921,10 +923,12 @@ export default {
     .btn-box {
       margin-top: 24px;
       text-align: center;
-      .el-button {
-        border: 1px dashed rgba(38, 111, 232, 1);
-        border-color: rgba(38, 111, 232, 1);
-        color: rgba(38, 111, 232, 1);
+      .add-btn-dashed {
+        background: #ffffff;
+        border-radius: 4px;
+        border: 1px #266fe8 dashed;
+        color: #266fe8;
+        padding: 10px 16px;
       }
     }
   }
@@ -978,7 +982,7 @@ export default {
     width: 100%;
   }
   .mark-textarea {
-    width: calc(25% + 308px) !important;
+    width: calc(50% - 40px) !important;
     margin-right: 0 !important;
     ::v-deep .el-form-item__content {
       width: calc(100% - 90px);
