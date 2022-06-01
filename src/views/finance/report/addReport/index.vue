@@ -1126,7 +1126,8 @@ export default {
   height: 48px;
 }
 ::v-deep .el-table th.is-leaf {
-  border-color: transparent;
+  border-right-color: #e7e7e7;
+  border-bottom-color: transparent;
 }
 ::v-deep .el-table td {
   border-bottom: 1px solid #f3f3f3;
@@ -1151,6 +1152,10 @@ export default {
     font-weight: normal !important;
     color: rgba(36, 36, 36, 1);
   }
+}
+::v-deep .el-textarea__inner {
+  font-family: auto;
+  padding: 6px 15px;
 }
 .tab-div {
   border-bottom: 1px solid #f3f3f3;
