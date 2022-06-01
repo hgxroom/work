@@ -895,8 +895,8 @@ export default {
 <style lang="scss" scoped>
 .search-form .el-form-item {
   min-width: 180px;
-  width: calc(25% - 10px);
-  margin-right: 10px;
+  width: calc(25% - 20px);
+  margin-right: 20px;
 }
 .app-main {
   background: rgba(245, 247, 250, 1);
@@ -925,6 +925,7 @@ export default {
         border: 1px dashed rgba(38, 111, 232, 1);
         border-color: rgba(38, 111, 232, 1);
         color: rgba(38, 111, 232, 1);
+        background-color: #fff;
       }
     }
   }
@@ -978,7 +979,7 @@ export default {
     width: 100%;
   }
   .mark-textarea {
-    width: calc(25% + 308px) !important;
+    width: calc(50% - 20px) !important;
     margin-right: 0 !important;
     ::v-deep .el-form-item__content {
       width: calc(100% - 90px);
