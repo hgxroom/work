@@ -133,16 +133,20 @@
               </el-table-column>
               <el-table-column
                 label="最终客户"
-                align="center"
+                align="left"
                 prop="finalCustomerName"
                 :show-overflow-tooltip="true"
               />
               <el-table-column
                 label="提交日期"
-                align="center"
+                align="left"
                 prop="createTime"
                 :show-overflow-tooltip="true"
-              />
+              >
+                <template v-slot="scope">
+                  {{ scope.row.updateTime || scope.row.createTime }}
+                </template>
+              </el-table-column>
               <el-table-column
                 label="状态"
                 align="center"
