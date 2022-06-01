@@ -47,13 +47,7 @@
     <div class="card-box">
       <el-row>
         <el-col :span="12">
-          <el-button
-            type="primary"
-            class="add-btn"
-            @click="handleCreate"
-            v-hasPermi="['customer:plan:add']"
-            >新增</el-button
-          >
+          <el-button type="primary" class="add-btn" @click="handleCreate">新增</el-button>
         </el-col>
       </el-row>
       <!-- 列表状态 -->
@@ -354,6 +348,7 @@ export default {
       }
     },
     handleCreate() {
+      debugger
       this.$router.push({ path: `/customer/visitPlanDetails` })
     },
     handleEditStatus(val, item) {

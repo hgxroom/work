@@ -301,7 +301,7 @@
             :show-overflow-tooltip="true"
           >
             <template v-slot="scope">
-              <div class="total-num">{{ extraWholeLoss }}</div>
+              <div>{{ extraWholeLoss }}</div>
             </template>
           </el-table-column>
           <el-table-column
