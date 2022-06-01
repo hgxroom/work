@@ -25,6 +25,9 @@
 .mb8 {
   margin-bottom: 8px;
 }
+.mb16 {
+  margin-bottom: 16px;
+}
 .ml5 {
   margin-left: 5px;
 }
@@ -382,4 +385,19 @@ h6 {
   background: rgba(245, 247, 250, 1);
   height: 100%;
   overflow-y: auto;
+}
+.add-btn {
+  // margin: 16px 0;
+  background-color: #00a870;
+  border-color: #00a870;
+  padding: 8px 15px;
+}
+.add-btn:hover {
+  background-color: #00a870;
+  border-color: #00a870;
+  opacity:0.5
+}
+.right-btn {
+  // margin: 16px 0 16px 16px;
+  padding: 8px 15px;
 }

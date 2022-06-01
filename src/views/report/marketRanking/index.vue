@@ -30,18 +30,12 @@
       </el-row>
     </div>
     <div class="card-box">
-      <el-row class="mb8">
-        <el-col>
-          <el-button
-            plain
-            size="mini"
-            icon="el-icon-tickets"
-            :loading="downloadLoading"
-            @click="exportReport"
-            >导出报表</el-button
-          >
+      <el-row class="mb16">
+        <el-col style="text-align: right">
+          <el-button type="default" @click="exportReport" class="right-btn"> 导出 </el-button>
         </el-col>
       </el-row>
+
       <el-table
         ref="tableData"
         :data="listData"
