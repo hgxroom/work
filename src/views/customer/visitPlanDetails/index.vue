@@ -107,6 +107,7 @@
             {{ formInline.planStartTime }} - {{ formInline.planEndTime }}
           </span>
           <el-date-picker
+            align="right"
             v-if="type !== 'detail'"
             v-model="datePickerTime"
             value-format="yyyy-MM-dd HH:mm:ss"

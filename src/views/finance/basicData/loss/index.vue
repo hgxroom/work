@@ -447,7 +447,7 @@ export default {
 .el-table--border:after,
 .el-table--group:after,
 .el-table:before {
-  background-color: #f3f3f3;
+  background-color: transparent;
 }
 .el-form-item {
   margin-bottom: 0px;
