@@ -1,11 +1,11 @@
 <!-- 报价单列表 -->
 <template>
-  <div class="app-main">
+  <div class="wrapper">
     <div class="app-container">
       <div class="card-box">
         <!-- 搜索和筛选栏 -->
         <el-row>
-          <el-col style="width: calc(100% - 224px)">
+          <el-col class="search-col-from">
             <el-form
               class="base-form"
               :model="queryParams"
@@ -56,13 +56,13 @@
                 <el-input v-model="queryParams.clothNo" placeholder="请输入布号"></el-input>
               </el-form-item> </el-form
           ></el-col>
-          <el-col style="width: 224px">
+          <el-col class="search-col-btn">
             <el-button type="primary" @click="handleQuery">查询</el-button>
             <el-button type="" @click="resetQuery">重置</el-button>
           </el-col>
         </el-row>
       </div>
-      <div class="card-box">
+      <div class="card-box" style="padding-bottom: 24px">
         <el-row>
           <el-col :span="12">
             <el-button type="primary" class="add-btn" @click="addRepot()">新增</el-button>
@@ -94,7 +94,7 @@
               </el-table-column>
               <el-table-column
                 label="报价单号"
-                align="center"
+                align="left"
                 prop="quotedOrderNo"
                 :show-overflow-tooltip="true"
               >
@@ -107,42 +107,46 @@
 
               <el-table-column
                 label="客户名称"
-                align="center"
+                align="left"
                 prop="customerName"
                 :show-overflow-tooltip="true"
               />
               <el-table-column
                 label="布号"
-                align="center"
+                align="left"
                 prop="clothNo"
                 :show-overflow-tooltip="true"
               />
               <el-table-column
                 label="提交人"
-                align="center"
+                align="left"
                 prop="createBy"
                 :show-overflow-tooltip="true"
               >
               </el-table-column>
               <el-table-column
                 label="部门"
-                align="center"
+                align="left"
                 prop="departmentName"
                 :show-overflow-tooltip="true"
               >
               </el-table-column>
               <el-table-column
                 label="最终客户"
-                align="center"
+                align="left"
                 prop="finalCustomerName"
                 :show-overflow-tooltip="true"
               />
               <el-table-column
                 label="提交日期"
-                align="center"
+                align="left"
                 prop="createTime"
                 :show-overflow-tooltip="true"
-              />
+              >
+                <template v-slot="scope">
+                  {{ scope.row.updateTime || scope.row.createTime }}
+                </template>
+              </el-table-column>
               <el-table-column
                 label="状态"
                 align="center"
@@ -436,10 +440,6 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-.app-main {
-  background: rgba(245, 247, 250, 1);
-  // padding-bottom: 80px;
-}
 .app-container {
   .card-box {
     position: relative;
@@ -447,15 +447,19 @@ export default {
     margin-bottom: 24px;
     border-radius: 8px;
     background-color: #fff;
+    .el-form-item {
+      margin-bottom: 20px;
+    }
+    padding-bottom: 0px;
   }
   .add-btn {
-    margin: 16px 0;
+    // margin: 16px 0;
     background-color: #00a870;
     border-color: #00a870;
     padding: 8px 15px;
   }
   .right-btn {
-    margin: 16px 0 16px 16px;
+    // margin: 16px 0 16px 16px;
     padding: 8px 15px;
   }
   margin: 0px 0 24px 0;
@@ -469,7 +473,7 @@ export default {
   flex-wrap: wrap;
   .el-form-item {
     min-width: 180px;
-    width: calc(30% - 40px);
+    width: calc(25% - 40px);
     margin-right: 40px;
   }
   ::v-deep .el-form-item__content {
@@ -482,18 +486,5 @@ export default {
   ::v-deep .el-select {
     width: 100%;
   }
-}
-.tab_head {
-  border-bottom: 1px solid #f3f3f3;
-  width: 100%;
-  display: flex;
-}
-.tab_box {
-  font-size: 14px;
-  padding: 16px 14px;
-  cursor: pointer;
-}
-.tab_checked {
-  border-bottom: 2px solid #0052d9;
 }
 </style>

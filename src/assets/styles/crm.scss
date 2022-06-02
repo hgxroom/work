@@ -25,6 +25,9 @@
 .mb8 {
   margin-bottom: 8px;
 }
+.mb16 {
+  margin-bottom: 16px;
+}
 .ml5 {
   margin-left: 5px;
 }
@@ -112,7 +115,7 @@ h6 {
 /** 表格布局 **/
 .pagination-container {
   position: relative;
-  height: 25px;
+  height: 50px;
   margin-bottom: 10px;
   margin-top: 15px;
   padding: 10px 20px !important;
@@ -149,7 +152,7 @@ h6 {
 /** 表格更多操作下拉样式 */
 .el-table .el-dropdown-link {
   cursor: pointer;
-  color: #409eff;
+  color: #0052D9;
   margin-left: 5px;
 }
 
@@ -284,6 +287,58 @@ h6 {
   position: relative;
   float: right;
 }
+/*分块样式 */
+.app-container {
+  
+  // margin: 24px;
+  .card-box {
+    position: relative;
+    padding: 16px 16px 16px 16px;
+    margin-bottom: 20px;
+    border-radius: 8px;
+    background-color: #fff;
+    .title {
+      color: rgba(0, 0, 0, 0.85);
+      margin: 0 0 16px 0;
+      font-weight: 600;
+      text-align: left;
+    }
+    &.item-mb-16{
+      .el-form-item {
+        margin-bottom:16px !important
+      }
+    
+    }
+    .el-form-item {
+      margin-bottom:0px
+    }
+    .el-select> .el-input > input{
+      height: 32px;
+    } 
+    .el-input__inner{
+      height: 32px;
+      line-height: 32px;
+    }
+    // .el-input--medium .el-input__inner {
+
+    // }
+    .btn-box {
+      margin-top: 24px;
+      text-align: center;
+      // .el-button {
+      //   border: 1px dashed rgba(38, 111, 232, 1);
+      //   border-color: rgba(38, 111, 232, 1);
+      //   color: rgba(38, 111, 232, 1);
+      // }
+    }
+  }
+ 
+
+}
+  /*白色背景 */
+  .bg-color-fff{
+    background-color: #fff;
+  }
 /* 列表搜索条件框样式 */
 .search-form {
   display: flex;
@@ -310,4 +365,48 @@ h6 {
 }
 .search-col-btn {
   width: 224px;
+  text-align: right;
+}
+/* tab切换样式 */
+.tab_head {
+  border-bottom: 1px solid #f3f3f3;
+  width: 100%;
+  display: flex;
+}
+.tab_box {
+  font-size: 14px;
+  padding: 16px 14px;
+  cursor: pointer;
+  display: flex;
+}
+.tab_checked {
+  border-bottom: 2px solid #0052d9;
+}
+//左侧tab箭头隐藏
+.el-submenu__title{
+  .el-icon-arrow-right:before {
+    content: "";
+}
+}
+
+// 包装容器
+.wrapper {
+  background: rgba(245, 247, 250, 1);
+  height: 100%;
+  overflow-y: auto;
+}
+.add-btn {
+  // margin: 16px 0;
+  background-color: #00a870;
+  border-color: #00a870;
+  padding: 8px 15px;
+}
+.add-btn:hover {
+  background-color: #00a870;
+  border-color: #00a870;
+  opacity:0.5
+}
+.right-btn {
+  // margin: 16px 0 16px 16px;
+  padding: 8px 15px;
 }

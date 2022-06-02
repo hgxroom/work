@@ -347,3 +347,11 @@ export function salesmanExport(params) {
 export function quotedPriceExport(params) {
   return download(`/system/quotedOrder/quotedPriceExport`, params, '报价单信息.xls')
 }
+
+//根据布号获取面料成分，工艺路线，工艺要求，助剂名称
+export function findFabricQuotationByBh(bh) {
+  return request({
+    url: `/hterp/fabricQuotation/findFabricQuotationByBh/${bh}`,
+    method: 'get',
+  })
+}
