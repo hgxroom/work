@@ -14,8 +14,8 @@
         >提交人：{{ baseInfo.createBy }} 创建时间：{{ baseInfo.createTime }}</el-col
       >
     </el-row>
-    <div class="container">
-      <div class="card-box">
+    <div class="app-container">
+      <div class="card-box item-mb-16">
         <el-form
           class="base-form"
           :model="baseInfo"
@@ -23,6 +23,7 @@
           ref="baseInfoForm"
           label-width="90px"
           :label-position="labelPosition"
+          :class="[type == 'detail' ? 'prod-detail' : '']"
         >
           <el-form-item label="参考布号" prop="referenceClothNo">
             <!-- 搜索框 -->
@@ -140,15 +141,7 @@
           </template>
           <el-form-item label="成分" prop="component" required>
             <div v-if="type == 'detail'">
-              <el-input
-                readonly
-                :disabled="type == 'detail' ? true : false"
-                :class="[type == 'detail' ? 'input-detail' : '']"
-                v-model="baseInfo.component"
-                placeholder="请输入成分"
-                style="width: 100%"
-                :title="type == 'detail' ? baseInfo.component : ''"
-              ></el-input>
+              <div class="unit-detail2">{{ baseInfo.component }}</div>
             </div>
             <div v-else @click="componentDialogVisible = true">
               <el-input
@@ -197,7 +190,7 @@
           </el-form-item>
         </el-form>
       </div>
-      <div class="card-box">
+      <div class="card-box item-mb-16">
         <el-row>
           <p class="font_h1">纱支信息</p>
           <el-form :model="formData" class="shazhi-form" :rules="formData.rules" ref="formRef">
@@ -511,7 +504,7 @@ export default {
     }
     this.type = this.$route.query.type
     const obj = Object.assign({}, this.$route, {
-      title: `自建产品`,
+      title: `新增自建产品`,
     })
     console.log(obj)
     if (this.type == 'detail') {
@@ -994,28 +987,7 @@ export default {
 }
 .container {
   margin: 24px;
-  .card-box {
-    position: relative;
-    padding: 16px 16px 24px 16px;
-    margin-bottom: 24px;
-    border-radius: 8px;
-    background-color: #fff;
-    .title {
-      color: rgba(0, 0, 0, 0.85);
-      margin: 0 0 16px 0;
-      font-weight: 600;
-      text-align: left;
-    }
-    .btn-box {
-      margin-top: 24px;
-      text-align: center;
-      .el-button {
-        border: 1px dashed rgba(38, 111, 232, 1);
-        border-color: rgba(38, 111, 232, 1);
-        color: rgba(38, 111, 232, 1);
-      }
-    }
-  }
+
   .upload-img {
     display: flex;
     font-size: 14px;
@@ -1084,13 +1056,34 @@ export default {
   text-align: right;
   margin-right: 24px;
 }
+.prod-detail {
+  ::v-deep .el-form-item {
+    .el-form-item__label {
+      color: #8b8b8b;
+    }
+  }
+}
+.input-detail {
+  ::v-deep .el-input__inner {
+    border: 1px solid transparent;
+    background: transparent;
+    cursor: auto;
+    color: #242424;
+  }
+  ::v-deep .el-input-group__append {
+    margin: 0;
+    padding: 0;
+    border-color: transparent;
+    background: transparent;
+  }
+}
 .unit-detail {
-  color: #666;
+  color: #242424;
   padding-left: 15px;
   line-height: 29px;
 }
 .unit-detail2 {
-  color: #666;
+  color: #242424;
   padding-left: 15px;
 }
 .el-table td.el-table__cell div {

@@ -1,163 +1,161 @@
 <template>
   <div class="app-container">
-    <!-- 搜索框 -->
-    <el-row>
-      <el-col>
-        <el-form :model="queryParams" ref="queryForm" :inline="true">
-          <el-form-item label="业务员">
-            <el-input v-model="queryParams.ywgdy" size="mini" clearble></el-input>
-          </el-form-item>
-          <el-form-item label="部门">
-            <el-input v-model="queryParams.ywb" size="mini" clearble></el-input>
-          </el-form-item>
+    <div class="card-box">
+      <!-- 搜索框 -->
+      <el-row>
+        <el-col class="search-col-from">
+          <el-form class="search-form" :model="queryParams" ref="queryForm" :inline="true">
+            <el-form-item label="业务员">
+              <el-input v-model="queryParams.ywgdy" size="mini" clearble></el-input>
+            </el-form-item>
+            <el-form-item label="部门">
+              <el-input v-model="queryParams.ywb" size="mini" clearble></el-input>
+            </el-form-item>
 
-          <el-form-item label="年份">
-            <el-date-picker
-              v-model="queryParams.scYear"
-              value-format="yyyy"
-              type="year"
-              placeholder="选择年"
-            >
-            </el-date-picker>
-          </el-form-item>
-          <el-form-item>
-            <el-button type="primary" @click="getList">查询</el-button>
-          </el-form-item>
+            <el-form-item label="年份">
+              <el-date-picker
+                v-model="queryParams.scYear"
+                value-format="yyyy"
+                type="year"
+                placeholder="选择年"
+              >
+              </el-date-picker>
+            </el-form-item>
+          </el-form>
+        </el-col>
+        <el-col class="search-col-btn">
+          <el-button type="primary" @click="getList">查询</el-button>
           <el-button icon="el-icon-refresh" @click="resetQuery">重置</el-button>
-        </el-form>
-      </el-col>
-    </el-row>
-    <el-row class="mb8">
-      <el-col>
-        <el-button
-          plain
-          size="mini"
-          icon="el-icon-tickets"
-          :loading="downloadLoading"
-          @click="exportReport"
-          >导出报表</el-button
-        >
-      </el-col>
-    </el-row>
-    <el-table
-      ref="tableData"
-      :data="listData"
-      v-loading="loading"
-      :show-summary="true"
-      :summary-method="tableSummaries"
-      :height="tableHeight"
-      style="width: 100%"
-      border
-    >
-      <el-table-column label="业务员" align="center" prop="ywgdy" :show-overflow-tooltip="true" />
-      <el-table-column label="部门" align="center" prop="ywb" :show-overflow-tooltip="true" />
-      <el-table-column
-        label="1月确收"
-        align="center"
-        prop="month1"
-        width="120px"
-        :show-overflow-tooltip="true"
-      />
-      <el-table-column
-        label="2月确收"
-        align="center"
-        prop="month2"
-        width="120px"
-        :show-overflow-tooltip="true"
-      />
-      <el-table-column
-        label="3月确收"
-        align="center"
-        prop="month3"
-        width="120px"
-        :show-overflow-tooltip="true"
-      />
-      <el-table-column
-        label="4月确收"
-        align="center"
-        prop="month4"
-        width="120px"
-        :show-overflow-tooltip="true"
-      />
-      <el-table-column
-        label="5月确收"
-        align="center"
-        prop="month5"
-        width="120px"
-        :show-overflow-tooltip="true"
-      />
-      <el-table-column
-        label="6月确收"
-        align="center"
-        prop="month6"
-        width="120px"
-        :show-overflow-tooltip="true"
-      />
-      <el-table-column
-        label="7月确收"
-        align="center"
-        prop="month7"
-        width="120px"
-        :show-overflow-tooltip="true"
-      />
-      <el-table-column
-        label="8月确收"
-        align="center"
-        prop="month8"
-        width="120px"
-        :show-overflow-tooltip="true"
-      />
-      <el-table-column
-        label="9月确收"
-        align="center"
-        prop="month9"
-        width="120px"
-        :show-overflow-tooltip="true"
-      />
-      <el-table-column
-        label="10月确收"
-        align="center"
-        prop="month10"
-        width="120px"
-        :show-overflow-tooltip="true"
-      />
-      <el-table-column
-        label="11月确收"
-        align="center"
-        prop="month11"
-        width="120px"
-        :show-overflow-tooltip="true"
-      />
-      <el-table-column
-        label="12月确收"
-        align="center"
-        prop="month12"
-        width="120px"
-        :show-overflow-tooltip="true"
-      />
-      <el-table-column
-        label="累计销售"
-        align="center"
-        prop="cumulativeSales"
-        width="120px"
-        :show-overflow-tooltip="true"
-      />
-      <el-table-column
-        label="超期欠额"
-        align="center"
-        prop="overdueArrears"
-        width="120px"
-        :show-overflow-tooltip="true"
-      />
-      <el-table-column
-        label="净额"
-        align="center"
-        prop="netAmount"
-        width="120px"
-        :show-overflow-tooltip="true"
-      />
-      <el-table-column label="排名" align="center" prop="scRank" :show-overflow-tooltip="true" />
-    </el-table>
+        </el-col>
+      </el-row>
+    </div>
+    <div class="card-box">
+      <el-row class="mb16">
+        <el-col style="text-align: right">
+          <el-button type="default" @click="exportReport" class="right-btn"> 导出 </el-button>
+        </el-col>
+      </el-row>
+
+      <el-table
+        ref="tableData"
+        :data="listData"
+        v-loading="loading"
+        :show-summary="true"
+        :summary-method="tableSummaries"
+        :height="tableHeight"
+        style="width: 100%"
+        border
+      >
+        <el-table-column label="业务员" align="center" prop="ywgdy" :show-overflow-tooltip="true" />
+        <el-table-column label="部门" align="center" prop="ywb" :show-overflow-tooltip="true" />
+        <el-table-column
+          label="1月确收"
+          align="center"
+          prop="month1"
+          width="120px"
+          :show-overflow-tooltip="true"
+        />
+        <el-table-column
+          label="2月确收"
+          align="center"
+          prop="month2"
+          width="120px"
+          :show-overflow-tooltip="true"
+        />
+        <el-table-column
+          label="3月确收"
+          align="center"
+          prop="month3"
+          width="120px"
+          :show-overflow-tooltip="true"
+        />
+        <el-table-column
+          label="4月确收"
+          align="center"
+          prop="month4"
+          width="120px"
+          :show-overflow-tooltip="true"
+        />
+        <el-table-column
+          label="5月确收"
+          align="center"
+          prop="month5"
+          width="120px"
+          :show-overflow-tooltip="true"
+        />
+        <el-table-column
+          label="6月确收"
+          align="center"
+          prop="month6"
+          width="120px"
+          :show-overflow-tooltip="true"
+        />
+        <el-table-column
+          label="7月确收"
+          align="center"
+          prop="month7"
+          width="120px"
+          :show-overflow-tooltip="true"
+        />
+        <el-table-column
+          label="8月确收"
+          align="center"
+          prop="month8"
+          width="120px"
+          :show-overflow-tooltip="true"
+        />
+        <el-table-column
+          label="9月确收"
+          align="center"
+          prop="month9"
+          width="120px"
+          :show-overflow-tooltip="true"
+        />
+        <el-table-column
+          label="10月确收"
+          align="center"
+          prop="month10"
+          width="120px"
+          :show-overflow-tooltip="true"
+        />
+        <el-table-column
+          label="11月确收"
+          align="center"
+          prop="month11"
+          width="120px"
+          :show-overflow-tooltip="true"
+        />
+        <el-table-column
+          label="12月确收"
+          align="center"
+          prop="month12"
+          width="120px"
+          :show-overflow-tooltip="true"
+        />
+        <el-table-column
+          label="累计销售"
+          align="center"
+          prop="cumulativeSales"
+          width="120px"
+          :show-overflow-tooltip="true"
+        />
+        <el-table-column
+          label="超期欠额"
+          align="center"
+          prop="overdueArrears"
+          width="120px"
+          :show-overflow-tooltip="true"
+        />
+        <el-table-column
+          label="净额"
+          align="center"
+          prop="netAmount"
+          width="120px"
+          :show-overflow-tooltip="true"
+        />
+        <el-table-column label="排名" align="center" prop="scRank" :show-overflow-tooltip="true" />
+      </el-table>
+    </div>
   </div>
 </template>
 <script>

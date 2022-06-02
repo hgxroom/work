@@ -1,182 +1,184 @@
 <template>
   <div class="app-container">
-    <el-form
-      class="visitForm"
-      :model="formInline"
-      :inline="true"
-      :rules="rules"
-      label-width="90px"
-      :label-position="labelPosition"
-    >
-      <el-form-item label="客户名称" prop="customerName">
-        <!-- 搜索框 -->
-        <el-autocomplete
-          v-model="formInline.customerName"
-          :fetch-suggestions="queryName"
-          placeholder="请输入内容"
-          :clearable="type == 'detail' ? false : true"
-          :disabled="type == 'detail' ? true : false"
-          :class="[type == 'detail' ? 'input-detail' : '']"
-          @select="handleSelect"
-        >
-          <template slot-scope="{ item }">
-            <div>{{ item.customerName }}</div>
-          </template>
-        </el-autocomplete>
-      </el-form-item>
-      <el-form-item label="客户区域" prop="customerArea">
-        <el-input
-          v-model="formInline.customerArea"
-          disabled
-          :clearable="type == 'detail' ? false : true"
-          :class="[type == 'detail' ? 'input-detail' : '']"
-        ></el-input>
-      </el-form-item>
-      <el-form-item label="品牌名称" prop="brandName">
-        <el-select
-          v-model="formInline.brandName"
-          placeholder="请选择"
-          :disabled="type == 'detail' ? true : false"
-          :class="[type == 'detail' ? 'select-detail' : '']"
-        >
-          <el-option
-            v-for="item in brandList"
-            :key="item.id"
-            :label="item.brandName"
-            :value="item.brandName"
-          ></el-option>
-        </el-select>
-      </el-form-item>
-      <el-form-item label="业务员" prop="salesman">
-        <el-input
-          v-model="formInline.salesman"
-          :disabled="true"
-          :clearable="type == 'detail' ? false : true"
-          :class="[type == 'detail' ? 'input-detail' : '']"
-        ></el-input>
-      </el-form-item>
-      <el-form-item label="拜访对象" prop="visitPeople">
-        <el-input
-          v-model="formInline.visitPeople"
-          :clearable="type == 'detail' ? false : true"
-          :disabled="type == 'detail' ? true : false"
-          :class="[type == 'detail' ? 'input-detail' : '']"
-        ></el-input>
-      </el-form-item>
-      <el-form-item label="职位" prop="post">
-        <el-input
-          v-model="formInline.post"
-          :clearable="type == 'detail' ? false : true"
-          :disabled="type == 'detail' ? true : false"
-          :class="[type == 'detail' ? 'input-detail' : '']"
-        ></el-input>
-      </el-form-item>
-      <el-form-item label="拜访目的" prop="visitPurpose">
-        <el-select
-          v-model="formInline.visitPurpose"
-          placeholder="请选择"
-          :disabled="type == 'detail' ? true : false"
-          :class="[type == 'detail' ? 'select-detail' : '']"
-        >
-          <el-option
-            v-for="(dict, index) in dict.type.customer_visit_purpose"
-            :key="index"
-            :label="dict.label"
-            :value="dict.label"
-          ></el-option>
-        </el-select>
-      </el-form-item>
-      <el-form-item label="拜访时间" prop="visitTime">
-        <span v-if="type == 'detail'" style="color: #666; padding-left: 15px">
-          {{ formInline.visitTime }} - {{ formInline.visitEndTime }}
-        </span>
-        <el-date-picker
-          v-if="type !== 'detail'"
-          v-model="datePickerTime"
-          value-format="yyyy-MM-dd HH:mm:ss"
-          type="datetimerange"
-          range-separator="-"
-          start-placeholder="开始日期"
-          end-placeholder="结束日期"
-          :picker-options="pickerOptions"
-          @change="pickTime"
-          :clearable="type == 'detail' ? false : true"
-          :disabled="type == 'detail' ? true : false"
-          :class="[type == 'detail' ? 'input-detail' : '']"
-        >
-        </el-date-picker>
-      </el-form-item>
-      <el-form-item label="联系方式" prop="contactInfo">
-        <el-input
-          v-model="formInline.contactInfo"
-          maxlength="11"
-          :clearable="type == 'detail' ? false : true"
-          :disabled="type == 'detail' ? true : false"
-          :class="[type == 'detail' ? 'input-detail' : '']"
-        ></el-input>
-      </el-form-item>
-    </el-form>
-    <el-form
-      class="visitForm"
-      :model="formInline"
-      :inline="true"
-      :rules="rules"
-      :label-position="'top'"
-    >
-      <el-form-item class="fullWidth" label="拓客策略">
-        <p v-if="type == 'detail'" class="unit-detail">{{ formInline.expansionStrategy }}</p>
-        <el-input
-          v-if="type !== 'detail'"
-          type="textarea"
-          autosize
-          v-model="formInline.expansionStrategy"
-          :clearable="type == 'detail' ? false : true"
-          :disabled="type == 'detail' ? true : false"
-          :class="[type == 'detail' ? 'input-textarea-detail' : '']"
-        ></el-input>
-      </el-form-item>
-      <el-form-item class="fullWidth" label="推进计划">
-        <p v-if="type == 'detail'" class="unit-detail">{{ formInline.advancePlan }}</p>
-        <el-input
-          v-if="type !== 'detail'"
-          type="textarea"
-          autosize
-          v-model="formInline.advancePlan"
-          :clearable="type == 'detail' ? false : true"
-          :disabled="type == 'detail' ? true : false"
-          :class="[type == 'detail' ? 'input-textarea-detail' : '']"
-        ></el-input>
-      </el-form-item>
-      <el-form-item class="fullWidth" label="需求资源和支持">
-        <p v-if="type == 'detail'" class="unit-detail">{{ formInline.needSupport }}</p>
-        <el-input
-          v-if="type !== 'detail'"
-          type="textarea"
-          autosize
-          v-model="formInline.needSupport"
-          :clearable="type == 'detail' ? false : true"
-          :disabled="type == 'detail' ? true : false"
-          :class="[type == 'detail' ? 'input-textarea-detail' : '']"
-        ></el-input>
-      </el-form-item>
-      <el-form-item class="fullWidth" label="拜访内容" prop="visitContent">
-        <p v-if="type == 'detail'" class="unit-detail">{{ formInline.visitContent }}</p>
-        <el-input
-          v-if="type !== 'detail'"
-          type="textarea"
-          v-model="formInline.visitContent"
-          :clearable="type == 'detail' ? false : true"
-          :disabled="type == 'detail' ? true : false"
-          :class="[type == 'detail' ? 'input-textarea-detail' : '']"
-        ></el-input>
-      </el-form-item>
-      <el-form-item class="btn-group" v-if="type !== 'detail'">
-        <el-button @click="cancel">取消</el-button>
-        <el-button type="primary" @click="submit" v-hasPermi="['customer:visit:edit']"
-          >保存</el-button
-        >
-      </el-form-item>
-    </el-form>
+    <div class="card-box item-mb-16">
+      <el-form
+        class="visitForm"
+        :model="formInline"
+        :inline="true"
+        :rules="rules"
+        label-width="90px"
+        :label-position="labelPosition"
+      >
+        <el-form-item label="客户名称" prop="customerName">
+          <!-- 搜索框 -->
+          <el-autocomplete
+            v-model="formInline.customerName"
+            :fetch-suggestions="queryName"
+            placeholder="请输入内容"
+            :clearable="type == 'detail' ? false : true"
+            :disabled="type == 'detail' ? true : false"
+            :class="[type == 'detail' ? 'input-detail' : '']"
+            @select="handleSelect"
+          >
+            <template slot-scope="{ item }">
+              <div>{{ item.customerName }}</div>
+            </template>
+          </el-autocomplete>
+        </el-form-item>
+        <el-form-item label="客户区域" prop="customerArea">
+          <el-input
+            v-model="formInline.customerArea"
+            disabled
+            :clearable="type == 'detail' ? false : true"
+            :class="[type == 'detail' ? 'input-detail' : '']"
+          ></el-input>
+        </el-form-item>
+        <el-form-item label="品牌名称" prop="brandName">
+          <el-select
+            v-model="formInline.brandName"
+            placeholder="请选择"
+            :disabled="type == 'detail' ? true : false"
+            :class="[type == 'detail' ? 'select-detail' : '']"
+          >
+            <el-option
+              v-for="item in brandList"
+              :key="item.id"
+              :label="item.brandName"
+              :value="item.brandName"
+            ></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="业务员" prop="salesman">
+          <el-input
+            v-model="formInline.salesman"
+            :disabled="true"
+            :clearable="type == 'detail' ? false : true"
+            :class="[type == 'detail' ? 'input-detail' : '']"
+          ></el-input>
+        </el-form-item>
+        <el-form-item label="拜访对象" prop="visitPeople">
+          <el-input
+            v-model="formInline.visitPeople"
+            :clearable="type == 'detail' ? false : true"
+            :disabled="type == 'detail' ? true : false"
+            :class="[type == 'detail' ? 'input-detail' : '']"
+          ></el-input>
+        </el-form-item>
+        <el-form-item label="职位" prop="post">
+          <el-input
+            v-model="formInline.post"
+            :clearable="type == 'detail' ? false : true"
+            :disabled="type == 'detail' ? true : false"
+            :class="[type == 'detail' ? 'input-detail' : '']"
+          ></el-input>
+        </el-form-item>
+        <el-form-item label="拜访目的" prop="visitPurpose">
+          <el-select
+            v-model="formInline.visitPurpose"
+            placeholder="请选择"
+            :disabled="type == 'detail' ? true : false"
+            :class="[type == 'detail' ? 'select-detail' : '']"
+          >
+            <el-option
+              v-for="(dict, index) in dict.type.customer_visit_purpose"
+              :key="index"
+              :label="dict.label"
+              :value="dict.label"
+            ></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="拜访时间" prop="visitTime">
+          <span v-if="type == 'detail'" style="color: #666; padding-left: 15px">
+            {{ formInline.visitTime }} - {{ formInline.visitEndTime }}
+          </span>
+          <el-date-picker
+            v-if="type !== 'detail'"
+            v-model="datePickerTime"
+            value-format="yyyy-MM-dd HH:mm:ss"
+            type="datetimerange"
+            range-separator="-"
+            start-placeholder="开始日期"
+            end-placeholder="结束日期"
+            :picker-options="pickerOptions"
+            @change="pickTime"
+            :clearable="type == 'detail' ? false : true"
+            :disabled="type == 'detail' ? true : false"
+            :class="[type == 'detail' ? 'input-detail' : '']"
+          >
+          </el-date-picker>
+        </el-form-item>
+        <el-form-item label="联系方式" prop="contactInfo">
+          <el-input
+            v-model="formInline.contactInfo"
+            maxlength="11"
+            :clearable="type == 'detail' ? false : true"
+            :disabled="type == 'detail' ? true : false"
+            :class="[type == 'detail' ? 'input-detail' : '']"
+          ></el-input>
+        </el-form-item>
+      </el-form>
+      <el-form
+        class="visitForm"
+        :model="formInline"
+        :inline="true"
+        :rules="rules"
+        :label-position="'top'"
+      >
+        <el-form-item class="fullWidth" label="拓客策略">
+          <p v-if="type == 'detail'" class="unit-detail">{{ formInline.expansionStrategy }}</p>
+          <el-input
+            v-if="type !== 'detail'"
+            type="textarea"
+            autosize
+            v-model="formInline.expansionStrategy"
+            :clearable="type == 'detail' ? false : true"
+            :disabled="type == 'detail' ? true : false"
+            :class="[type == 'detail' ? 'input-textarea-detail' : '']"
+          ></el-input>
+        </el-form-item>
+        <el-form-item class="fullWidth" label="推进计划">
+          <p v-if="type == 'detail'" class="unit-detail">{{ formInline.advancePlan }}</p>
+          <el-input
+            v-if="type !== 'detail'"
+            type="textarea"
+            autosize
+            v-model="formInline.advancePlan"
+            :clearable="type == 'detail' ? false : true"
+            :disabled="type == 'detail' ? true : false"
+            :class="[type == 'detail' ? 'input-textarea-detail' : '']"
+          ></el-input>
+        </el-form-item>
+        <el-form-item class="fullWidth" label="需求资源和支持">
+          <p v-if="type == 'detail'" class="unit-detail">{{ formInline.needSupport }}</p>
+          <el-input
+            v-if="type !== 'detail'"
+            type="textarea"
+            autosize
+            v-model="formInline.needSupport"
+            :clearable="type == 'detail' ? false : true"
+            :disabled="type == 'detail' ? true : false"
+            :class="[type == 'detail' ? 'input-textarea-detail' : '']"
+          ></el-input>
+        </el-form-item>
+        <el-form-item class="fullWidth" label="拜访内容" prop="visitContent">
+          <p v-if="type == 'detail'" class="unit-detail">{{ formInline.visitContent }}</p>
+          <el-input
+            v-if="type !== 'detail'"
+            type="textarea"
+            v-model="formInline.visitContent"
+            :clearable="type == 'detail' ? false : true"
+            :disabled="type == 'detail' ? true : false"
+            :class="[type == 'detail' ? 'input-textarea-detail' : '']"
+          ></el-input>
+        </el-form-item>
+        <el-form-item class="btn-group" v-if="type !== 'detail'">
+          <el-button @click="cancel">取消</el-button>
+          <el-button type="primary" @click="submit" v-hasPermi="['customer:visit:edit']"
+            >保存</el-button
+          >
+        </el-form-item>
+      </el-form>
+    </div>
   </div>
 </template>
 <script>
