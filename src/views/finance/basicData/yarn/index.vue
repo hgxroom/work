@@ -14,8 +14,9 @@
         <el-form :model="formData" :rules="formData.rules" ref="formRef">
           <el-table
             size="small"
+            border
             :data="formData.data"
-            height="600"
+            :max-height="600"
             style="width: 100%; font-size: 14px; color: #242424; bordercolor: #000"
             highlight-current-row
             header-row-class-name="tableHeader"
@@ -498,7 +499,8 @@ export default {
   height: 48px;
 }
 ::v-deep .el-table th.is-leaf {
-  border-color: transparent;
+  border-right-color: #e7e7e7;
+  border-bottom-color: transparent;
 }
 ::v-deep .el-table td {
   border-bottom: 1px solid #f3f3f3;
@@ -508,6 +510,7 @@ export default {
 .el-table:before {
   background-color: #f3f3f3;
 }
+
 .el-form-item {
   margin-bottom: 0px;
 }

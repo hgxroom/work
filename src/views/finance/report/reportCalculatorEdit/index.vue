@@ -138,7 +138,10 @@
       <div>
         <el-row class="card-box" style="display: flex">
           <el-col :span="15">
-            <p class="title">综合成本</p>
+            <div style="display: flex">
+              <p class="title">综合成本</p>
+              <p class="title-cost">毛坯成本（元）:{{ weavingCostList[0].blankCost || '--' }}</p>
+            </div>
             <el-form class="base-form" ref="queryForm" label-width="90px" :inline="true">
               <div style="width: calc(50% - 40px); margin-right: 40px">
                 <el-row>
@@ -885,7 +888,7 @@ export default {
             val.costPrice =
               [
                 (Number(this.weavingCostList[0].blankCost) +
-                  this.dyeingCostList[index].dyeingFee +
+                  Number(this.dyeingCostList[index].dyeingFee) +
                   Number(this.functionCostTotal) +
                   Number(this.extraWholeCost) +
                   Number(this.otherExpenses)) *
@@ -1194,25 +1197,51 @@ export default {
           this.specialFinishingList.forEach((val) => {
             this.splList.push(val.processName)
           })
+          this.extraWholeCost = this.CostextraWholeCost()
+          this.extraWholeLoss = this.CostextraWholeLoss()
         }
 
-        this.extraWholeCost = res.data.specialVo.extraWholeCost
-        this.extraWholeLoss = res.data.specialVo.extraWholeLoss
+        // this.extraWholeCost = res.data.specialVo.extraWholeCost
+        // this.extraWholeLoss = res.data.specialVo.extraWholeLoss
         if (res.data.functionCostVo.functionCostList) {
           this.functionCostList = res.data.functionCostVo.functionCostList
           this.functionCostList.forEach((val) => {
             this.funList.push(val.functionalCommitmentName)
           })
+          this.functionCostTotal = this.CostfunctionCostTotal()
         }
 
-        this.functionCostTotal = res.data.functionCostVo.functionCostTotal
+        // this.functionCostTotal = res.data.functionCostVo.functionCostTotal
         this.finalQuotedList = res.data.finalQuotedList
         this.floatingProfitMargin = res.data.floatingProfitMargin
         this.freight = res.data.freight
         this.otherExpenses = res.data.otherExpenses
       })
     },
-
+    //特整总损耗求和
+    CostextraWholeLoss() {
+      let cost = 0
+      this.specialFinishingList.forEach((val) => {
+        cost = cost + val.extraLoss
+      })
+      return cost
+    },
+    //特整总成本求和
+    CostextraWholeCost() {
+      let cost = 0
+      this.specialFinishingList.forEach((val) => {
+        cost = cost + val.laborCost
+      })
+      return cost
+    },
+    //功能性总成本求和
+    CostfunctionCostTotal() {
+      let cost = 0
+      this.functionCostList.forEach((val) => {
+        cost = cost + val.laborCost
+      })
+      return cost
+    },
     // 确定
     resetQuery(done) {
       this.componentList.forEach((i) => {
@@ -1293,6 +1322,11 @@ export default {
       margin: 0 0 16px 0;
       font-weight: 600;
       text-align: left;
+    }
+    .title-cost {
+      font-size: 14px;
+      color: #8b8b8b;
+      margin: 0px 0px 0px 24px;
     }
     .info-list {
       padding: 16px 0;
