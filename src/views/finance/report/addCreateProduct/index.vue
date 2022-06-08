@@ -828,10 +828,13 @@ export default {
     handleSelect(type, evt, scope) {
       //去重
       if (type == 'yarnName') {
-        let data = this.formData.data.find((val) => {
-          return val.yarnName == evt && val.yarnNo
+        let redata = 0
+        this.formData.data.forEach((val) => {
+          if (val.yarnName === evt) {
+            redata = redata + 1
+          }
         })
-        if (data) {
+        if (redata > 1) {
           this.formData.data[scope.$index].yarnName = ''
           this.formData.sel.yarnName = ''
           return this.$message.error('不能选择相同数据')
@@ -839,10 +842,13 @@ export default {
       }
       //去重
       if (type == 'yarnNo') {
-        let data = this.formData.data.find((val) => {
-          return val.yarnNo == evt && val.yarnName
+        let redata = 0
+        this.formData.data.forEach((val) => {
+          if (val.yarnNo === evt) {
+            redata = redata + 1
+          }
         })
-        if (data) {
+        if (redata > 1) {
           this.formData.data[scope.$index].yarnNo = ''
           this.formData.sel.yarnNo = ''
           return this.$message.error('不能选择相同数据')
