@@ -649,8 +649,8 @@ export default {
         {
           jobType: '',
           colorName: '',
-          dyeingFee: 10,
-          dyeingLoss: 9,
+          dyeingFee: 0,
+          dyeingLoss: 0,
         },
       ],
       //纱线成本数据
@@ -924,6 +924,17 @@ export default {
         nextBtn = true
         return this.$message.error(`请选择作业类型`)
       }
+      this.dyeingCostList.forEach((val) => {
+        if (val.dyeingFee === '' && !nextBtn) {
+          nextBtn = true
+          return this.$message.error(`请填写染费`)
+        }
+        if (val.dyeingLoss === '' && !nextBtn) {
+          nextBtn = true
+          return this.$message.error(`请填写染损`)
+        }
+      })
+
       if (this.specialFinishingList.length > 0 && !nextBtn) {
         this.specialFinishingList.forEach((val) => {
           if (!val.processName) {
