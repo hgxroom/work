@@ -905,13 +905,16 @@ export default {
     validate() {
       let nextBtn = false
       this.yarnCostList.forEach((val) => {
-        if ((!val.yarnCost || val.yarnCost === '0') && !nextBtn) {
+        // if ((val.yarnCost === '0' ||!val.yarnCost ) && !nextBtn) {
+        if ((val.yarnCost === null || val.yarnCost === '') && !nextBtn) {
           nextBtn = true
           return this.$message.error(`请将纱线价格填写完整`)
         }
       })
       if (
-        (!this.weavingCostList[0].weavingFee || this.weavingCostList[0].weavingFee === '0') &&
+        // (!this.weavingCostList[0].weavingFee || this.weavingCostList[0].weavingFee === '0') &&!nextBtn
+        (this.weavingCostList[0].weavingFee === null ||
+          this.weavingCostList[0].weavingFee === '') &&
         !nextBtn
       ) {
         nextBtn = true
@@ -1184,7 +1187,7 @@ export default {
         this.yarnCostList = res.data.productYarnVo.yarnCostList
         //是否存在纱线价格没有填的情况
         let data = this.yarnCostList.find((val) => {
-          return val.yarnCost == '' || val.yarnCost == null
+          return val.yarnCost === '' || val.yarnCost === null
         })
         if (data) {
           this.weavingFeeBtn = true

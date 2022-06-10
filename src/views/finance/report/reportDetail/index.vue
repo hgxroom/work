@@ -463,7 +463,7 @@
               (baseInfo.orderStatus == 3 ||
                 baseInfo.orderStatus == 4 ||
                 baseInfo.orderStatus == 5) &&
-              baseInfo.roleType !== 0
+              baseInfo.roleType == 1
             "
             label="操作"
             width="100"
