@@ -125,9 +125,11 @@
           v-if="flagTable"
           size="small"
           border
+          :max-height="650"
           :data="formData.data"
           style="width: 100%; font-size: 14px; color: #242424; bordercolor: #000"
           header-row-class-name="tableHeader"
+          max-height="500"
         >
           <el-table-column label="布号" prop="clothNo" width="100" fixed="left"></el-table-column>
           <el-table-column label="颜色" width="90" fixed="left">
@@ -463,7 +465,7 @@
               (baseInfo.orderStatus == 3 ||
                 baseInfo.orderStatus == 4 ||
                 baseInfo.orderStatus == 5) &&
-              baseInfo.roleType !== 0
+              baseInfo.roleType == 1
             "
             label="操作"
             width="100"
