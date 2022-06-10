@@ -550,8 +550,7 @@ export default {
           this.labelList.forEach((element) => {
             this.datalist[index][element.key] = (
               this.datalist[0][element.key] *
-              (1 + this.datalist[index].interestRate / 100) *
-              this.reportData.weightFactor
+              (1 + this.datalist[index].interestRate / 100)
             ).toFixed(4)
           })
           break
@@ -560,8 +559,7 @@ export default {
             this.datalist[index][element.key] = (
               (this.datalist[0][element.key] *
                 this.reportData.meterWeight *
-                (1 + this.datalist[index].interestRate / 100) *
-                this.reportData.weightFactor) /
+                (1 + this.datalist[index].interestRate / 100)) /
               1000
             ).toFixed(4)
           })
@@ -573,8 +571,7 @@ export default {
               (this.datalist[0][element.key] /
                 this.reportData.drawbackCoefficient /
                 this.reportData.exchangeRate) *
-              (1 + this.datalist[index].interestRate / 100) *
-              this.reportData.weightFactor
+              (1 + this.datalist[index].interestRate / 100)
             ).toFixed(4)
           })
           break
@@ -585,8 +582,7 @@ export default {
                 this.reportData.drawbackCoefficient /
                 this.reportData.exchangeRate /
                 2.2046) *
-              (1 + this.datalist[index].interestRate / 100) *
-              this.reportData.weightFactor
+              (1 + this.datalist[index].interestRate / 100)
             ).toFixed(4)
           })
           break
@@ -598,8 +594,7 @@ export default {
                 1.1 /
                 this.reportData.exchangeRate) *
               0.9144 *
-              (1 + this.datalist[index].interestRate / 100) *
-              this.reportData.weightFactor
+              (1 + this.datalist[index].interestRate / 100)
             ).toFixed(4)
           })
           break
