@@ -82,11 +82,11 @@
         <el-table
           size="small"
           :data="formHistoryData.data"
-          style="width: 100%; font-size: 14px; color: #242424; border-color: #000"
+          border
+          style="width: 100%; font-size: 14px; color: #242424"
           highlight-current-row
           header-row-class-name="tableHeader"
         >
-          <el-table-column label="序号" type="index" align="center" width="100px"></el-table-column>
           <el-table-column
             v-for="(item, index) in formHistoryData.columns"
             :key="index"
@@ -241,12 +241,12 @@
         <p class="title">历史订单信息</p>
         <el-table
           size="small"
+          border
           :data="formHistoryOrderData.data"
-          style="width: 100%; font-size: 14px; color: #242424; bordercolor: #000"
+          style="width: 100%; font-size: 14px; color: #242424"
           highlight-current-row
           header-row-class-name="tableHeader"
         >
-          <el-table-column label="序号" type="index" align="center" width="100px"></el-table-column>
           <el-table-column
             v-for="(item, index) in formHistoryOrderData.columns"
             :key="index"
@@ -344,7 +344,7 @@ export default {
             align: 'left',
             type: 'text',
             prop: 'bzhrq',
-            width: 150,
+            width: 160,
           },
           {
             label: '订单号',
@@ -968,7 +968,8 @@ export default {
   height: 48px;
 }
 ::v-deep .el-table th.is-leaf {
-  border-color: transparent;
+  border-right-color: #e7e7e7;
+  border-bottom-color: transparent;
 }
 ::v-deep .el-table td {
   border-bottom: 1px solid #f3f3f3;
@@ -979,11 +980,15 @@ export default {
 .el-table:before {
   background-color: #f3f3f3;
 }
-
+.el-table--border {
+  border: 1px solid #f3f3f3;
+}
 ::v-deep .el-table tr:hover > td {
   background-color: #fff !important;
 }
-
+::v-deep .el-table--border .el-table__cell {
+  border-right: 1px solid #f3f3f3;
+}
 ::v-deep.el-form-item {
   width: calc(25% - 10px);
   .el-form-item__label {
