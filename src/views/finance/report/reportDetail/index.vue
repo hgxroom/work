@@ -125,6 +125,7 @@
           v-if="flagTable"
           size="small"
           border
+          :max-height="650"
           :data="formData.data"
           style="width: 100%; font-size: 14px; color: #242424; bordercolor: #000"
           header-row-class-name="tableHeader"
