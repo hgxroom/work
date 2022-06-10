@@ -600,8 +600,8 @@ export default {
       functionCostTotal: '',
       //特整成本数据
       specialFinishingList: [],
-      extraWholeCost: [],
-      extraWholeLoss: [],
+      extraWholeCost: '',
+      extraWholeLoss: '',
       //织布成本数据
       weavingCostList: [
         {
@@ -1273,7 +1273,7 @@ export default {
     border: 1px solid transparent;
     background: transparent;
     cursor: auto;
-    color: #666;
+    color: #242424;
     height: 32px;
     padding: 0px;
   }
@@ -1288,7 +1288,7 @@ export default {
   ::v-deep .el-input__inner {
     border: 1px solid transparent;
     background: transparent;
-    color: #666;
+    color: #242424;
     padding-left: 0px;
     height: 32px;
   }
@@ -1303,7 +1303,7 @@ export default {
   }
 }
 .unit-detail {
-  color: #666;
+  color: #242424;
   padding-left: 15px;
 }
 .multiple-detail {

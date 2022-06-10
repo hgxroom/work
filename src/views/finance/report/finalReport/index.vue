@@ -593,8 +593,7 @@ export default {
         case '美元/码':
           this.labelList.forEach((element) => {
             this.datalist[index][element.key] = (
-              (this.datalist[0][element.key] /
-                this.reportData.meterWeight /
+              ((this.datalist[0][element.key] * this.reportData.meterWeight) /
                 1000 /
                 1.1 /
                 this.reportData.exchangeRate) *

@@ -634,8 +634,8 @@ export default {
       functionCostTotal: '',
       //特整成本数据
       specialFinishingList: [],
-      extraWholeCost: [],
-      extraWholeLoss: [],
+      extraWholeCost: '',
+      extraWholeLoss: '',
       //织布成本数据
       weavingCostList: [
         {
@@ -905,12 +905,15 @@ export default {
     validate() {
       let nextBtn = false
       this.yarnCostList.forEach((val) => {
-        if (!val.yarnCost && !nextBtn) {
+        if ((!val.yarnCost || val.yarnCost === '0') && !nextBtn) {
           nextBtn = true
           return this.$message.error(`请将纱线价格填写完整`)
         }
       })
-      if (!this.weavingCostList[0].weavingFee && !nextBtn) {
+      if (
+        (!this.weavingCostList[0].weavingFee || this.weavingCostList[0].weavingFee === '0') &&
+        !nextBtn
+      ) {
         nextBtn = true
         return this.$message.error(`请填写织费`)
       }
