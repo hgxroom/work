@@ -55,24 +55,27 @@
             </el-table-column>
             <el-table-column label="操作" align="center">
               <template v-slot="scope">
-                <el-button
+                <!-- <el-button
                   v-if="scope.row.editFlag"
                   type="text"
                   @click.stop="saveRow(scope.row, scope.$index)"
                   size="small"
                 >
                   保存
-                </el-button>
-                <el-button
+                </el-button> -->
+                <!-- <el-button
                   type="text"
                   v-if="!scope.row.editFlag"
                   @click="editRow(scope.row, scope.$index)"
                   size="small"
                 >
                   编辑
-                </el-button>
-                <el-button type="text" @click="deleteRow(scope.row, scope.$index)" size="small">
+                </el-button> -->
+                <!-- <el-button type="text" @click="deleteRow(scope.row, scope.$index)" size="small">
                   删除
+                </el-button> -->
+                <el-button type="text" @click="statusRow(scope.row, scope.$index)" size="small">
+                  {{ scope.row.status == 0 ? '禁用' : '启用' }}
                 </el-button>
               </template>
             </el-table-column>
@@ -250,18 +253,20 @@ export default {
     },
     statusRow(row, index) {
       // 启用、禁用
-      if (row.status == 1) {
-        for (const i of this.formData.data) {
-          if (i.status == 0) return this.$message.warning('请先禁用其他功能性承若')
-        }
-      }
+      // if (row.status == 1) {
+      //   for (const i of this.formData.data) {
+      //     if (i.status == 0) return this.$message.warning('请先禁用其他功能性承若')
+      //   }
+      // }
       // 状态改变
       let statusText = row.status == 0 ? '禁用' : '启用'
-      let { id, status } = row
+      let { id, status, commitmentName, laborCost } = row
       status = status == 0 ? 1 : 0
       let data = {
         id: id, // 序号
         status: status, // 状态
+        commitmentName,
+        laborCost,
       }
       this.$confirm(`确定${statusText}这条数据, 是否继续?`, '提示', {
         confirmButtonText: '确定',
@@ -269,11 +274,11 @@ export default {
         type: 'warning',
       })
         .then(() => {
-          this.$message({
-            type: 'success',
-            message: `${statusText}成功!`,
-          })
           editFunctionalCommitment(data).then((res) => {
+            this.$message({
+              type: 'success',
+              message: `${statusText}成功!`,
+            })
             this.getList()
           })
           // rows.splice(index, 1)

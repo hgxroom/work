@@ -69,6 +69,7 @@
         :data="listData"
         ref="customerList"
         style="width: 100%"
+        border
         :max-height="550"
         :row-style="rowstyle"
       >

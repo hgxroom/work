@@ -54,6 +54,7 @@
               v-model="baseInfo.customerName"
               placeholder="请输入客户"
               disabled
+              :title="type == 'detail' ? baseInfo.customerName : ''"
               :clearable="type == 'detail' ? false : true"
               :class="[type == 'detail' ? 'input-detail' : '']"
               class="auto-prop"
@@ -343,7 +344,7 @@
                 :visible-arrow="false"
               >
                 <p style="max-width: 600px; margin: 0">{{ scope.row.pm }}</p>
-                <div slot="reference" class="content-colum">
+                <div slot="reference" class="content-colum2">
                   {{ scope.row.pm }}
                 </div>
               </el-popover>
@@ -1011,7 +1012,9 @@ export default {
   display: flex;
   flex-wrap: wrap;
   justify-content: flex-start;
-
+  ::v-deep .el-form-item__content {
+    width: calc(100% - 90px);
+  }
   .el-select {
     width: 100%;
   }
@@ -1050,6 +1053,9 @@ export default {
     background: transparent;
     cursor: auto;
     color: #242424;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
   }
   ::v-deep .el-input-group__append {
     margin: 0;
@@ -1229,20 +1235,27 @@ export default {
   text-overflow: ellipsis;
   -o-text-overflow: ellipsis; /* for Opera */
 }
-.auto-prop {
-  ::v-deep .el-input {
-    .el-input__inner {
-      width: 250px;
-      padding-right: 0;
-    }
-  }
+.content-colum2 {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
 }
-.auto-prop {
-  ::v-deep .el-input__inner {
-    width: 250px;
-    padding-right: 0;
-  }
-}
+// .auto-prop {
+//   ::v-deep .el-input {
+//     .el-input__inner {
+//       width: 250px;
+//       padding-right: 0;
+//     }
+//   }
+// }
+// .auto-prop {
+//   ::v-deep .el-input__inner {
+//     width: 250px;
+//     padding-right: 0;
+//   }
+// }
 </style>
 <style>
 .popper-class {

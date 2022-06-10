@@ -249,20 +249,25 @@
           :label-position="labelPosition"
         >
           <el-form-item label="布号" prop="clothNo">
-            <el-autocomplete
+            <el-select
               v-model="productInfo.clothNo"
-              :fetch-suggestions="queryReferenceClothNo"
+              filterable
+              remote
+              reserve-keyword
               placeholder="请输入布号"
-              :trigger-on-focus="false"
-              :disabled="type == 'detail' ? true : false"
-              :class="[type == 'detail' ? 'input-detail' : '']"
-              @select="handleSelectReferenceClothNo"
-              style="width: 100%"
+              :remote-method="queryReferenceClothNo"
+              :loading="loading"
+              class="auto-prop"
+              @change="handleSelectReferenceClothNo($event)"
             >
-              <template slot-scope="{ item }">
-                <div>{{ item.clothNo }}</div>
-              </template>
-            </el-autocomplete>
+              <el-option
+                v-for="item in clothoptions"
+                :key="item.clothNo"
+                :label="item.clothNo"
+                :value="item.clothNo"
+              >
+              </el-option>
+            </el-select>
           </el-form-item>
           <el-form-item label="特殊工艺" prop="specialProcessName">
             <el-select
@@ -420,6 +425,7 @@ export default {
       imgUrl: [],
       fileList: [],
       options: [],
+      clothoptions: [],
       loading: false,
       showUpload: false,
       //基础信息
@@ -631,7 +637,10 @@ export default {
       this.baseInfo.customerName = item.khmch
     },
     //选择布号
-    handleSelectReferenceClothNo(item) {
+    handleSelectReferenceClothNo(evt) {
+      let item = this.clothoptions.find((val) => {
+        return val.clothNo == evt
+      })
       //基本信息
       this.productInfo.clothNo = item.clothNo
       this.productInfo.component = item.cf
@@ -664,21 +673,24 @@ export default {
       }
     },
     //模糊布号
-    queryReferenceClothNo(queryString, cb) {
-      if (queryString === '') {
-        cb([])
-        return
-      }
-      let data = {
-        referenceClothNo: queryString,
-      }
-      clearTimeout(this.timeout)
-      if (queryString.length >= 3) {
-        this.timeout = setTimeout(() => {
-          getFabricQuotationByBh(data).then((res) => {
-            cb(res.data)
-          })
-        }, 900)
+    queryReferenceClothNo(query) {
+      if (query !== '') {
+        this.loading = true
+        let data = {
+          referenceClothNo: query,
+        }
+        clearTimeout(this.timeout)
+        if (query.length >= 4) {
+          this.timeout = setTimeout(() => {
+            getFabricQuotationByBh(data).then((res) => {
+              // cb(res.data)
+              this.clothoptions = res.data
+              this.loading = false
+            })
+          }, 700)
+        }
+      } else {
+        this.clothoptions = []
       }
     },
     //选择布类
@@ -812,6 +824,18 @@ export default {
         })
         return
       }
+      if (
+        !(
+          this.productInfo.clothType &&
+          this.productInfo.component &&
+          this.productInfo.loomSpecification &&
+          this.productInfo.widthCloth &&
+          this.productInfo.gramWeight
+        )
+      ) {
+        this.$message.error('布号参数不完整，请选择其他布号')
+        return
+      }
       let index = this.baseInfo.productList.findIndex(
         (item) => item.clothNo === this.productInfo.clothNo,
       )
@@ -821,8 +845,8 @@ export default {
       }
       this.baseInfo.productList.push(JSON.parse(JSON.stringify(this.productInfo)))
       this.formData.data = this.baseInfo.productList
-      // console.log('this.formData.data', this.baseInfo.productList)
       this.productDialogVisible = false
+      this.clothoptions = []
     },
     //取消
     handleClose(done) {
