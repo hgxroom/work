@@ -634,8 +634,8 @@ export default {
       functionCostTotal: '',
       //特整成本数据
       specialFinishingList: [],
-      extraWholeCost: [],
-      extraWholeLoss: [],
+      extraWholeCost: '',
+      extraWholeLoss: '',
       //织布成本数据
       weavingCostList: [
         {
@@ -649,8 +649,8 @@ export default {
         {
           jobType: '',
           colorName: '',
-          dyeingFee: 10,
-          dyeingLoss: 9,
+          dyeingFee: 0,
+          dyeingLoss: 0,
         },
       ],
       //纱线成本数据
@@ -905,12 +905,18 @@ export default {
     validate() {
       let nextBtn = false
       this.yarnCostList.forEach((val) => {
-        if (!val.yarnCost && !nextBtn) {
+        // if ((val.yarnCost === '0' ||!val.yarnCost ) && !nextBtn) {
+        if ((val.yarnCost === null || val.yarnCost === '') && !nextBtn) {
           nextBtn = true
           return this.$message.error(`请将纱线价格填写完整`)
         }
       })
-      if (!this.weavingCostList[0].weavingFee && !nextBtn) {
+      if (
+        // (!this.weavingCostList[0].weavingFee || this.weavingCostList[0].weavingFee === '0') &&!nextBtn
+        (this.weavingCostList[0].weavingFee === null ||
+          this.weavingCostList[0].weavingFee === '') &&
+        !nextBtn
+      ) {
         nextBtn = true
         return this.$message.error(`请填写织费`)
       }
@@ -918,6 +924,17 @@ export default {
         nextBtn = true
         return this.$message.error(`请选择作业类型`)
       }
+      this.dyeingCostList.forEach((val) => {
+        if (val.dyeingFee === '' && !nextBtn) {
+          nextBtn = true
+          return this.$message.error(`请填写染费`)
+        }
+        if (val.dyeingLoss === '' && !nextBtn) {
+          nextBtn = true
+          return this.$message.error(`请填写染损`)
+        }
+      })
+
       if (this.specialFinishingList.length > 0 && !nextBtn) {
         this.specialFinishingList.forEach((val) => {
           if (!val.processName) {
@@ -1181,7 +1198,7 @@ export default {
         this.yarnCostList = res.data.productYarnVo.yarnCostList
         //是否存在纱线价格没有填的情况
         let data = this.yarnCostList.find((val) => {
-          return val.yarnCost == '' || val.yarnCost == null
+          return val.yarnCost === '' || val.yarnCost === null
         })
         if (data) {
           this.weavingFeeBtn = true
