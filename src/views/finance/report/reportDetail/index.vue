@@ -503,7 +503,12 @@
           </el-table-column>
         </el-table>
       </div>
-      <div class="footer" v-if="baseInfo.orderStatus == 1 && baseInfo.roleType == 1">
+      <div
+        class="footer"
+        v-if="
+          baseInfo.orderStatus == 1 && (baseInfo.roleType == 1 || roles.includes('businessLeader'))
+        "
+      >
         <el-button @click="cancel()" class="save-btn">取消</el-button>
         <el-button
           @click="submit()"
