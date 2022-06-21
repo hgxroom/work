@@ -741,7 +741,8 @@ export default {
                 this.functionCostTotal +
                 this.extraWholeCost) *
               (1 + this.extraWholeLoss / 100 + this.dyeingCostList[index].dyeingLoss / 100)
-            val.costPrice = Number(val.costPrice).toFixed(4)
+            val.costPrice = Math.round(Number(val.costPrice) * 100) / 100
+            // val.costPrice = Number(val.costPrice).toFixed(2)
           }
         })
       })
@@ -947,7 +948,7 @@ export default {
         Number(this.weavingCostList[0].weavingFee) +
         Number(this.yarnCostTotal) +
         (Number(this.yarnCostTotal) * this.weavingCostList[0].weavingLoss) / 100
-      this.weavingCostList[0].blankCost = cost.toFixed(4)
+      this.weavingCostList[0].blankCost = Math.round(cost * 100) / 100
     },
     //纱线价格变化
     handleCount(scope) {
@@ -956,7 +957,7 @@ export default {
       this.yarnCostList.forEach((val) => {
         count = count + Number(val.yarnCost) * Number(val.yarnRatio / 100)
       })
-      this.yarnCostTotal = count.toFixed(4)
+      this.yarnCostTotal = Math.round(count * 100) / 100
       if (this.weavingCostList[0].blankCost) {
         this.handleweaving()
       }

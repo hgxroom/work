@@ -5,8 +5,10 @@ import dialogDragWidth from './dialog/dragWidth'
 import dialogDragHeight from './dialog/dragHeight'
 import clipboard from './module/clipboard'
 import loadmore from './loadmoreltable/loadmore'
+import fitcolumns from './table-columns/fit-columns'
 
 const install = function (Vue) {
+  Vue.directive('fitcolumns', fitcolumns)
   Vue.directive('loadmore', loadmore)
   Vue.directive('hasRole', hasRole)
   Vue.directive('hasPermi', hasPermi)

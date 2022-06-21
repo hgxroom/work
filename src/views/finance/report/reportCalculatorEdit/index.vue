@@ -140,7 +140,13 @@
           <el-col :span="15">
             <div style="display: flex">
               <p class="title">综合成本</p>
-              <p class="title-cost">毛坯成本（元）:{{ weavingCostList[0].blankCost || '--' }}</p>
+              <p class="title-cost">
+                毛坯成本（元）:{{
+                  weavingCostList[0].blankCost || weavingCostList[0].blankCost === 0
+                    ? weavingCostList[0].blankCost
+                    : '--'
+                }}
+              </p>
             </div>
             <el-form class="base-form" ref="queryForm" label-width="90px" :inline="true">
               <div style="width: calc(50% - 40px); margin-right: 40px">
@@ -305,6 +311,21 @@
                     </el-form-item>
                   </el-col>
                 </el-row>
+                <el-row type="flex">
+                  <el-form-item label="备注">
+                    <el-input
+                      style="width: 100%"
+                      size="mini"
+                      maxlength="30"
+                      show-word-limit
+                      v-model="costRemark"
+                      rows="3"
+                      type="textarea"
+                      :disabled="type == 'detail' ? true : false"
+                      placeholder="请输入备注"
+                    />
+                  </el-form-item>
+                </el-row>
               </div>
             </el-form>
           </el-col>
@@ -325,84 +346,18 @@
         </el-row>
       </div>
       <div class="card-box">
-        <p class="title">历史报价信息</p>
+        <p class="title">报价信息参考</p>
         <el-table
           size="small"
-          border
-          max-height="500"
           :data="formHistoryData.data"
+          border
+          max-height="500px"
           style="width: 100%; font-size: 14px; color: #242424"
           highlight-current-row
           header-row-class-name="tableHeader"
         >
-          <el-table-column label="序号" type="index" align="center" width="80px"></el-table-column>
-          <el-table-column
-            v-for="(item, index) in formHistoryData.columns"
-            :key="index"
-            :label="item.label"
-            :prop="item.prop"
-            :width="item.width"
-            :align="item.align"
-          >
-            <template v-slot="scope">
-              <div>
-                {{ scope.row[item.prop] }}
-              </div>
-            </template>
-          </el-table-column>
-          <el-table-column label="纱线编号" width="120px">
-            <template v-slot="scope">
-              <div
-                class="tab-div"
-                v-for="(item, index) in scope.row.quotedOrderYarnCostList"
-                :key="index"
-              >
-                {{ item.yarnNo }}
-              </div>
-            </template>
-          </el-table-column>
-          <el-table-column label="纱线品名">
-            <template v-slot="scope">
-              <div
-                class="tab-div"
-                v-for="(item, index) in scope.row.quotedOrderYarnCostList"
-                :key="index"
-                :title="item.yarnName"
-              >
-                <el-popover
-                  trigger="hover"
-                  placement="top"
-                  popper-class="popper-class"
-                  :visible-arrow="false"
-                >
-                  <p style="max-width: 600px; margin: 0">{{ item.yarnName }}</p>
-                  <div slot="reference" class="content-colum">
-                    {{ item.yarnName }}
-                  </div>
-                </el-popover>
-                <!-- {{ item.yarnName }} -->
-              </div>
-            </template>
-          </el-table-column>
-          <!-- <el-table-column label="纱线品名">
-            <template v-slot="scope">
-              <div v-for="(item, index) in scope.row.quotedOrderYarnCostList" :key="index">
-                {{ item.yarnName }}
-              </div>
-            </template>
-          </el-table-column> -->
-          <el-table-column label="纱线价格">
-            <template v-slot="scope">
-              <div
-                class="tab-div"
-                v-for="(item, index) in scope.row.quotedOrderYarnCostList"
-                :key="index"
-              >
-                {{ item.yarnCost }}
-              </div>
-            </template>
-          </el-table-column>
-          <el-table-column label="颜色">
+          <el-table-column label="布号" min-width="100px" prop="clothNo"></el-table-column>
+          <el-table-column label="颜色" width="60">
             <template v-slot="scope">
               <div
                 class="tab-div"
@@ -413,7 +368,7 @@
               </div>
             </template>
           </el-table-column>
-          <el-table-column label="成本价(元/kg)" width="110px">
+          <el-table-column label="成本价(元/kg)" width="120px">
             <template v-slot="scope">
               <div
                 class="tab-div"
@@ -424,7 +379,87 @@
               </div>
             </template>
           </el-table-column>
-          <el-table-column :label="'销售报价1' + settlementMethod" width="130px">
+          <el-table-column label="纱线品名" min-width="300px">
+            <template v-slot="scope">
+              <div
+                class="tab-div"
+                v-for="(item, index) in scope.row.quotedOrderYarnCostList"
+                :key="index"
+                :title="item.yarnName"
+              >
+                {{ item.yarnName }}
+              </div>
+            </template>
+          </el-table-column>
+          <el-table-column label="纱价" min-width="60px">
+            <template v-slot="scope">
+              <div
+                class="tab-div"
+                v-for="(item, index) in scope.row.quotedOrderYarnCostList"
+                :key="index"
+              >
+                {{ item.yarnCost }}
+              </div>
+            </template>
+          </el-table-column>
+          <el-table-column label="纱比(%)" min-width="80px">
+            <template v-slot="scope">
+              <div
+                class="tab-div"
+                v-for="(item, index) in scope.row.quotedOrderYarnCostList"
+                :key="index"
+              >
+                {{ item.yarnRatio }}
+              </div>
+            </template>
+          </el-table-column>
+          <el-table-column label="纱线成本" min-width="80px" prop="yarnCostTotal"></el-table-column>
+          <el-table-column label="织费" min-width="60px" prop="weavingFee"></el-table-column>
+          <el-table-column label="织损(%)" min-width="80px" prop="weavingLoss"></el-table-column>
+          <el-table-column label="毛坯成本" min-width="80px" prop="blankCost"></el-table-column>
+          <el-table-column label="染损(%)" min-width="80px">
+            <template v-slot="scope">
+              <div
+                class="tab-div"
+                v-for="(item, index) in scope.row.quotedOrderPriceVoList"
+                :key="index"
+              >
+                {{ item.dyeingLoss }}
+              </div>
+            </template>
+          </el-table-column>
+          <el-table-column label="染费" min-width="60px">
+            <template v-slot="scope">
+              <div
+                class="tab-div"
+                v-for="(item, index) in scope.row.quotedOrderPriceVoList"
+                :key="index"
+              >
+                {{ item.dyeingFee }}
+              </div>
+            </template>
+          </el-table-column>
+          <el-table-column label="特整损耗(%)" min-width="100px" prop="extraLoss"></el-table-column>
+          <el-table-column label="特整成本" min-width="80px" prop="laborCost"></el-table-column>
+          <el-table-column
+            label="功能性成本"
+            width="100px"
+            prop="functionCostTotal"
+          ></el-table-column>
+          <el-table-column label="运费" min-width="60px" prop="freight"></el-table-column>
+          <el-table-column label="其他费用" min-width="80px" prop="otherExpenses"></el-table-column>
+          <!-- <el-table-column label="纱线编号">
+            <template v-slot="scope">
+              <div
+                class="tab-div"
+                v-for="(item, index) in scope.row.quotedOrderYarnCostList"
+                :key="index"
+              >
+                {{ item.yarnNo }}
+              </div>
+            </template>
+          </el-table-column> -->
+          <el-table-column :label="'销售报价1' + settlementMethod" min-width="120px">
             <template v-slot="scope">
               <div
                 class="tab-div"
@@ -440,14 +475,14 @@
               </div>
             </template>
           </el-table-column>
-          <el-table-column label="利润率(%)" width="90px" align="center">
+          <el-table-column label="利润率(%)" min-width="100px" align="center">
             <template v-slot="scope">
               <div>
                 {{ scope.row.quotedOrderPriceVoList[0].interestRate1 }}
               </div>
             </template>
           </el-table-column>
-          <el-table-column :label="'销售报价2' + settlementMethod" width="130px">
+          <el-table-column :label="'销售报价2' + settlementMethod" min-width="120px">
             <template v-slot="scope">
               <div
                 class="tab-div"
@@ -463,14 +498,14 @@
               </div>
             </template>
           </el-table-column>
-          <el-table-column label="利润率(%)" width="90px" align="center">
+          <el-table-column label="利润率(%)" min-width="100px" align="center">
             <template v-slot="scope">
               <div>
                 {{ scope.row.quotedOrderPriceVoList[0].interestRate2 }}
               </div>
             </template>
           </el-table-column>
-          <el-table-column :label="'销售报价3' + settlementMethod" width="130px">
+          <el-table-column :label="'销售报价3' + settlementMethod" min-width="120px">
             <template v-slot="scope">
               <div
                 class="tab-div"
@@ -486,15 +521,16 @@
               </div>
             </template>
           </el-table-column>
-          <el-table-column label="利润率(%)" width="90px" align="center">
+          <el-table-column label="利润率(%)" min-width="100px" align="center">
             <template v-slot="scope">
               <div>
                 {{ scope.row.quotedOrderPriceVoList[0].interestRate3 }}
               </div>
             </template>
           </el-table-column>
-          <el-table-column label="客户" prop="customerName"></el-table-column>
-          <el-table-column label="提交人" prop="createBy"></el-table-column>
+          <el-table-column label="客户" min-width="200px" prop="customerName"></el-table-column>
+          <el-table-column label="提交人" min-width="70px" prop="createBy"></el-table-column>
+          <el-table-column label="报价时间" min-width="155px" prop="createTime"></el-table-column>
         </el-table>
       </div>
       <div class="card-box">
@@ -608,6 +644,7 @@ export default {
   ],
   data() {
     return {
+      costRemark: '', //综合成本备注
       otherExpenses: 0, //其他费用
       freight: 0, //运费
       floatingProfitMargin: 0, //浮动利润率
@@ -877,6 +914,9 @@ export default {
     },
     //计算报价
     reportCalculator() {
+      let num = 3.175
+      let num2 = Math.round(num * 100) / 100
+      console.log(num.toFixed(2), num2)
       if (this.validate()) {
         return
       }
@@ -896,7 +936,8 @@ export default {
                   Number(this.freight),
               ] *
               (1 + this.floatingProfitMargin / 100)
-            val.costPrice = Number(val.costPrice).toFixed(4)
+            val.costPrice = Math.round(Number(val.costPrice) * 100) / 100
+            // val.costPrice = Number(val.costPrice).toFixed(2)
           }
         })
       })
@@ -971,7 +1012,7 @@ export default {
       data.otherExpenses = this.otherExpenses
       data.floatingProfitMargin = this.floatingProfitMargin
       data.freight = this.freight
-      console.log(data)
+      data.remark = this.costRemark
       calcQuotedPrice(data).then((res) => {
         let quotedOrderNo = this.$route.query.quotedOrderNo
         const obj = { path: `/finance/reportDetail?type=detail&quotedOrderNo=${quotedOrderNo}` }
@@ -1110,16 +1151,17 @@ export default {
     },
     //织费变化
     handleweaving(scope) {
-      if (!this.yarnCostTotal) {
+      if (!this.yarnCostTotal && this.yarnCostTotal != 0) {
         return this.$message.error(`请将纱线价格填写完整`)
       }
-      Number(this.yarnCostTotal)
       this.reportBtn = true
       let cost =
         Number(this.weavingCostList[0].weavingFee) +
         Number(this.yarnCostTotal) +
         (Number(this.yarnCostTotal) * this.weavingCostList[0].weavingLoss) / 100
-      this.weavingCostList[0].blankCost = cost.toFixed(4)
+
+      // this.weavingCostList[0].blankCost = cost.toFixed(2)
+      this.weavingCostList[0].blankCost = Math.round(cost * 100) / 100
     },
     //纱线价格变化
     handleCount(scope) {
@@ -1127,7 +1169,7 @@ export default {
       this.reportBtn = true
       //是否存在纱线价格没有填的情况
       let data = this.yarnCostList.find((val) => {
-        return val.yarnCost == '' || val.yarnCost == null
+        return val.yarnCost === '' || val.yarnCost === null
       })
       if (data) {
         this.weavingFeeBtn = true
@@ -1137,8 +1179,10 @@ export default {
       this.yarnCostList.forEach((val) => {
         count = count + Number(val.yarnCost) * Number(val.yarnRatio / 100)
       })
-      this.yarnCostTotal = count.toFixed(4)
-      if (this.weavingCostList[0].blankCost) {
+
+      // this.yarnCostTotal = count.toFixed(2)
+      this.yarnCostTotal = Math.round(count * 100) / 100
+      if (this.weavingCostList[0].blankCost || this.weavingCostList[0].blankCost === 0) {
         this.handleweaving()
       }
     },
@@ -1233,6 +1277,7 @@ export default {
         this.floatingProfitMargin = res.data.floatingProfitMargin
         this.freight = res.data.freight
         this.otherExpenses = res.data.otherExpenses
+        this.costRemark = res.data.remark
       })
     },
     //特整总损耗求和
@@ -1416,6 +1461,7 @@ export default {
     }
     .el-form-item {
       margin-bottom: 10px;
+      margin-right: 0px;
     }
     .btn-box {
       margin-top: 24px;

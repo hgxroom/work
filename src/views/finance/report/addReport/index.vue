@@ -14,7 +14,7 @@
         >
           <div class="search-form" style="width: 100%">
             <el-form-item label="客户" prop="customerName">
-              <el-select
+              <!-- <el-select
                 v-model="baseInfo.customerName"
                 filterable
                 remote
@@ -31,21 +31,21 @@
                   :value="item.value"
                 >
                 </el-option>
-              </el-select>
+              </el-select> -->
               <!-- 搜索框 -->
-              <!-- <el-autocomplete
-              v-model.trim="baseInfo.customerName"
-              :fetch-suggestions="queryName"
-              placeholder="请输入客户名称"
-              :trigger-on-focus="false"
-              @select="handleSelect"
-              class="auto-prop"
-              style="width: 100%"
-            >
-              <template slot-scope="{ item }">
-                <div>{{ item.khmch }}</div>
-              </template>
-            </el-autocomplete> -->
+              <el-autocomplete
+                v-model.trim="baseInfo.customerName"
+                :fetch-suggestions="queryName"
+                placeholder="请输入客户名称"
+                :trigger-on-focus="false"
+                @select="handleSelect"
+                class="auto-prop"
+                style="width: 100%"
+              >
+                <template slot-scope="{ item }">
+                  <div>{{ item.khmch }}</div>
+                </template>
+              </el-autocomplete>
             </el-form-item>
             <el-form-item label="最终客户" prop="finalCustomerName">
               <el-input
@@ -651,7 +651,7 @@ export default {
       this.productInfo.specialProcessName = item.specialProcessName
       this.productInfo.functionName = item.functionName
       this.productInfo.loomSpecification = item.loomType
-      this.productInfo.meterWeight = (((+item.fk + 5) / 100) * +item.kz).toFixed(4) || 0
+      this.productInfo.meterWeight = (((+item.fk + 5) / 100) * +item.kz).toFixed(2) || 0
       //纱织信息
       if (item.quotationYarnVoList) {
         let list = []
