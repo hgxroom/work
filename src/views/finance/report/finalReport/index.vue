@@ -78,41 +78,40 @@
         </el-table>
       </div>
       <div class="card-box">
-        <p class="title">历史报价信息</p>
+        <p class="title">报价信息参考</p>
         <el-table
           size="small"
           :data="formHistoryData.data"
           border
+          max-height="500px"
           style="width: 100%; font-size: 14px; color: #242424"
           highlight-current-row
           header-row-class-name="tableHeader"
         >
-          <el-table-column
-            v-for="(item, index) in formHistoryData.columns"
-            :key="index"
-            :label="item.label"
-            :prop="item.prop"
-            :width="item.width"
-            :align="item.align"
-          >
-            <template v-slot="scope">
-              <div>
-                {{ scope.row[item.prop] }}
-              </div>
-            </template>
-          </el-table-column>
-          <el-table-column label="纱线编号" width="120px">
+          <el-table-column label="布号" min-width="100px" prop="clothNo"></el-table-column>
+          <el-table-column label="颜色" width="60">
             <template v-slot="scope">
               <div
                 class="tab-div"
-                v-for="(item, index) in scope.row.quotedOrderYarnCostList"
+                v-for="(item, index) in scope.row.quotedOrderPriceVoList"
                 :key="index"
               >
-                {{ item.yarnNo }}
+                {{ item.colorName }}
               </div>
             </template>
           </el-table-column>
-          <el-table-column label="纱线品名">
+          <el-table-column label="成本价(元/kg)" width="120px">
+            <template v-slot="scope">
+              <div
+                class="tab-div"
+                v-for="(item, index) in scope.row.quotedOrderPriceVoList"
+                :key="index"
+              >
+                {{ item.costPrice }}
+              </div>
+            </template>
+          </el-table-column>
+          <el-table-column label="纱线品名" min-width="300px">
             <template v-slot="scope">
               <div
                 class="tab-div"
@@ -124,14 +123,7 @@
               </div>
             </template>
           </el-table-column>
-          <!-- <el-table-column label="纱线品名">
-            <template v-slot="scope">
-              <div v-for="(item, index) in scope.row.quotedOrderYarnCostList" :key="index">
-                {{ item.yarnName }}
-              </div>
-            </template>
-          </el-table-column> -->
-          <el-table-column label="纱线价格">
+          <el-table-column label="纱价" v-if="!roles.includes('saleLeader')" min-width="60px">
             <template v-slot="scope">
               <div
                 class="tab-div"
@@ -142,29 +134,79 @@
               </div>
             </template>
           </el-table-column>
-          <el-table-column label="颜色">
+          <el-table-column label="纱比(%)" min-width="80px">
+            <template v-slot="scope">
+              <div
+                class="tab-div"
+                v-for="(item, index) in scope.row.quotedOrderYarnCostList"
+                :key="index"
+              >
+                {{ item.yarnRatio }}
+              </div>
+            </template>
+          </el-table-column>
+          <el-table-column
+            label="纱线成本"
+            min-width="80px"
+            v-if="!roles.includes('saleLeader')"
+            prop="yarnCostTotal"
+          ></el-table-column>
+          <el-table-column
+            label="织费"
+            min-width="60px"
+            v-if="!roles.includes('saleLeader')"
+            prop="weavingFee"
+          ></el-table-column>
+          <el-table-column
+            label="织损(%)"
+            min-width="80px"
+            v-if="!roles.includes('saleLeader')"
+            prop="weavingLoss"
+          ></el-table-column>
+          <el-table-column label="毛坯成本" min-width="80px" prop="blankCost"></el-table-column>
+          <el-table-column label="染损(%)" v-if="!roles.includes('saleLeader')" min-width="80px">
             <template v-slot="scope">
               <div
                 class="tab-div"
                 v-for="(item, index) in scope.row.quotedOrderPriceVoList"
                 :key="index"
               >
-                {{ item.colorName }}
+                {{ item.dyeingLoss }}
               </div>
             </template>
           </el-table-column>
-          <el-table-column label="成本价(元/kg)" width="110px">
+          <el-table-column label="染费" v-if="!roles.includes('saleLeader')" min-width="60px">
             <template v-slot="scope">
               <div
                 class="tab-div"
                 v-for="(item, index) in scope.row.quotedOrderPriceVoList"
                 :key="index"
               >
-                {{ item.costPrice }}
+                {{ item.dyeingFee }}
               </div>
             </template>
           </el-table-column>
-          <el-table-column :label="'销售报价1' + settlementMethod" width="130px">
+          <el-table-column label="特整损耗(%)" min-width="100px" prop="extraLoss"></el-table-column>
+          <el-table-column label="特整成本" min-width="80px" prop="laborCost"></el-table-column>
+          <el-table-column
+            label="功能性成本"
+            width="100px"
+            prop="functionCostTotal"
+          ></el-table-column>
+          <el-table-column label="运费" min-width="60px" prop="freight"></el-table-column>
+          <el-table-column label="其他费用" min-width="80px" prop="otherExpenses"></el-table-column>
+          <!-- <el-table-column label="纱线编号">
+            <template v-slot="scope">
+              <div
+                class="tab-div"
+                v-for="(item, index) in scope.row.quotedOrderYarnCostList"
+                :key="index"
+              >
+                {{ item.yarnNo }}
+              </div>
+            </template>
+          </el-table-column> -->
+          <el-table-column :label="'销售报价1' + settlementMethod" min-width="120px">
             <template v-slot="scope">
               <div
                 class="tab-div"
@@ -180,14 +222,14 @@
               </div>
             </template>
           </el-table-column>
-          <el-table-column label="利润率(%)" width="90px" align="center">
+          <el-table-column label="利润率(%)" min-width="100px" align="center">
             <template v-slot="scope">
               <div>
                 {{ scope.row.quotedOrderPriceVoList[0].interestRate1 }}
               </div>
             </template>
           </el-table-column>
-          <el-table-column :label="'销售报价2' + settlementMethod" width="130px">
+          <el-table-column :label="'销售报价2' + settlementMethod" min-width="120px">
             <template v-slot="scope">
               <div
                 class="tab-div"
@@ -203,14 +245,14 @@
               </div>
             </template>
           </el-table-column>
-          <el-table-column label="利润率(%)" width="90px" align="center">
+          <el-table-column label="利润率(%)" min-width="100px" align="center">
             <template v-slot="scope">
               <div>
                 {{ scope.row.quotedOrderPriceVoList[0].interestRate2 }}
               </div>
             </template>
           </el-table-column>
-          <el-table-column :label="'销售报价3' + settlementMethod" width="130px">
+          <el-table-column :label="'销售报价3' + settlementMethod" min-width="120px">
             <template v-slot="scope">
               <div
                 class="tab-div"
@@ -226,15 +268,16 @@
               </div>
             </template>
           </el-table-column>
-          <el-table-column label="利润率(%)" width="90px" align="center">
+          <el-table-column label="利润率(%)" min-width="100px" align="center">
             <template v-slot="scope">
               <div>
                 {{ scope.row.quotedOrderPriceVoList[0].interestRate3 }}
               </div>
             </template>
           </el-table-column>
-          <el-table-column label="客户" prop="customerName"></el-table-column>
-          <el-table-column label="提交人" prop="createBy"></el-table-column>
+          <el-table-column label="客户" min-width="200px" prop="customerName"></el-table-column>
+          <el-table-column label="提交人" min-width="70px" prop="createBy"></el-table-column>
+          <el-table-column label="报价时间" min-width="155px" prop="createTime"></el-table-column>
         </el-table>
       </div>
       <div class="card-box">
@@ -254,6 +297,7 @@
             :prop="item.prop"
             :width="item.width"
             :align="item.align"
+            :show-overflow-tooltip="true"
           >
             <template v-slot="scope">
               <el-popover
@@ -263,7 +307,10 @@
                 :visible-arrow="false"
               >
                 <p style="max-width: 400px; margin: 0">{{ scope.row[item.prop] }}</p>
-                <div slot="reference" :class="item.prop == 'pm' ? 'content-colum' : ''">
+                <div
+                  slot="reference"
+                  :class="item.prop == 'pm' || item.prop == 'khmch' ? 'content-colum' : ''"
+                >
                   {{ scope.row[item.prop] }}
                 </div>
               </el-popover>
@@ -280,7 +327,7 @@
 </template>
 
 <script>
-import { number } from 'echarts/lib/export'
+import { mapGetters } from 'vuex'
 import {
   getBuildProductSaledByNo,
   getQuotedListByNewClothNo,
@@ -415,7 +462,9 @@ export default {
 
   components: {},
 
-  computed: {},
+  computed: {
+    ...mapGetters({ roles: 'roles' }),
+  },
 
   mounted() {},
   created() {
@@ -486,14 +535,13 @@ export default {
       let data = {}
       data = {
         newClothNo: newClothNo,
+        orderNo: this.quotedOrderNo,
       }
       getQuotedListByNewClothNo(data).then((res) => {
         this.formHistoryData.data = res.data
         if (res.data.settlementMethod) {
           this.settlementMethod = res.data.settlementMethod
         }
-
-        console.log(res, this.settlementMethod)
       })
     },
     // 历史订单信息
@@ -542,60 +590,63 @@ export default {
       console.log(val)
       this.computeWay(this.reportData.settlementMethod, val.$index)
     },
+    //计算保留两位小数
+    Math_round_2(val) {
+      return Math.round(val * 100) / 100
+    },
     //销售报价计算
     computeWay(type, index) {
       let reportNum = null
       switch (type) {
         case '元/kg':
           this.labelList.forEach((element) => {
-            this.datalist[index][element.key] = (
-              this.datalist[0][element.key] *
-              (1 + this.datalist[index].interestRate / 100)
-            ).toFixed(4)
+            this.datalist[index][element.key] =
+              this.datalist[0][element.key] * (1 + this.datalist[index].interestRate / 100)
+            this.datalist[index][element.key] = this.Math_round_2(this.datalist[index][element.key])
           })
           break
         case '元/米':
           this.labelList.forEach((element) => {
-            this.datalist[index][element.key] = (
+            this.datalist[index][element.key] =
               (this.datalist[0][element.key] *
                 this.reportData.meterWeight *
                 (1 + this.datalist[index].interestRate / 100)) /
               1000
-            ).toFixed(4)
+            this.datalist[index][element.key] = this.Math_round_2(this.datalist[index][element.key])
           })
           break
 
         case '美元/kg':
           this.labelList.forEach((element) => {
-            this.datalist[index][element.key] = (
+            this.datalist[index][element.key] =
               (this.datalist[0][element.key] /
                 this.reportData.drawbackCoefficient /
                 this.reportData.exchangeRate) *
               (1 + this.datalist[index].interestRate / 100)
-            ).toFixed(4)
+            this.datalist[index][element.key] = this.Math_round_2(this.datalist[index][element.key])
           })
           break
         case '美元/磅':
           this.labelList.forEach((element) => {
-            this.datalist[index][element.key] = (
+            this.datalist[index][element.key] =
               (this.datalist[0][element.key] /
                 this.reportData.drawbackCoefficient /
                 this.reportData.exchangeRate /
                 2.2046) *
               (1 + this.datalist[index].interestRate / 100)
-            ).toFixed(4)
+            this.datalist[index][element.key] = this.Math_round_2(this.datalist[index][element.key])
           })
           break
         case '美元/码':
           this.labelList.forEach((element) => {
-            this.datalist[index][element.key] = (
+            this.datalist[index][element.key] =
               ((this.datalist[0][element.key] * this.reportData.meterWeight) /
                 1000 /
                 1.1 /
                 this.reportData.exchangeRate) *
               0.9144 *
               (1 + this.datalist[index].interestRate / 100)
-            ).toFixed(4)
+            this.datalist[index][element.key] = this.Math_round_2(this.datalist[index][element.key])
           })
           break
         default:
@@ -1007,9 +1058,9 @@ export default {
   border-bottom: 1px solid #dfe6ec;
   margin: 0 -10px;
   padding: 8px 10px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  // overflow: hidden;
+  // text-overflow: ellipsis;
+  // white-space: nowrap;
 }
 .tab-divline {
   padding-left: 0;

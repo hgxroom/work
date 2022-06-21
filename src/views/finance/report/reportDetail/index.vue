@@ -129,7 +129,6 @@
           :data="formData.data"
           style="width: 100%; font-size: 14px; color: #242424; bordercolor: #000"
           header-row-class-name="tableHeader"
-          max-height="500"
         >
           <el-table-column label="布号" prop="clothNo" width="100" fixed="left"></el-table-column>
           <el-table-column label="颜色" width="90" fixed="left">
@@ -155,9 +154,23 @@
             </template>
           </el-table-column>
           <el-table-column
+            label="备注"
+            width="180"
+            v-if="
+              baseInfo.orderStatus == 1 || baseInfo.orderStatus == 2 || baseInfo.orderStatus == 3
+            "
+          >
+            <template v-slot="scope">
+              <div>{{ scope.row.remark }}</div>
+            </template>
+          </el-table-column>
+          <el-table-column
             label="运费(元)"
             width="140"
-            v-if="baseInfo.roleType == 1 || baseInfo.roleType == 2"
+            v-if="
+              baseInfo.roleType == 1 ||
+              (baseInfo.roleType == 2 && !roles.includes('businessLeader'))
+            "
           >
             <template v-slot="scope">
               <div v-if="baseInfo.orderStatus > 1 && baseInfo.roleType !== 1">
@@ -171,7 +184,10 @@
           <el-table-column
             label="其他费用(元)"
             width="140"
-            v-if="baseInfo.roleType == 1 || baseInfo.roleType == 2"
+            v-if="
+              baseInfo.roleType == 1 ||
+              (baseInfo.roleType == 2 && !roles.includes('businessLeader'))
+            "
           >
             <template v-slot="scope">
               <div v-if="baseInfo.orderStatus > 1 && baseInfo.roleType !== 1">
@@ -185,7 +201,10 @@
           <el-table-column
             label="浮动利润率(%)"
             width="140"
-            v-if="baseInfo.roleType == 1 || baseInfo.roleType == 2"
+            v-if="
+              baseInfo.roleType == 1 ||
+              (baseInfo.roleType == 2 && !roles.includes('businessLeader'))
+            "
           >
             <template v-slot="scope">
               <div v-if="baseInfo.orderStatus > 1 && baseInfo.roleType !== 1">
@@ -352,7 +371,7 @@
               </el-popover>
             </template>
           </el-table-column>
-          <el-table-column label="纱线编号" width="150">
+          <el-table-column label="纱线编号" width="150" v-if="!roles.includes('businessLeader')">
             <template v-slot="scope">
               <div
                 class="tab-div tab-divline"
@@ -465,7 +484,7 @@
               (baseInfo.orderStatus == 3 ||
                 baseInfo.orderStatus == 4 ||
                 baseInfo.orderStatus == 5) &&
-              baseInfo.roleType == 1
+              (baseInfo.roleType == 1 || roles.includes('businessLeader'))
             "
             label="操作"
             width="100"
@@ -523,6 +542,7 @@ import {
   commitStatus,
 } from '@/api/finance/report'
 import { formRules, brandInfoTemp, dictMap } from './utils.js'
+import { mapGetters } from 'vuex'
 export default {
   dicts: dictMap,
   data() {
@@ -621,7 +641,9 @@ export default {
 
   components: {},
 
-  computed: {},
+  computed: {
+    ...mapGetters({ roles: 'roles' }),
+  },
 
   mounted() {},
 
@@ -691,6 +713,34 @@ export default {
           this.baseInfo = res.data
           console.log('this.baseInfo', this.baseInfo)
           this.formData.data = this.baseInfo.productList
+          if (this.roles.includes('businessLeader')) {
+            this.formData.columns = [
+              {
+                label: '织机规格',
+                align: 'center',
+                type: 'text',
+                prop: 'loomSpecification',
+              },
+              {
+                label: '成分',
+                align: 'center',
+                type: 'text',
+                prop: 'component',
+              },
+              {
+                label: '米重',
+                align: 'center',
+                type: 'text',
+                prop: 'meterWeight',
+              },
+              {
+                label: '订单规模',
+                align: 'center',
+                type: 'text',
+                prop: 'orderNum',
+              },
+            ]
+          }
           if (res.data.enclosureAddress) {
             this.imgList = res.data.enclosureAddress.split(';')
           }

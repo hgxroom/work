@@ -1,41 +1,11 @@
 {
   "files": [
     {
-      "path": "src/views/finance/report/addCreateProduct/index.vue",
+      "path": "src/views/finance/report/finalReport/index.vue",
       "bookmarks": [
         {
-          "line": 9,
-          "column": 65,
-          "label": ""
-        }
-      ]
-    },
-    {
-      "path": "src/views/finance/report/reportCalculator/index.vue",
-      "bookmarks": [
-        {
-          "line": 1253,
-          "column": 3,
-          "label": ""
-        },
-        {
-          "line": 1261,
-          "column": 16,
-          "label": ""
-        }
-      ]
-    },
-    {
-      "path": "src/views/finance/report/reportCalculatorEdit/index.vue",
-      "bookmarks": [
-        {
-          "line": 142,
-          "column": 28,
-          "label": ""
-        },
-        {
-          "line": 639,
-          "column": 21,
+          "line": 365,
+          "column": 24,
           "label": ""
         }
       ]
