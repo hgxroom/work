@@ -457,7 +457,7 @@
           >
             <template v-slot="scope">
               <el-button
-                v-if="baseInfo.roleType == 1"
+                v-if="baseInfo.roleType == 1 || roles.includes('businessLeader')"
                 type="text"
                 @click="toCostOffer(scope.row)"
                 size="small"
@@ -467,7 +467,10 @@
             </template>
           </el-table-column>
           <el-table-column
-            v-if="baseInfo.orderStatus == 2 && baseInfo.roleType == 2"
+            v-if="
+              baseInfo.orderStatus == 2 &&
+              (baseInfo.roleType == 2 || roles.includes('businessLeader'))
+            "
             label="操作"
             width="100"
             align="center"
@@ -513,10 +516,15 @@
         >
       </div>
       <div class="footer" v-if="baseInfo.orderStatus == 2">
-        <el-button @click="cancel()" class="save-btn" v-if="baseInfo.roleType == 2">取消</el-button>
+        <el-button
+          @click="cancel()"
+          class="save-btn"
+          v-if="baseInfo.roleType == 2 || roles.includes('businessLeader')"
+          >取消</el-button
+        >
         <el-button
           @click="submit()"
-          v-if="baseInfo.roleType == 2"
+          v-if="baseInfo.roleType == 2 || roles.includes('businessLeader')"
           :disabled="
             (baseInfo.offerFlag == '1' && baseInfo.orderStatus == 1) ||
             (baseInfo.auditFlag == '1' && baseInfo.orderStatus == 2)
