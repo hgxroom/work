@@ -25,7 +25,7 @@
                 type="number"
                 class="numrule"
                 placeholder="请输入内容"
-                @change="handleCount(scope)"
+                @change="handleCount(scope, $event)"
                 v-model="scope.row.interestRate"
               >
               </el-input>
@@ -507,12 +507,25 @@ export default {
         this.datalist[scope.$index].choiceflag = false
       }
     },
-
+    //确认报价时利润率不能为空
+    handleNull() {
+      let nullBtn = false
+      this.datalist.forEach((val, index) => {
+        if (val.interestRate === '') {
+          nullBtn = true
+        }
+      })
+      return nullBtn
+    },
     //提交
     submit() {
+      if (this.handleNull()) {
+        return this.$message.error('销售报价利润率不能为空！')
+      }
       if (!this.handlecheck('scope', 'submit')) {
         return this.$message.error('最终报价最少要选择一个！')
       }
+
       this.datalist.forEach((val, index) => {
         this.reportData.buildProductFinalSaleVos[index].choiceflag = val.choiceflag
         this.reportData.buildProductFinalSaleVos[index].interestRate = val.interestRate
@@ -596,9 +609,37 @@ export default {
       })
     },
     //输入计算
-    handleCount(val) {
-      console.log(val)
-      this.computeWay(this.reportData.settlementMethod, val.$index)
+    handleCount(val, evt) {
+      console.log(val, evt)
+      if (Number(evt) < 0) {
+        val.row.interestRate = ''
+      } else {
+        let ReBtn = this.deleteRe(this.datalist, 'interestRate') //false为重复，ture为不重复
+        if (ReBtn) {
+          this.computeWay(this.reportData.settlementMethod, val.$index)
+        } else {
+          val.row.interestRate = ''
+        }
+      }
+      // this.yarnCostList.forEach((item) => {
+      //   if (item.yarnCost < 0) {
+      //     item.yarnCost = null
+      //   }
+      // })
+      // this.computeWay(this.reportData.settlementMethod, val.$index)
+    },
+    //利润率去重
+    deleteRe(arr, key) {
+      let ReBtn = true
+      for (let i = 1; i < arr.length; i++) {
+        for (let j = i + 1; j < arr.length; j++) {
+          if (arr[i][key] == arr[j][key]) {
+            ReBtn = false
+          }
+        }
+      }
+      console.log(ReBtn)
+      return ReBtn
     },
     //计算保留两位小数
     Math_round_2(val) {
