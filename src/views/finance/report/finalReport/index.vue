@@ -88,6 +88,13 @@
           highlight-current-row
           header-row-class-name="tableHeader"
         >
+          <el-table-column label="报价时间" min-width="155px" prop="createTime"></el-table-column>
+          <el-table-column
+            label="客户"
+            min-width="200px"
+            prop="customerName"
+            v-if="!roles.includes('saleLeader')"
+          ></el-table-column>
           <el-table-column label="布号" min-width="100px" prop="clothNo"></el-table-column>
           <el-table-column label="颜色" width="60">
             <template v-slot="scope">
@@ -275,9 +282,12 @@
               </div>
             </template>
           </el-table-column>
-          <el-table-column label="客户" min-width="200px" prop="customerName"></el-table-column>
-          <el-table-column label="提交人" min-width="70px" prop="createBy"></el-table-column>
-          <el-table-column label="报价时间" min-width="155px" prop="createTime"></el-table-column>
+          <el-table-column
+            label="提交人"
+            min-width="70px"
+            prop="createBy"
+            v-if="!roles.includes('saleLeader')"
+          ></el-table-column>
         </el-table>
       </div>
       <div class="card-box">
