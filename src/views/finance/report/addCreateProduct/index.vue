@@ -374,7 +374,7 @@
               </div>
               <el-input
                 v-model="item.input"
-                onkeyup="value=value.replace(/\D/g, '').replace(/^0{1,}/g, '')"
+                @change="oninput($event, item)"
                 type="number"
                 class="check-input numrule"
                 size="mini"
@@ -922,6 +922,19 @@ export default {
     //取消
     handleClose(done) {
       this.componentDialogVisible = false
+    },
+    oninput(num, item) {
+      if (num < 0 || num > 100) {
+        item.input = ''
+      } else {
+        let formatNum =
+          ('' + num)
+            .replace(/[^\d^\.]+/g, '')
+            .replace(/^0+(\d)/, '$1')
+            .replace(/^\./, '0.')
+            .match(/^\d*(\.?\d{0,2})/g)[0] || ''
+        item.input = formatNum
+      }
     },
   },
 }
