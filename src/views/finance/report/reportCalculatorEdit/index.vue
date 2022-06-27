@@ -1165,6 +1165,11 @@ export default {
     },
     //纱线价格变化
     handleCount(scope) {
+      this.yarnCostList.forEach((item) => {
+        if (item.yarnCost < 0) {
+          item.yarnCost = null
+        }
+      })
       let count = 0
       this.reportBtn = true
       //是否存在纱线价格没有填的情况
